@@ -1,42 +1,37 @@
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import { Provider } from "react-redux";
-// import { store } from "./store";
-// import Home from "./pages/Home"
-// import LoginPage from "./pages/LoginPage";
-// import Dashboard from './pages/Dashboard';
-// import ProtectedRoute from "./components/ProtectedRoute";
-
-// function App() {
-//   return (
-//     <Provider store={store}>
-//       <BrowserRouter>
-//         <Routes>
-//           <Route path="/home"></Route>
-//           {/* <Route path="/login" element={<LoginPage />} /> */}
-//           {/* <Route
-//             path="/*"
-//             element={<ProtectedRoute>{<Dashboard /> }</ProtectedRoute>}
-//           /> */}
-//         </Routes>
-//       </BrowserRouter>
-//     </Provider>
-//   );
-// }
-// src/frameworks/ui/App.tsx
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/frameworks/ui/redux/store/index";
 import routes from "@/interface-adapters/routes/config.ts";
 import MainLayout from "./layout/MainLayout";
 import AuthLayout from "./layout/AuthLayout";
+import { loadUser } from "./redux/slices/authSlice";
+import type { AppDispatch } from "@/frameworks/ui/redux/store/index";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  const { isAuthenticated, authLoading } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  console.log("Auth check:", { isAuthenticated, authLoading });
+
+  if (authLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+  }
+
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
 const App = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>

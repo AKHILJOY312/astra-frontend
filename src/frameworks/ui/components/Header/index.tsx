@@ -4,12 +4,13 @@ import { MenuOutlined } from "@ant-design/icons";
 import { SvgIcon } from "../../common/SvgIcon";
 import { Button } from "../../common/Button/index";
 import Container from "../../common/Container";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [visible, setVisible] = useState(false);
 
   const toggleDrawer = () => setVisible(!visible);
-
+  const navigate = useNavigate();
   const scrollTo = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -40,9 +41,13 @@ const Header = () => {
       </div>
       <div
         onClick={() => scrollTo("contact")}
-        className="mx-6 my-2 cursor-pointer"
+        className="text-lg text-[#18216d] mx-6 my-2 cursor-pointer transition-all duration-200 hover:text-orange-500 hover:underline underline-offset-4 decoration-wavy"
       >
-        <Button>Contact</Button>
+        Contact
+      </div>
+      <div className="flex items-center gap-4 ml-6">
+        <Button onClick={() => navigate("/login")}>Login</Button>
+        <Button onClick={() => navigate("/register")}>Sign Up</Button>
       </div>
     </>
   );
@@ -53,7 +58,7 @@ const Header = () => {
         <Row justify="space-between" align="middle">
           {/* Logo */}
           <a href="/" aria-label="homepage" className="flex items-center">
-            <SvgIcon src="logo.svg" width="101px" height="64px" />
+            <SvgIcon src="untitled1.svg" width="50px" height="50px" /> Astra
           </a>
 
           {/* Desktop Menu */}

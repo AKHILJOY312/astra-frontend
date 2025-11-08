@@ -25,7 +25,20 @@ const routes: RouteItem[] = [
     exact: true,
     layout: "auth", //auth,main,none
   },
-  // {
+  {
+    path: "/login",
+    component: "LoginPage.tsx",
+    exact: true,
+    layout: "auth",
+  },
+  {
+    path: "/project",
+    component: "ProjectPage",
+    exact: true,
+    protected: true,
+    layout: "main",
+  },
+  //  // {
   //   path: '/projects/:id',
   //   component: 'ProjectPage',
   //   exact: true,
