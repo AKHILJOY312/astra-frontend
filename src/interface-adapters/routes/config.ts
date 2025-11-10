@@ -42,7 +42,7 @@ const routes: RouteItem[] = [
     component: "ProjectPage",
     exact: true,
     protected: true,
-    layout: "main",
+    layout: "none",
   },
   {
     path: "/reset-password",

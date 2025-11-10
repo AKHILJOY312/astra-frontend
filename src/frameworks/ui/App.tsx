@@ -8,9 +8,18 @@ import AuthLayout from "./layout/AuthLayout";
 import { loadUser } from "./redux/slices/authSlice";
 import type { AppDispatch } from "@/frameworks/ui/redux/store/index";
 import GlobalLoader from "./common/GlobalLoader";
+import { adminRoutes } from "@/frameworks/ui/routes/AdminRoutes";
+import NotFound from "./common/NotFound";
+
 const pages = import.meta.glob<{ default: React.ComponentType<any> }>(
   "./pages/**/*.tsx"
 );
+
+// const AdminProtectedRoute = ({ children }: { children: JSX.Element }) => {
+//   // const { admin } = useSelector((state: RootState) => state.adminAuth);
+//   // if (!admin) return <Navigate to="/admin/login" replace />;
+//   return children;
+// };
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -32,8 +41,11 @@ const App = () => {
     <BrowserRouter>
       <Suspense fallback={null}>
         <Routes>
+          {/*  Admin Routes */}
+          {adminRoutes}
+
           {routes.map((routeItem) => {
-            const importPage = pages[`./pages/${routeItem.component}.tsx`];
+            const importPage = pages[`./pages/user/${routeItem.component}.tsx`];
 
             if (!importPage) {
               console.error(`Component not found: ${routeItem.component}`);
@@ -51,7 +63,7 @@ const App = () => {
             // Wrap with layout
             if (routeItem.layout === "auth") {
               element = <AuthLayout>{element}</AuthLayout>;
-            } else {
+            } else if (routeItem.layout === "main") {
               // default to main layout
               element = <MainLayout>{element}</MainLayout>;
             }
@@ -65,7 +77,7 @@ const App = () => {
             );
           })}
 
-          <Route path="*" element={<div>404</div>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
