@@ -1,12 +1,12 @@
 {
-  "title": "Landing page template for developers & startups",
-  "text": "Beautifully designed templates using React.js, ant design and styled-components! Save weeks of time and build your landing page in minutes.",
+  "title": "Empower Team Collaboration with Our Project Management Platform",
+  "text": "Streamline communication, tasks, and collaboration in one place. From secure authentication to real-time chat, Kanban boards, and premium project upgrades — our platform helps teams plan, build, and deliver efficiently.",
   "button": [
     {
-      "title": "Explore"
+      "title": "Get Started"
     },
     {
-      "title": "Learn more",
+      "title": "Explore Modules",
       "color": "#fff"
     }
   ]

@@ -1,15 +1,15 @@
 {
-  "title": "Light, fast & responsive",
-  "text": "This template is ready to use, so you don't need to change anything at a component level, unless you want to customize the default styling.",
+  "title": "Light, Fast & Responsive",
+  "text": "Experience a modern, performance-driven project management platform built for speed, scalability, and seamless collaboration across all devices.",
   "section": [
     {
-      "title": "Why Antd?",
-      "content": "Ant Design is a React UI library that has a lot of easy-to-use components for building elegant UI.",
+      "title": "Why Us?",
+      "content": "We provide an all-in-one solution designed to simplify project management — from team communication and task tracking to file sharing and billing — all optimized for a smooth, responsive experience.",
       "icon": "notes.svg"
     },
     {
-      "title": "Why styled-components?",
-      "content": "Styled Components gives you total control over your components.",
+      "title": "How to Get Started?",
+      "content": "Sign up, create your first project, invite your team, and start managing tasks instantly. Our intuitive interface ensures you can get up and running in minutes — no setup hassle required.",
       "icon": "notes.svg"
     }
   ]

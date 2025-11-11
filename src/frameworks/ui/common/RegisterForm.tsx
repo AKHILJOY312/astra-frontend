@@ -140,6 +140,12 @@ const RegisterForm: React.FC = () => {
   };
 
   useEffect(() => {
+    // clear any persisted success/error when user reopens page
+    dispatch(clearMessage());
+    dispatch(clearError());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (message) {
       setIsSuccess(true);
       const timer = setTimeout(() => {
@@ -156,7 +162,7 @@ const RegisterForm: React.FC = () => {
   }, [message, error, dispatch]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+    <div className="min-h-screen flex items-center justify-center  bg-purple-300 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
           {/* Header */}
@@ -190,12 +196,12 @@ const RegisterForm: React.FC = () => {
               <div className="pt-4">
                 <Mail className="w-16 h-16 mx-auto text-blue-500 animate-bounce" />
               </div>
-              <p className="text-sm text-gray-500 pt-4">
+              {/* <p className="text-sm text-gray-500 pt-4">
                 Didn't receive the email? Check your spam folder or{" "}
                 <button className="text-blue-600 hover:text-blue-700 font-medium hover:underline">
                   resend verification
                 </button>
-              </p>
+              </p> */}
             </div>
           ) : (
             <>
@@ -214,7 +220,7 @@ const RegisterForm: React.FC = () => {
                     Full Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+                    {/* <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" /> */}
                     <input
                       type="text"
                       name="name"
@@ -244,7 +250,7 @@ const RegisterForm: React.FC = () => {
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+                    {/* <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" /> */}
                     <input
                       type="email"
                       name="email"
@@ -274,7 +280,7 @@ const RegisterForm: React.FC = () => {
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+                    {/* <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" /> */}
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
@@ -340,7 +346,7 @@ const RegisterForm: React.FC = () => {
                     Confirm Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+                    {/* <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" /> */}
                     <input
                       type={showConfirm ? "text" : "password"}
                       name="confirmPassword"

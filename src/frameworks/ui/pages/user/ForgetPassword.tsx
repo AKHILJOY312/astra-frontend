@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AlertCircle, Loader2, Mail } from "lucide-react";
 import type { AppDispatch } from "../../redux/store";
-import { forgotPassword } from "../../redux/slices/authSlice"; // <-- create this async thunk
+import { forgotPassword } from "../../redux/slices/authSlice";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AlertCircle, Loader2, Lock, Eye, EyeOff } from "lucide-react";
-import type { AppDispatch } from "../redux/store";
-import { resetPassword } from "../redux/slices/authSlice"; // <-- create this async thunk
+import type { AppDispatch } from "@/frameworks/ui/redux/store";
+import { resetPassword } from "@/frameworks/ui/redux/slices/authSlice"; // <-- create this async thunk
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
