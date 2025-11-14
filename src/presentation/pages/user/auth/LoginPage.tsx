@@ -12,7 +12,9 @@ export default function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading } = useSelector((state: RootState) => state.auth);
-
+  const handleGoogle = () => {
+    window.location.href = "api/auth/google";
+  };
   const handleSubmit = async (
     values: { email: string; password: string },
     { setFieldError }: any
@@ -188,6 +190,7 @@ export default function LoginPage() {
             <button
               type="button"
               className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              onClick={() => handleGoogle()}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path

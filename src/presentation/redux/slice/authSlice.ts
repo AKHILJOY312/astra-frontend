@@ -9,6 +9,7 @@ import {
   logoutUser,
   forgotPassword,
   resetPassword,
+  loginSuccess,
 } from "../thunk/authThunks";
 
 const initialState: AuthState = {
@@ -121,6 +122,12 @@ const authSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(loginSuccess.fulfilled, (state, action) => {
+        state.accessToken = action.payload.token;
+        state.isAuthenticated = true;
+        state.loading = false;
+        tokenService.setToken(action.payload.token);
       });
   },
 });

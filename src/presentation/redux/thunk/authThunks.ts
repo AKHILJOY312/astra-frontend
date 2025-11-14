@@ -10,7 +10,7 @@ import {
   ResetPasswordUseCase,
   VerifyEmailUseCase,
 } from "../../../application/use-cases/auth/index";
-
+import { tokenService } from "@/lib/tokenService";
 // Resolve once (singleton)
 const loginUC = container.get(LoginUseCase);
 const registerUC = container.get(RegisterUseCase);
@@ -121,5 +121,14 @@ export const verifyEmail = createAsyncThunk(
         e.response?.data?.message || "Verification failed"
       );
     }
+  }
+);
+
+export const loginSuccess = createAsyncThunk(
+  "auth/loginSuccess",
+  async (data: { token: string }, { dispatch }) => {
+    tokenService.setToken(data.token);
+
+    return { token: data.token };
   }
 );

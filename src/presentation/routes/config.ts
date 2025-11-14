@@ -50,6 +50,12 @@ export const userRoutes: RouteItem[] = [
     layout: "app",
     filePath: "user/project/",
   },
+  {
+    path: "/success",
+    component: "AuthSuccess",
+    layout: "none",
+    filePath: "user/auth/",
+  },
 
   //  // {
   //   path: '/projects/:id',
