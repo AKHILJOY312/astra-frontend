@@ -1,15 +1,17 @@
-let accessToken: string | null = null;
+// tokenService.ts
+const USER_TOKEN_KEY = "userAccessToken";
 
 export const tokenService = {
-  getToken: () => accessToken,
+  getToken: (): string | null => localStorage.getItem(USER_TOKEN_KEY),
   setToken: (token: string | null) => {
-    accessToken = token;
+    if (token) {
+      localStorage.setItem(USER_TOKEN_KEY, token);
+    } else {
+      localStorage.removeItem(USER_TOKEN_KEY);
+    }
   },
-  clearToken: () => {
-    accessToken = null;
-  },
+  clearToken: () => localStorage.removeItem(USER_TOKEN_KEY),
 
-  //for admin
   // Admin-specific
   getAdminToken: () => localStorage.getItem("adminToken"),
   setAdminToken: (token: string) => localStorage.setItem("adminToken", token),

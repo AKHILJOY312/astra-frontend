@@ -25,6 +25,7 @@ export class AuthRepositoryImpl implements AuthRepository {
   }
 
   async loadUser(): Promise<User> {
+    console.log("working");
     const { data } = await authApi.loadMe();
     console.log(data);
     return userResponseToEntity(data.user);
