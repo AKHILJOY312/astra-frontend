@@ -72,13 +72,6 @@ export const userRoutes: RouteItem[] = [
 ];
 
 export const adminRoutes: RouteItem[] = [
-  {
-    path: "/admin/dashboard",
-    component: "Home",
-    layout: "admin",
-    protected: true,
-    filePath: "admin/Dashboard/",
-  },
   // {
   //   path: "/admin/profile",
   //   component: "UserProfiles",
@@ -90,5 +83,19 @@ export const adminRoutes: RouteItem[] = [
     component: "SignIn",
     layout: "admin",
     filePath: "admin/AuthPages/",
+  },
+  {
+    path: "/admin/dashboard",
+    component: "Home",
+    layout: "admin",
+    protected: true,
+    filePath: "admin/Dashboard/",
+  },
+  {
+    path: "admin/forgot-password",
+    component: "Home",
+    layout: "admin",
+    protected: true,
+    filePath: "admin/Dashboard/",
   },
 ];

@@ -5,10 +5,11 @@ import { SvgIcon } from "../common/SvgIcon";
 import { Button } from "../common/Button/index";
 import Container from "../common/Container";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/presentation/hooks/useAuth";
 
 const Header = () => {
   const [visible, setVisible] = useState(false);
-
+  const { isAuthenticated } = useAuth();
   const toggleDrawer = () => setVisible(!visible);
   const navigate = useNavigate();
   const scrollTo = (id: string) => {
@@ -45,12 +46,22 @@ const Header = () => {
       >
         Contact
       </div>
-      <div className="flex items-center gap-4 ml-6">
-        <Button onClick={() => navigate("/login")}>Login</Button>
-      </div>
-      <div className="flex items-center gap-4 ml-6">
-        <Button onClick={() => navigate("/register")}>Sign Up</Button>
-      </div>
+      {isAuthenticated ? (
+        <>
+          <div className="flex items-center gap-4 ml-6">
+            <Button onClick={() => navigate("/project")}>Project</Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="flex items-center gap-4 ml-6">
+            <Button onClick={() => navigate("/login")}>Login</Button>
+          </div>
+          <div className="flex items-center gap-4 ml-6">
+            <Button onClick={() => navigate("/register")}>Sign Up</Button>
+          </div>
+        </>
+      )}
     </>
   );
 

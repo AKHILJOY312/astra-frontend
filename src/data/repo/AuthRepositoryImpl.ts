@@ -42,7 +42,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async resetPassword(token: string, password: string) {
     const { data } = await authApi.resetPassword(token, password);
-    return { message: data.message };
+    return { message: data.message, role: data.role as "admin" | "user" };
   }
   async verifyEmail(token: string): Promise<VerifyEmailResponse> {
     const { data } = await authApi.verifyEmail(token);

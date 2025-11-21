@@ -20,7 +20,6 @@ export default function ResetPasswordPage() {
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
   // Redirect if no token
   useEffect(() => {
     if (!token) {
@@ -73,8 +72,15 @@ export default function ResetPasswordPage() {
     try {
       const result = await dispatch(resetPassword({ token: token!, password }));
       if (resetPassword.fulfilled.match(result)) {
+        const userRole = result.payload.role;
         setSuccess("Password reset successfully! Redirecting to login...");
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => {
+          if (userRole === "admin") {
+            navigate("/admin/login");
+          } else {
+            navigate("/login");
+          }
+        }, 2000);
       } else {
         setError((result.payload as string) || "Failed to reset password");
       }

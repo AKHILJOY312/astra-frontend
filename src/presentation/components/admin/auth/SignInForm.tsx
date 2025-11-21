@@ -140,7 +140,7 @@ export default function AdminLoginPage() {
                 {/* Forgot Password */}
                 <div className="text-right">
                   <a
-                    href="/admin/forgot-password"
+                    href="/forget-password"
                     className="text-purple-600 hover:text-purple-700 font-medium text-sm transition-colors"
                   >
                     Forgot password?

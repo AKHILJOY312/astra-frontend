@@ -123,6 +123,7 @@ const authSlice = createSlice({
       })
       .addCase(resetPassword.fulfilled, (state, action) => {
         state.loading = false;
+        state.role = action.payload.role;
         state.message = action.payload.message || "Password reset successfully";
       })
       .addCase(resetPassword.rejected, (state, action) => {

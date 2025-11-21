@@ -17,6 +17,9 @@ export interface AuthRepository {
   loadUser(): Promise<User>;
   logout(): Promise<void>;
   forgotPassword(email: string): Promise<string>;
-  resetPassword(token: string, password: string): Promise<{ message: string }>;
+  resetPassword(
+    token: string,
+    password: string
+  ): Promise<{ message: string; role: "admin" | "user" }>;
   verifyEmail(token: string): Promise<VerifyEmailResponse>;
 }
