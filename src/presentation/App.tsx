@@ -47,7 +47,6 @@ const AdminProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading, role } = useAppSelector(
     (state) => state.auth
   );
-  const navigate = useNavigate();
 
   // Optional: Show loading while checking
   if (loading) {
@@ -61,18 +60,17 @@ const AdminProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   // Main check: must be logged in AND have isAdmin: true
   const isAdmin = isAuthenticated && role === "admin";
 
-  useEffect(() => {
-    if (!isAdmin) {
-      navigate("/admin/login", { replace: true });
-    }
-  }, [isAdmin, navigate]);
+  // useEffect(() => {
+  //   if (!isAdmin) {
+  //     navigate("/admin/login", { replace: true });
+  //   }
+  // }, [isAdmin, navigate]);
 
   // If not admin → redirect immediately
   if (!isAdmin) {
     return <Navigate to="/admin/login" replace />;
   }
 
-  // All good → render the admin page
   return <>{children}</>;
 };
 

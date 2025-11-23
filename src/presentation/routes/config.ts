@@ -92,6 +92,13 @@ export const adminRoutes: RouteItem[] = [
     filePath: "admin/Dashboard/",
   },
   {
+    path: "/admin/plan",
+    component: "PlanManagementPage",
+    layout: "admin",
+    protected: true,
+    filePath: "admin/Plan/",
+  },
+  {
     path: "admin/forgot-password",
     component: "Home",
     layout: "admin",

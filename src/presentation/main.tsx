@@ -10,15 +10,18 @@ import "swiper/swiper-bundle.css";
 import "flatpickr/dist/flatpickr.css";
 import { AppWrapper } from "../presentation/components/admin/common/PageMeta.tsx";
 import { ThemeProvider } from "../presentation/context/ThemeContext.tsx";
+import QueryProvider from "./context/QueryProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <ThemeProvider>
-        <AppWrapper>
-          <App />
-        </AppWrapper>
-      </ThemeProvider>
+      <QueryProvider>
+        <ThemeProvider>
+          <AppWrapper>
+            <App />
+          </AppWrapper>
+        </ThemeProvider>
+      </QueryProvider>
     </PersistGate>
   </Provider>
 );

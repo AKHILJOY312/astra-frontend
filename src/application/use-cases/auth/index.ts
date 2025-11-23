@@ -3,6 +3,6 @@ export * from "./LoginUseCase";
 export * from "./RegisterUseCase";
 export * from "./VerifyEmailUseCase";
 export * from "./LogoutUseCase";
-export * from "./LoadUserUseCase";
+export * from "./LoadUserCase";
 export * from "./ForgotPasswordUseCase";
 export * from "./ResetPasswordUseCase";

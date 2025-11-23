@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface ButtonProps {
   children: ReactNode; // Button text or content
@@ -9,12 +9,14 @@ interface ButtonProps {
   onClick?: () => void; // Click handler
   disabled?: boolean; // Disabled state
   className?: string; // Disabled state
+  type?: "button" | "submit" | null;
 }
 
 const Button: React.FC<ButtonProps> = ({
   children,
   size = "md",
   variant = "primary",
+  type = null,
   startIcon,
   endIcon,
   onClick,
