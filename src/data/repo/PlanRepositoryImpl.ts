@@ -5,13 +5,9 @@ import type { PlanRepository } from "@/application/repo/PlanRepository";
 
 export class PlanRepositoryImpl implements PlanRepository {
   async getPlans(page: number, limit: number) {
-    console.log("PLANLIST → FETCHING PAGE:", page);
-
     const res = await apiCaller.get("/admin/plans", {
       params: { page, limit },
     });
-
-    console.log("PLANLIST → RECEIVED DATA:", res.data);
 
     // ADD THIS LINE — fixes everything
     return { data: res.data.plans as Plan[], total: res.data.total };
@@ -28,6 +24,7 @@ export class PlanRepositoryImpl implements PlanRepository {
   }
 
   async deletePlan(id: string) {
+    console.log("*id:" + id);
     await apiCaller.delete(`/admin/plans/${id}`);
   }
 }

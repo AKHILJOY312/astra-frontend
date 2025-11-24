@@ -32,19 +32,12 @@ export default function PlanList() {
     initialPageParam: 1,
 
     getNextPageParam: (lastPage, allPages, allPagesCount) => {
-      console.log("getNextPageParam called", {
-        lastPageLength: lastPage.data.length,
-        allPagesCount: allPages.length,
-        lastPage,
-      });
-
       if (lastPage.data.length < 12) {
-        console.log("No more pages – last page has < 12 items");
         return undefined;
       }
 
       const nextPage = allPages.length + 1;
-      console.log("There might be more – requesting page", nextPage);
+
       return nextPage;
     },
   });
@@ -95,7 +88,6 @@ export default function PlanList() {
       </div>
     );
   }
-  console.log(plans);
 
   return (
     <>

@@ -10,7 +10,7 @@ export class DeletePlanUseCase {
 
   async execute(id: string): Promise<void> {
     // Optional: Soft-delete instead of hard-delete
-    await this.repository.updatePlan(id, { isDeleted: true });
+    await this.repository.deletePlan(id);
 
     // Hard delete (your current backend likely does this)
     // await this.repository.deletePlan(id);

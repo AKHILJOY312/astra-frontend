@@ -105,7 +105,20 @@ export default function PlanFormDialog({ plan, open, onClose }: Props) {
       };
 
       if (plan) {
-        await updatePlanUseCase.execute(plan._id, cleanedValues);
+        // FIX: Explicitly check for ID before calling use case
+        const planId = plan.id;
+
+        if (!planId) {
+          console.error(
+            "CRITICAL ERROR: Plan ID is missing in update mode. Aborting update."
+          );
+          setSubmitError(
+            "Cannot update plan: The plan ID could not be found. Please refresh the list and try again."
+          );
+          return;
+        }
+
+        await updatePlanUseCase.execute(planId, cleanedValues);
       } else {
         await createPlanUseCase.execute(cleanedValues);
       }
@@ -113,7 +126,8 @@ export default function PlanFormDialog({ plan, open, onClose }: Props) {
       queryClient.invalidateQueries({ queryKey: ["plans"] });
       onClose();
     } catch (err: any) {
-      console.error(err);
+      // ⚠️ PHASE 3 DEBUG LOG: Full error object on API failure
+      console.error("DEBUG: Submission failed. Full Error Object:", err);
       setSubmitError(err?.response?.data?.message || "Failed to save plan");
     }
   };

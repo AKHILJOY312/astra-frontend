@@ -37,6 +37,7 @@ export default function PlanDetailModal({ plan, open, onClose }: Props) {
     setIsDeleting(true);
 
     try {
+      console.log(plan.id);
       await deletePlanUseCase.execute(plan.id);
       queryClient.invalidateQueries({ queryKey: ["plans"] });
       onClose();
