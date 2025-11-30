@@ -22,7 +22,7 @@ export default function ProjectDetail() {
   }, [projectId, projects, dispatch]);
 
   return (
-    <div className="flex-1 flex ml-20 lg:ml-80">
+    <div className="flex-1 flex ">
       <ChannelSidebar />
       <MessageArea />
     </div>
