@@ -1,7 +1,7 @@
 import type { Plan } from "@/domain/entities/plan/Plan";
 import type { PlanLimits } from "../use-cases";
 
-export interface PlanRepository {
+export interface IPlanRepository {
   getPlans(
     page: number,
     limit: number

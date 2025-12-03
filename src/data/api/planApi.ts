@@ -16,9 +16,9 @@ export const getCurrentPlan = () => apiCaller.get("/admin/plans/current");
 
 export const getLimits = () => apiCaller.get("/admin/plans/limits");
 
-export const getAvailablePlans = () => apiCaller.get("/plans");
+export const getAvailablePlans = () => apiCaller.get("/subscription/plans");
 
 export const upgradePlan = (planId: string) =>
-  apiCaller.post("/subscription/upgrade", { planId });
+  apiCaller.post("/subscription/razorpay/order", { planId });
 
 export const getPlanLimits = () => apiCaller.get("/subscription/limits");

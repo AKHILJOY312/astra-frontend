@@ -1,12 +1,12 @@
 // src/application/use-cases/project/GetProjectByIdUseCase.ts
-import type { ProjectRepository } from "../../repo/ProjectRepository";
+import type { IProjectRepository } from "../../repo/IProjectRepository";
 import { Project } from "../../../domain/entities/project/Project";
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/di/types";
 @injectable()
 export class GetProjectByIdUseCase {
   constructor(
-    @inject(TYPES.ProjectRepository) private projectRepo: ProjectRepository
+    @inject(TYPES.IProjectRepository) private projectRepo: IProjectRepository
   ) {}
 
   async execute(projectId: string): Promise<Project> {

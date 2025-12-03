@@ -1,6 +1,4 @@
-"use client"; // Remove this line if not using Next.js App Router
-
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Home,
   MessagesSquare,
@@ -13,6 +11,10 @@ import {
   Hash,
   Globe,
 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/presentation/redux/store/store";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "@/presentation/redux/thunk/authThunks";
 
 // Helper to clsx-like class merging
 const cn = (...inputs: (string | undefined | false)[]) =>
@@ -20,13 +22,34 @@ const cn = (...inputs: (string | undefined | false)[]) =>
 
 export default function SlackSidebar() {
   const [activeItem, setActiveItem] = useState("home");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
-  // Mock user
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function handleLogout() {
+    dispatch(logoutUser());
+    navigate("/login");
+  }
   const user = { name: "John Doe", image: "", initials: "JD" };
 
   return (
     <aside className="flex h-screen w-[70px] flex-col items-center gap-y-4 bg-[#381349] pb-2 pt-3">
-      {/* Workspace Switcher */}
+      {/* project Switcher */}
       <div className="group relative">
         <button className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#4F1B60] transition-all hover:rounded-xl hover:bg-[#6b2a85]">
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white text-xl font-bold text-[#381349]">
@@ -83,22 +106,69 @@ export default function SlackSidebar() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* User Button */}
-      <div className="group relative mb-2">
-        <button className="flex h-12 w-12 items-center justify-center rounded-lg transition-all hover:rounded-xl hover:bg-white/10">
+      {/* USER AVATAR + DROPDOWN – Fixed to stay inside screen */}
+      <div ref={dropdownRef} className="relative mb-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowDropdown((prev) => !prev);
+          }}
+          className="flex h-12 w-12 items-center justify-center rounded-lg transition-all hover:rounded-xl hover:bg-white/10"
+        >
           <div className="relative">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 text-white font-bold">
-              {user.initials || user.name[0]}
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 text-lg font-bold text-white">
+              {user.initials}
             </div>
             <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#381349] bg-green-500" />
           </div>
         </button>
 
-        {/* Tooltip */}
-        <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white opacity0 transition-opacity group-hover:opacity-100">
+        {/* Tooltip (still centered) */}
+        <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
           {user.name}
           <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-black" />
         </div>
+
+        {/* DROPDOWN – Now aligned to the RIGHT edge of the sidebar */}
+        {showDropdown && (
+          <div className="absolute bottom-full left-full mb-4 ml-2 w-64 -translate-y-2 rounded-lg bg-[#2f2f2f] shadow-2xl ring-1 ring-white/10 z-50">
+            <div className="p-3">
+              {/* User info */}
+              <div className="flex items-center gap-3 rounded-lg p-3 hover:bg-white/10">
+                <div className="relative flex-shrink-0">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 text-xl font-bold text-white">
+                    {user.initials}
+                  </div>
+                  <div className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-[#2f2f2f] bg-green-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-green-400">Online</p>
+                </div>
+              </div>
+
+              <div className="my-2 h-px bg-white/10" />
+
+              <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-white/90 transition hover:bg-white/10">
+                <Settings className="h-4 w-4" />
+                Profile & account
+              </button>
+
+              <button
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-white/90 transition hover:bg-white/10"
+                onClick={() => handleLogout()}
+              >
+                <LogOut className="h-4 w-4" />
+                Log out
+              </button>
+            </div>
+
+            {/* Arrow pointer – now points from the left */}
+            <div className="absolute bottom-0 left-0 -mb-2 ml-6 border-8 border-transparent border-t-[#2f2f2f]" />
+          </div>
+        )}
       </div>
     </aside>
   );

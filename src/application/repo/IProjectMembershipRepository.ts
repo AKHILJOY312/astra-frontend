@@ -2,7 +2,7 @@
 import { ProjectMembership } from "../../domain/entities/project/ProjectMembership";
 import type { AddMemberDTO } from "../use-cases/index";
 
-export interface ProjectMembershipRepository {
+export interface IProjectMembershipRepository {
   addMember(
     projectId: string,
     email: string,

@@ -4,6 +4,7 @@ import UpgradePlanModal from "../common/UpgradePlanModal";
 import { PlanLimitBanner } from "../common/PlanLimitBanner";
 import InviteMemberModal from "../common/InviteMemberModal";
 import Header from "../workspace/Header";
+import CreateProjectModal from "../common/CreateProjectModal";
 export default function UserLayout({
   children,
 }: {
@@ -32,6 +33,7 @@ export default function UserLayout({
       </div>
 
       {/* Your existing global modals & banners */}
+      <CreateProjectModal></CreateProjectModal>
       <UpgradePlanModal />
       <PlanLimitBanner />
       <InviteMemberModal />

@@ -6,7 +6,7 @@ import { loginUser } from "@/presentation/redux/thunk/authThunks";
 import type { AppDispatch, RootState } from "@/presentation/redux/store/store";
 import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { loginSchema } from "@/presentation/yup/loginSchema";
+import { loginSchema } from "@/presentation/yup/AuthSchema";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);

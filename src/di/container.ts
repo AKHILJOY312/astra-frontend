@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { Container } from "inversify";
 import { TYPES } from "./types";
 
-import type { AuthRepository } from "../application/repo/AuthRepository";
+import type { IAuthRepository } from "../application/repo/IAuthRepository";
 import { AuthRepositoryImpl } from "../data/repo/AuthRepositoryImpl";
 import { PlanRepositoryImpl } from "@/data/repo/PlanRepositoryImpl";
 
@@ -23,12 +23,13 @@ import {
   DeletePlanUseCase,
   GetCurrentPlanUseCase,
   GetPlanLimitsUseCase,
+  GetAvailablePlansUseCase,
 } from "@/application/use-cases/plan";
-import type { ProjectRepository } from "@/application/repo/ProjectRepository";
+import type { IProjectRepository } from "@/application/repo/IProjectRepository";
 import { ProjectRepositoryImpl } from "@/data/repo/ProjectRepositoryImpl";
-import type { ProjectMembershipRepository } from "@/application/repo/ProjectMembershipRepository";
+import type { IProjectMembershipRepository } from "@/application/repo/IProjectMembershipRepository";
 import { ProjectMembershipRepositoryImpl } from "@/data/repo/ProjectMembershipRepositoryImpl";
-import type { ChannelRepository } from "@/application/repo/ChannelRepository";
+import type { IChannelRepository } from "@/application/repo/IChannelRepository";
 import { ChannelRepositoryImpl } from "@/data/repo/ChannelRepositoryImpl";
 import {
   AddMemberUseCase,
@@ -40,32 +41,41 @@ import {
 } from "@/application/use-cases";
 import { CreateChannelUseCase } from "@/application/use-cases/channel/CreateChannelUseCase";
 import { UpgradePlanUseCase } from "@/application/use-cases/upgradeplan/UpgradePlanUseCase";
+import { CreateRazorpayOrderUseCase } from "@/application/use-cases/upgradeplan/CreateRazorpayOrderUseCase";
+import { VerifyPaymentUseCase } from "@/application/use-cases/upgradeplan/VerifyPaymentUseCase";
+import type { IRazorpayService } from "@/application/services/IRazorpayService";
+import { RazorpayServiceImpl } from "@/data/repo/RazorpayServiceImpl";
+import type { IUserSubscriptionRepository } from "@/application/repo/IUserSubscriptionRepository";
+import { UserSubscriptionRepositoryImpl } from "@/data/repo/UserSubscriptionRepositoryImpl";
 
 const container = new Container();
 
 // ───── Repository ───────────────────────────────────────
 container
-  .bind<AuthRepository>(TYPES.AuthRepository) // ← generic = interface type
+  .bind<IAuthRepository>(TYPES.IAuthRepository) // ← generic = interface type
   .to(AuthRepositoryImpl)
   .inSingletonScope();
 
-container.bind(TYPES.PlanRepository).to(PlanRepositoryImpl).inSingletonScope();
+container.bind(TYPES.IPlanRepository).to(PlanRepositoryImpl).inSingletonScope();
 
 container
-  .bind<ProjectRepository>(TYPES.ProjectRepository)
+  .bind<IProjectRepository>(TYPES.IProjectRepository)
   .to(ProjectRepositoryImpl)
   .inSingletonScope();
 
 container
-  .bind<ProjectMembershipRepository>(TYPES.ProjectMembershipRepository)
+  .bind<IProjectMembershipRepository>(TYPES.IProjectMembershipRepository)
   .to(ProjectMembershipRepositoryImpl)
   .inSingletonScope();
 
 container
-  .bind<ChannelRepository>(TYPES.ChannelRepository)
+  .bind<IChannelRepository>(TYPES.IChannelRepository)
   .to(ChannelRepositoryImpl)
   .inSingletonScope();
 
+container
+  .bind<IUserSubscriptionRepository>(TYPES.IUserSubscriptionRepository)
+  .to(UserSubscriptionRepositoryImpl);
 // ───── Use‑cases ────────────────────────────────────────
 // Auth use cases
 container
@@ -123,9 +133,22 @@ container
   .to(GetPlanLimitsUseCase)
   .inTransientScope();
 container
+  .bind<GetAvailablePlansUseCase>(TYPES.GetAvailablePlansUseCase)
+  .to(GetAvailablePlansUseCase)
+  .inTransientScope();
+container
   .bind<UpgradePlanUseCase>(TYPES.UpgradePlanUseCase)
   .to(UpgradePlanUseCase);
-// container.bind(GetAvailablePlansUseCase).toSelf().inTransientScope();
+container
+  .bind<CreateRazorpayOrderUseCase>(TYPES.CreateRazorpayOrderUseCase)
+  .to(CreateRazorpayOrderUseCase);
+container
+  .bind<VerifyPaymentUseCase>(TYPES.VerifyPaymentUseCase)
+  .to(VerifyPaymentUseCase);
+
+container
+  .bind<IRazorpayService>(TYPES.IRazorpayService)
+  .to(RazorpayServiceImpl);
 
 // Project use cases
 container

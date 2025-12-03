@@ -50,7 +50,7 @@ export default function CreateProjectModal() {
         }
       }
 
-      // 🔥 Trigger upgrade modal
+      // Trigger upgrade modal
       if (upgradeRequired) {
         dispatch(openUpgradePlanModal());
       }
@@ -73,7 +73,7 @@ export default function CreateProjectModal() {
             onClick={() => dispatch(closeCreateProjectModal())}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-black" />
           </button>
         </div>
 
@@ -87,7 +87,7 @@ export default function CreateProjectModal() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Marketing Campaign 2025"
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="w-full text-black px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               autoFocus
             />
           </div>
@@ -101,7 +101,7 @@ export default function CreateProjectModal() {
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="What is this project about?"
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none transition-all"
+              className="w-full px-4 py-3 text-black rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none transition-all"
             />
           </div>
 
@@ -115,7 +115,7 @@ export default function CreateProjectModal() {
             <button
               type="button"
               onClick={() => dispatch(closeCreateProjectModal())}
-              className="flex-1 py-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors"
+              className="flex-1 py-3 text-black rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors"
             >
               Cancel
             </button>

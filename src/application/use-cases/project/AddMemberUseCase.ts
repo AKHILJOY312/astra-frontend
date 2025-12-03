@@ -1,6 +1,6 @@
 // src/application/use-cases/project/AddMemberUseCase.ts
 
-import type { ProjectMembershipRepository } from "@/application/repo/ProjectMembershipRepository";
+import type { IProjectMembershipRepository } from "@/application/repo/IProjectMembershipRepository";
 import { TYPES } from "@/di/types";
 import type { ProjectMembership } from "@/domain/types/index.";
 import { inject, injectable } from "inversify";
@@ -13,8 +13,8 @@ export interface AddMemberDTO {
 @injectable()
 export class AddMemberUseCase {
   constructor(
-    @inject(TYPES.ProjectMembershipRepository)
-    private membershipRepo: ProjectMembershipRepository
+    @inject(TYPES.IProjectMembershipRepository)
+    private membershipRepo: IProjectMembershipRepository
   ) {}
 
   async execute(dto: AddMemberDTO): Promise<ProjectMembership> {

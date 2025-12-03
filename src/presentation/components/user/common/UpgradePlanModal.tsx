@@ -67,7 +67,7 @@ export default function UpgradePlanModal() {
             onClick={() => dispatch(closeUpgradePlanModal())}
             className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
           >
-            <X className="w-6 h-6" />
+            <X className="w-6 h-6 text-black" />
           </button>
         </div>
 

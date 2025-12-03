@@ -1,46 +1,42 @@
-import type React from "react";
-import { Link } from "react-router";
+// src/components/ui/DropdownItem.tsx
+import { Link } from "react-router-dom";
 
 interface DropdownItemProps {
-  tag?: "a" | "button";
   to?: string;
   onClick?: () => void;
-  onItemClick?: () => void;
-  baseClassName?: string;
+  icon?: React.ReactNode;
   className?: string;
   children: React.ReactNode;
 }
 
 export const DropdownItem: React.FC<DropdownItemProps> = ({
-  tag = "button",
   to,
   onClick,
-  onItemClick,
-  baseClassName = "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+  icon,
   className = "",
   children,
 }) => {
-  const combinedClasses = `${baseClassName} ${className}`.trim();
+  const baseClasses =
+    "flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition";
 
-  const handleClick = (event: React.MouseEvent) => {
-    if (tag === "button") {
-      event.preventDefault();
-    }
-    if (onClick) onClick();
-    if (onItemClick) onItemClick();
-  };
+  const content = (
+    <>
+      {icon && <span className="w-4 h-4">{icon}</span>}
+      <span>{children}</span>
+    </>
+  );
 
-  if (tag === "a" && to) {
+  if (to) {
     return (
-      <Link to={to} className={combinedClasses} onClick={handleClick}>
-        {children}
+      <Link to={to} className={`${baseClasses} ${className}`} onClick={onClick}>
+        {content}
       </Link>
     );
   }
 
   return (
-    <button onClick={handleClick} className={combinedClasses}>
-      {children}
+    <button onClick={onClick} className={`${baseClasses} ${className}`}>
+      {content}
     </button>
   );
 };

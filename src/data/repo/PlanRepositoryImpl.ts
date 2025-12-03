@@ -1,9 +1,9 @@
 import type { Plan } from "@/domain/entities/plan/Plan";
-import type { PlanRepository } from "@/application/repo/PlanRepository";
+import type { IPlanRepository } from "@/application/repo/IPlanRepository";
 import * as planApi from "../api/planApi";
 import { planResponseToEntity } from "../mappers/planMapper";
 
-export class PlanRepositoryImpl implements PlanRepository {
+export class PlanRepositoryImpl implements IPlanRepository {
   async getPlans(page: number, limit: number) {
     const { data } = await planApi.getPlans(page, limit);
 

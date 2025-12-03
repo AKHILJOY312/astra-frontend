@@ -1,52 +1,36 @@
+import useGoBack from "@/presentation/hooks/useGoBack";
 import {
   Search,
   HelpCircle,
   Bell,
-  ChevronDown,
   Mic,
   Headphones,
-  Settings,
-  Hash,
-  MoreVertical,
-  Users,
+  ArrowLeft,
+  Sparkles,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const cn = (...inputs: (string | undefined | false)[]) =>
   inputs.filter(Boolean).join(" ");
 
 export default function SlackHeader() {
-  const currentChannel = {
-    name: "general",
-    isPrivate: false,
-    members: 42,
-  };
-
+  let navigate = useNavigate();
+  console.log;
+  function handleupGrade() {
+    navigate("/upgrade");
+  }
+  const goBack = useGoBack();
   const userStatus = "online"; // online, away, dnd
 
   return (
-    <header className="fixed top-0 left-[70px] right-0 z-40 flex h-12 items-center border-b border-white/10 bg-[#4F1B60] px-4 text-white">
-      {/* Left: Channel Info */}
-      <div className="flex flex-1 items-center gap-3">
-        <button className="flex items-center gap-2 hover:bg-white/10 rounded-md px-2 py-1.5 transition">
-          <Hash className="h-5 w-5" />
-          <span className="text-lg font-semibold">{currentChannel.name}</span>
-          <ChevronDown className="h-4 w-4 opacity-70" />
-        </button>
-
-        {/* Channel Details (hover to see more) */}
-        <div className="hidden items-center gap-4 text-sm opacity-70 md:flex">
-          <span className="flex items-center gap-1">
-            <Users className="h-4 w-4" />
-            {currentChannel.members}
-          </span>
-          <span>|</span>
-          <span>
-            Welcome to the team! This is the very beginning of the #
-            {currentChannel.name} channel.
-          </span>
-        </div>
-      </div>
-
+    <header className="fixed top-0 left-[70px] right-0 z-40 flex h-12 justify-end  border-b border-white/10 bg-[#4F1B60] px-4 text-white ">
+      <button
+        onClick={goBack}
+        className="flex items-center gap-2 rounded-lg px-3 py-1.5 hover:bg-white/10 transition"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span className="text-sm font-medium">Back</span>
+      </button>
       {/* Right: Actions */}
       <div className="flex items-center gap-2">
         {/* Search */}
@@ -69,7 +53,15 @@ export default function SlackHeader() {
           <Bell className="h-5 w-5" />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500" />
         </button>
-
+        <button
+          onClick={() => {
+            handleupGrade();
+          }}
+          className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-4 py-1.5 text-sm font-semibold text-black hover:from-yellow-400 hover:to-amber-400 transition shadow-md"
+        >
+          <Sparkles className="h-4 w-4" />
+          Upgrade
+        </button>
         {/* Voice / Presence */}
         <div className="flex items-center gap-1">
           <button
@@ -87,7 +79,7 @@ export default function SlackHeader() {
         </div>
 
         {/* User Menu */}
-        <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-white/10 transition">
+        {/* <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-white/10 transition">
           <div className="relative">
             <div className="h-7 w-7 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-sm font-bold">
               JD
@@ -102,7 +94,7 @@ export default function SlackHeader() {
             />
           </div>
           <ChevronDown className="h-4 w-4 opacity-70" />
-        </button>
+        </button> */}
       </div>
     </header>
   );

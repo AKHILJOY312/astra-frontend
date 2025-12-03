@@ -1,5 +1,5 @@
 // src/application/use-cases/plan/CreatePlanUseCase.ts
-import type { PlanRepository } from "@/application/repo/PlanRepository";
+import type { IPlanRepository } from "@/application/repo/IPlanRepository";
 import { TYPES } from "@/di/types";
 import type { Plan } from "@/domain/entities/plan/Plan";
 import { inject, injectable } from "inversify";
@@ -19,8 +19,8 @@ export interface CreatePlanInput {
 @injectable()
 export class CreatePlanUseCase {
   constructor(
-    @inject(TYPES.PlanRepository)
-    private repository: PlanRepository
+    @inject(TYPES.IPlanRepository)
+    private repository: IPlanRepository
   ) {}
 
   async execute(input: CreatePlanInput): Promise<Plan> {

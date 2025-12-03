@@ -1,4 +1,4 @@
-import type { PlanRepository } from "@/application/repo/PlanRepository";
+import type { IPlanRepository } from "@/application/repo/IPlanRepository";
 import { TYPES } from "@/di/types";
 import { inject, injectable } from "inversify";
 
@@ -10,7 +10,9 @@ export interface PlanLimits {
 }
 @injectable()
 export class GetPlanLimitsUseCase {
-  constructor(@inject(TYPES.PlanRepository) private planRepo: PlanRepository) {}
+  constructor(
+    @inject(TYPES.IPlanRepository) private planRepo: IPlanRepository
+  ) {}
 
   async execute(): Promise<PlanLimits> {
     return await this.planRepo.getLimits();

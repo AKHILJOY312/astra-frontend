@@ -1,97 +1,106 @@
-// src/presentation/hooks/useRazorpay.ts
 import { container } from "@/di/container";
 import { TYPES } from "@/di/types";
-import { UpgradePlanUseCase } from "@/application/use-cases/upgradeplan/UpgradePlanUseCase";
+import { CreateRazorpayOrderUseCase } from "@/application/use-cases/upgradeplan/CreateRazorpayOrderUseCase";
+import { VerifyPaymentUseCase } from "@/application/use-cases/upgradeplan/VerifyPaymentUseCase";
 
-const upgradeUC = container.get<UpgradePlanUseCase>(TYPES.UpgradePlanUseCase);
+import { useState } from "react";
+export const loadRazorpay = () => {
+  return new Promise<boolean>((resolve) => {
+    if ((window as any).Razorpay) return resolve(true);
 
-interface RazorpayOrder {
-  id: string;
-  amount: number;
-  currency: "INR";
-}
-
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
 export const useRazorpay = () => {
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
+  const [modalOpen, setModalOpen] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<
+    "success" | "failed" | null
+  >(null);
+  const [paymentDetails, setPaymentDetails] = useState<any>({});
+
+  const createOrder = container.get<CreateRazorpayOrderUseCase>(
+    TYPES.CreateRazorpayOrderUseCase
+  );
+
+  const verifyPayment = container.get<VerifyPaymentUseCase>(
+    TYPES.VerifyPaymentUseCase
+  );
 
   const initiatePayment = async (planId: string) => {
-    const loaded = await loadRazorpayScript();
-    if (!loaded) throw new Error("Razorpay SDK failed to load");
-
-    // Step 1: Create order via your backend
-    const orderResponse = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/subscription/razorpay/order`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-        body: JSON.stringify({ planId }),
+    try {
+      const isLoaded = await loadRazorpay();
+      if (!isLoaded) {
+        alert("Failed to load Razorpay SDK");
+        return;
       }
-    );
 
-    const order: RazorpayOrder = await orderResponse.json();
+      if (!(window as any).Razorpay) {
+        alert("Razorpay SDK did not initialize");
+        return;
+      }
 
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY!,
-      amount: order.amount,
-      currency: order.currency,
-      name: "Astra Workspace",
-      description: `Upgrade to ${planId.replace("_", " ").toUpperCase()}`,
-      order_id: order.id,
-      handler: async (response: any) => {
-        try {
-          // Step 2: Verify payment
-          await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/subscription/razorpay/verify`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            }
-          );
+      const order = await createOrder.execute(planId);
 
-          // Step 3: Upgrade plan via Clean Architecture
-          await upgradeUC.execute({ planId });
-          window.location.href = "/payment/success";
-        } catch (err) {
-          window.location.href = "/payment/failed";
-        }
-      },
-      prefill: {
-        name: "John Doe",
-        email: "john@example.com",
-      },
-      theme: {
-        color: "#3b82f6",
-      },
-    };
+      const options = {
+        key: order.keyId,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Astra",
+        description: `Upgrade to ${order.planName}`,
+        order_id: order.orderId,
+        handler: async (response: any) => {
+          try {
+            await verifyPayment.execute({
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+            setPaymentDetails({
+              planName: order.planName,
+              amount: order.amount,
+              paymentId: response.razorpay_payment_id,
+            });
+            setPaymentStatus("success");
+            setModalOpen(true);
+          } catch (err: any) {
+            setPaymentStatus("failed");
+            setPaymentDetails({
+              errorMessage: err.message || "Verification failed",
+            });
+            setModalOpen(true);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setPaymentStatus("failed");
+            setPaymentDetails({ errorMessage: "Payment cancelled" });
+            setModalOpen(true);
+          },
+        },
+        theme: {
+          color: "#7c3aed",
+        },
+      };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (error: any) {
+      setPaymentStatus("failed");
+      setPaymentDetails({ errorMessage: error.message });
+      setModalOpen(true);
+    }
   };
 
-  return { initiatePayment };
+  return {
+    initiatePayment,
+    modalOpen,
+    setModalOpen,
+    paymentStatus,
+    paymentDetails,
+  };
 };

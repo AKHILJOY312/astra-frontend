@@ -1,11 +1,11 @@
-import type { PlanRepository } from "@/application/repo/PlanRepository";
+import type { IPlanRepository } from "@/application/repo/IPlanRepository";
 import { TYPES } from "@/di/types";
 import { inject, injectable } from "inversify";
 @injectable()
 export class DeletePlanUseCase {
   constructor(
-    @inject(TYPES.PlanRepository)
-    private repository: PlanRepository
+    @inject(TYPES.IPlanRepository)
+    private repository: IPlanRepository
   ) {}
 
   async execute(id: string): Promise<void> {

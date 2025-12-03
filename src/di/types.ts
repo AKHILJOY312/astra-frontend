@@ -1,19 +1,12 @@
 // src/di/types.ts
 export const TYPES = {
-  AuthRepository: Symbol.for("AuthRepository"),
-  PlanRepository: Symbol.for("PlanRepository"),
-  ProjectRepository: Symbol.for("ProjectRepository"),
-  ProjectMembershipRepository: Symbol.for("ProjectMembershipRepository"),
-  ChannelRepository: Symbol.for("ChannelRepository"),
-
-  //   // Use Cases
-  //   LoginUseCase: Symbol.for("LoginUseCase"),
-  //   RegisterUseCase: Symbol.for("RegisterUseCase"),
-  //   LoadUserUseCase: Symbol.for("LoadUserUseCase"),
-  //   LogoutUseCase: Symbol.for("LogoutUseCase"),
-  //   ForgotPasswordUseCase: Symbol.for("ForgotPasswordUseCase"),
-  //   ResetPasswordUseCase: Symbol.for("ResetPasswordUseCase"),
-  //   VerifyEmailUseCase: Symbol.for("VerifyEmailUseCase"),
+  IAuthRepository: Symbol.for("IAuthRepository"),
+  IPlanRepository: Symbol.for("IPlanRepository"),
+  IProjectRepository: Symbol.for("IProjectRepository"),
+  IProjectMembershipRepository: Symbol.for("IProjectMembershipRepository"),
+  IChannelRepository: Symbol.for("IChannelRepository"),
+  IUserSubscriptionRepository: Symbol.for("IUserSubscriptionRepository"),
+  IRazorpayService: Symbol.for("IRazorpayService"),
 
   // Auth use cases
   LoginUseCase: Symbol.for("LoginUseCase"),
@@ -41,24 +34,12 @@ export const TYPES = {
   DeletePlanUseCase: Symbol.for("DeletePlanUseCase"),
   GetPlanLimitsUseCase: Symbol.for("GetPlanLimitsUseCase"),
   UpgradePlanUseCase: Symbol.for("UpgradePlanUseCase"),
+  GetAvailablePlansUseCase: Symbol.for("GetAvailablePlansUseCase"),
 
   // Channels
   CreateChannelUseCase: Symbol.for("CreateChannelUseCase"),
   ListChannelsUseCase: Symbol.for("ListChannelsUseCase"),
 
-  // CreateProjectUseCase: Symbol.for("CreateProjectUseCase"),
-  // ListUserProjectsUseCase: Symbol.for("ListUserProjectsUseCase"),
-  //   GetProjectByIdUseCase: Symbol.for("GetProjectByIdUseCase"),
-
-  // AddMemberUseCase: Symbol.for("AddMemberUseCase"),
-  //   GetProjectMembersUseCase: Symbol.for("GetProjectMembersUseCase"),
-
-  // GetCurrentPlanUseCase: Symbol.for("GetCurrentPlanUseCase"),
-  //   GetAvailablePlansUseCase: Symbol.for("GetAvailablePlansUseCase"),
-  //   UpgradePlanUseCase: Symbol.for("UpgradePlanUseCase"),
-  // GetPlanLimitsUseCase: Symbol.for("GetPlanLimitsUseCase"),
-
-  // CreateChannelUseCase: Symbol.for("CreateChannelUseCase"),
-  //   ListChannelsUseCase: Symbol.for("ListChannelsUseCase"),
-  //   DeleteChannelUseCase: Symbol.for("DeleteChannelUseCase"),
+  CreateRazorpayOrderUseCase: Symbol.for("CreateRazorpayOrderUseCase"),
+  VerifyPaymentUseCase: Symbol.for("VerifyPaymentUseCase"),
 } as const;

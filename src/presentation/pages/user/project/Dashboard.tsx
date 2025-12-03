@@ -13,7 +13,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="flex-1 ml-20 lg:ml-80 transition-all duration-300">
+      <div className="flex-1 mt-5 ml-3 lg:ml-3 transition-all duration-300">
         <div className="p-8 max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">

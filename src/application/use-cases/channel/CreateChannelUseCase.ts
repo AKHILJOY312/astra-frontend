@@ -1,16 +1,16 @@
 // src/application/use-cases/channel/CreateChannelUseCase.ts
 import type {
-  ChannelRepository,
+  IChannelRepository,
   CreateChannelDTO,
-} from "../../repo/ChannelRepository";
+} from "../../repo/IChannelRepository";
 import { Channel } from "../../../domain/entities/channel/Channel";
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/di/types";
 @injectable()
 export class CreateChannelUseCase {
   constructor(
-    @inject(TYPES.ChannelRepository)
-    private channelRepo: ChannelRepository
+    @inject(TYPES.IChannelRepository)
+    private channelRepo: IChannelRepository
   ) {}
 
   async execute(dto: CreateChannelDTO): Promise<Channel> {

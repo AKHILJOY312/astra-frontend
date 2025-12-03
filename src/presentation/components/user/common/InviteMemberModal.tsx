@@ -43,7 +43,12 @@ export default function InviteMemberModal() {
         setSuccess(false);
       }, 1500);
     } catch (err: any) {
-      setError(err.message || "Failed to send invite");
+      const backendError =
+        err?.response?.data?.error ||
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to send invite";
+      setError(backendError);
     } finally {
       setLoading(false);
     }
@@ -52,7 +57,7 @@ export default function InviteMemberModal() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 text-black bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">

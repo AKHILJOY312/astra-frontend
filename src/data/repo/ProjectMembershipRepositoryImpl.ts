@@ -1,10 +1,10 @@
 // src/data/repo/ProjectMembershipRepositoryImpl.ts
-import type { ProjectMembershipRepository } from "../../application/repo/ProjectMembershipRepository";
+import type { IProjectMembershipRepository } from "../../application/repo/IProjectMembershipRepository";
 import { ProjectMembership } from "../../domain/entities/project/ProjectMembership";
 import * as membershipApi from "../api/membershipApi";
 
 export class ProjectMembershipRepositoryImpl
-  implements ProjectMembershipRepository
+  implements IProjectMembershipRepository
 {
   async addMember(
     projectId: string,

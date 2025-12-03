@@ -7,7 +7,7 @@ export interface CreateChannelDTO {
   isPrivate?: boolean;
 }
 
-export interface ChannelRepository {
+export interface IChannelRepository {
   create(dto: CreateChannelDTO): Promise<Channel>;
   getByProject(projectId: string): Promise<Channel[]>;
   getById(channelId: string): Promise<Channel | null>;

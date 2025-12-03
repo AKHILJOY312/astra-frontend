@@ -9,14 +9,46 @@ import {
   Search,
   Settings,
   Circle,
+  Info,
+  Calendar,
+  Users,
 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { openInviteMemberModal } from "@/presentation/redux/slice/uiSlice";
+import { useProjects } from "@/presentation/hooks/useProjects";
+import { useParams } from "react-router-dom";
+import { Dropdown } from "../../ui/dropdown/Dropdown";
+import { DropdownItem } from "../../ui/dropdown/DropdownItem";
 
 export default function ChannelSidebar() {
   const [channelsCollapsed, setChannelsCollapsed] = useState(false);
   const [dmsCollapsed, setDmsCollapsed] = useState(false);
   const [activeChannel, setActiveChannel] = useState("1");
   const [searchQuery, setSearchQuery] = useState("");
+  const dispatch = useDispatch();
+  const { projectId } = useParams<{ projectId: string }>();
+  const { projects, loading } = useProjects();
+  const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
+  const currentProject = projects.find((p) => p.id === projectId);
 
+  const projectName = currentProject?.projectName || "Loading...";
+  const description = currentProject?.description || "No description";
+  const createdAt = currentProject?.createdAt
+    ? new Date(currentProject.createdAt).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "—";
+  const fallbackName = projectName.slice(0, 2).toUpperCase();
+
+  // For initials in the top bar
+  const initials = projectName
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
   const channels = [
     { id: "1", name: "general", private: false, unread: true },
     { id: "2", name: "random", private: false },
@@ -35,17 +67,90 @@ export default function ChannelSidebar() {
   ];
 
   return (
-    <div className="w-60 bg-[#1A1D21] text-gray-300 flex flex-col h-screen">
+    <div className="w-60 bg-[#1A1D21] text-gray-300 flex flex-col h-screen min-h-0 pt-12">
       {/* Fixed Top Header */}
-      <div className="h-12 flex items-center justify-between px-3 border-b border-white/10 shrink-0">
-        <button className="flex items-center gap-2 hover:bg-white/10 rounded-md px-2 py-1 transition">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
-            PH
+      <button
+        onClick={() => setIsProjectMenuOpen(!isProjectMenuOpen)}
+        className="dropdown-toggle flex items-center gap-2 hover:bg-white/10 rounded-md px-2 py-1.5 transition group"
+      >
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
+          {initials}
+        </div>
+        <span className="font-semibold text-white truncate max-w-32">
+          {projectName}
+        </span>
+        <ChevronDown
+          className={`w-4 h-4 transition-transform duration-200 ${
+            isProjectMenuOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {/* Reusable Dropdown */}
+      <Dropdown
+        isOpen={isProjectMenuOpen}
+        onClose={() => setIsProjectMenuOpen(false)}
+        align="left"
+      >
+        <div className="w-60">
+          <div className="p-5 border-b border-white/10">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center justify-center font-bold text-white text-xl">
+                {initials}
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">
+                  {projectName}
+                </h3>
+                <p className="text-xs text-gray-400">Workspace</p>
+              </div>
+            </div>
           </div>
-          <span className="font-semibold text-white">Project Hub</span>
-          <ChevronDown className="w-4 h-4" />
-        </button>
-      </div>
+
+          <div className="p-5 space-y-4 text-sm">
+            <div className="flex gap-3">
+              <Info className="w-4 h-4 text-gray-400 mt-0.5" />
+              <div>
+                <p className="text-gray-500 text-xs uppercase tracking-wider">
+                  Description
+                </p>
+                <p className="text-white mt-1">{description}</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Calendar className="w-4 h-4 text-gray-400" />
+              <div>
+                <p className="text-gray-500 text-xs uppercase tracking-wider">
+                  Created
+                </p>
+                <p className="text-white">{createdAt}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 p-3 space-y-1">
+            <DropdownItem
+              icon={<Users className="w-4 h-4" />}
+              onClick={() => {
+                dispatch(openInviteMemberModal());
+                setIsProjectMenuOpen(false);
+              }}
+            >
+              View Members
+            </DropdownItem>
+            <DropdownItem icon={<Settings className="w-4 h-4" />}>
+              Project Settings
+            </DropdownItem>
+          </div>
+        </div>
+      </Dropdown>
+
+      <button
+        onClick={() => dispatch(openInviteMemberModal())}
+        className="p-1.5 hover:bg-white/10 rounded transition"
+      >
+        <Plus className="w-4 h-4" />
+      </button>
 
       {/* Scrollable Middle Area - THIS IS THE KEY FIX */}
       <div className="flex-1 overflow-y-auto min-h-0">
@@ -162,7 +267,7 @@ export default function ChannelSidebar() {
       </div>
 
       {/* Fixed Bottom User Bar - Always Visible */}
-      {/* <div className="border-t border-white/10 p-3 shrink-0">
+      <div className="border-t border-white/10 p-3 shrink-0">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white font-bold text-sm">
@@ -178,7 +283,7 @@ export default function ChannelSidebar() {
             <Settings className="w-4 h-4" />
           </button>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

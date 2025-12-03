@@ -1,11 +1,11 @@
 // src/data/repositories/AuthRepositoryImpl.ts
-import type { AuthRepository } from "../../application/repo/AuthRepository";
+import type { IAuthRepository } from "../../application/repo/IAuthRepository";
 import type { User } from "../../domain/entities/user/User";
 import * as authApi from "../api/authApi";
 import { userResponseToEntity } from "../mappers/userMapper";
 import type { VerifyEmailResponse } from "@/domain/types/auth.types";
 
-export class AuthRepositoryImpl implements AuthRepository {
+export class AuthRepositoryImpl implements IAuthRepository {
   async login(credentials: {
     email: string;
     password: string;

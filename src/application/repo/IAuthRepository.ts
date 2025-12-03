@@ -2,7 +2,7 @@
 import type { User } from "../../domain/entities/user/User";
 import type { VerifyEmailResponse } from "@/domain/types/auth.types";
 
-export interface AuthRepository {
+export interface IAuthRepository {
   login(credentials: {
     email: string;
     password: string;

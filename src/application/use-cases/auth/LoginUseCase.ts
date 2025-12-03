@@ -1,13 +1,13 @@
 // src/domain/useCases/auth/LoginUseCase.ts
 import { injectable, inject } from "inversify";
-import type { AuthRepository } from "../../../application/repo/AuthRepository";
+import type { IAuthRepository } from "../../repo/IAuthRepository";
 import type { User } from "../../../domain/entities/user/User";
 import { TYPES } from "@/di/types"; // <-- Import the identifier
 
 @injectable()
 export class LoginUseCase {
   constructor(
-    @inject(TYPES.AuthRepository) private readonly repo: AuthRepository
+    @inject(TYPES.IAuthRepository) private readonly repo: IAuthRepository
   ) {}
 
   async execute(credentials: {

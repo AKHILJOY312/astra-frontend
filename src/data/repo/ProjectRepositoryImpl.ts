@@ -1,9 +1,9 @@
 // src/data/repo/ProjectRepositoryImpl.ts
-import type { ProjectRepository } from "../../application/repo/ProjectRepository";
+import type { IProjectRepository } from "../../application/repo/IProjectRepository";
 import * as projectApi from "../api/projectApi";
 import { projectResponseToEntity } from "../mappers/projectMapper";
 
-export class ProjectRepositoryImpl implements ProjectRepository {
+export class ProjectRepositoryImpl implements IProjectRepository {
   async create(dto: {
     projectName: string;
     description?: string;

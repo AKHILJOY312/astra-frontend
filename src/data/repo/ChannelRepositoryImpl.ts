@@ -1,12 +1,12 @@
 import type {
-  ChannelRepository,
+  IChannelRepository,
   CreateChannelDTO,
-} from "../../application/repo/ChannelRepository";
+} from "../../application/repo/IChannelRepository";
 import apiCaller from "../../lib/apicaller";
 import { channelResponseToEntity } from "../mappers/channelMapper";
 import type { Channel } from "@/domain/entities/channel/Channel";
 
-export class ChannelRepositoryImpl implements ChannelRepository {
+export class ChannelRepositoryImpl implements IChannelRepository {
   async create(dto: CreateChannelDTO): Promise<Channel> {
     const { data } = await apiCaller.post("/channels", dto);
     return channelResponseToEntity(data.channel || data);

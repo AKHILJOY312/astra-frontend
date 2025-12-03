@@ -1,14 +1,16 @@
 // src/application/use-cases/plan/UpgradePlanUseCase.ts
 import { inject, injectable } from "inversify";
-import type { PlanRepository } from "../../repo/PlanRepository";
+import type { IPlanRepository } from "../../repo/IPlanRepository";
 import { TYPES } from "@/di/types";
 
 export interface UpgradePlanDTO {
-  planId: string; // e.g. "pro_monthly" | "team_yearly"
+  planId: string;
 }
 @injectable()
 export class UpgradePlanUseCase {
-  constructor(@inject(TYPES.PlanRepository) private planRepo: PlanRepository) {}
+  constructor(
+    @inject(TYPES.IPlanRepository) private planRepo: IPlanRepository
+  ) {}
 
   async execute(dto: UpgradePlanDTO): Promise<void> {
     const { planId } = dto;

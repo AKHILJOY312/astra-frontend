@@ -68,7 +68,7 @@ export const userRoutes: RouteItem[] = [
   {
     path: "/upgrade",
     component: "UpgradePlanPage",
-    layout: "main",
+    layout: "app",
     protected: true,
     filePath: "user/upgrade/",
   },
