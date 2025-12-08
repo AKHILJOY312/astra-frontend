@@ -28,9 +28,17 @@ const messageSlice = createSlice({
     clearTextMessages(state) {
       state.list = [];
     },
+    prependOldMessages(state, action) {
+      state.list = [...action.payload, ...state.list];
+    },
   },
 });
 
-export const { setActiveChannel, setMessages, addMessage, clearTextMessages } =
-  messageSlice.actions;
+export const {
+  setActiveChannel,
+  setMessages,
+  addMessage,
+  clearTextMessages,
+  prependOldMessages,
+} = messageSlice.actions;
 export default messageSlice.reducer;
