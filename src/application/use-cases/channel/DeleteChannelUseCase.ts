@@ -9,7 +9,7 @@ export class DeleteChannelUseCase {
     private channelRepo: IChannelRepository
   ) {}
 
-  async execute(channelId: string): Promise<void> {
-    await this.channelRepo.delete(channelId);
+  async execute(projectId: string, channelId: string): Promise<void> {
+    await this.channelRepo.delete(projectId, channelId);
   }
 }

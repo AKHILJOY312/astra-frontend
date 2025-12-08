@@ -6,11 +6,14 @@ import { useDispatch } from "react-redux";
 import { logoutUser } from "@/presentation/redux/thunk/authThunks";
 import type { AppDispatch } from "@/presentation/redux/store/store";
 import { LogOut } from "lucide-react";
+import { useAuth } from "@/presentation/hooks/useAuth";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { user, isAuthenticated } = useAuth();
+  const firstName = user?.name?.split(" ")[0] || "";
 
   function handleLogout() {
     dispatch(logoutUser());
@@ -33,7 +36,9 @@ export default function UserDropdown() {
           <img src="/images/user/owner.jpg" alt="User" />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">Musharof</span>
+        <span className="block mr-1 font-medium text-theme-sm">
+          {firstName}
+        </span>
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
@@ -61,10 +66,10 @@ export default function UserDropdown() {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Musharof Chowdhury
+            {isAuthenticated ? user?.name : "Guest"}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            randomuser@pimjo.com
+            {user?.email}
           </span>
         </div>
 

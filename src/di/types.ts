@@ -39,6 +39,8 @@ export const TYPES = {
   // Channels
   CreateChannelUseCase: Symbol.for("CreateChannelUseCase"),
   ListChannelsUseCase: Symbol.for("ListChannelsUseCase"),
+  EditChannelUseCase: Symbol.for("EditChannelUseCase"),
+  DeleteChannelUseCase: Symbol.for("DeleteChannelUseCase"),
 
   CreateRazorpayOrderUseCase: Symbol.for("CreateRazorpayOrderUseCase"),
   VerifyPaymentUseCase: Symbol.for("VerifyPaymentUseCase"),

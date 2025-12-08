@@ -23,7 +23,7 @@ const createProjectUC = container.get<CreateProjectUseCase>(
 
 export const useProjects = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { projects, loading, error } = useSelector(
+  const { projects, loading, error, currentProject } = useSelector(
     (state: RootState) => state.project
   );
 
@@ -85,6 +85,7 @@ export const useProjects = () => {
     projects,
     loading,
     error,
+    currentProject,
     refreshProjects: loadProjects,
     createProject,
     clearError: () => dispatch(clearProjectError()),

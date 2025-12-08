@@ -5,12 +5,16 @@ import { persistReducer, persistStore } from "redux-persist";
 
 import authReducer from "../slice/authSlice";
 import projectReducer from "../slice/projectSlice";
+import channelReducer from "../slice/channelSlice";
 import uiReducer from "../slice/uiSlice";
+import messageReducer from "../slice/messageSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   project: projectReducer,
   ui: uiReducer,
+  channel: channelReducer,
+  messages: messageReducer,
 });
 
 // Type root reducer BEFORE wrapping with persistReducer

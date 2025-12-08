@@ -13,7 +13,7 @@ export class CreateChannelUseCase {
     private channelRepo: IChannelRepository
   ) {}
 
-  async execute(dto: CreateChannelDTO): Promise<Channel> {
-    return await this.channelRepo.create(dto);
+  async execute(projectId: string, dto: CreateChannelDTO): Promise<Channel> {
+    return await this.channelRepo.create(projectId, dto);
   }
 }

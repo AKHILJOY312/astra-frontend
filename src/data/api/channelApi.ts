@@ -1,15 +1,17 @@
-// src/data/api/channelApi.ts  // bonus – you’ll need it soon
 import api from "../../lib/apicaller";
+import type { EditChannelDTO } from "@/application/repo/IChannelRepository";
 
-export const createChannel = (payload: {
-  projectId: string;
-  channelName: string;
-  description?: string;
-  isPrivate?: boolean;
-}) => api.post("/channels", payload);
+export const createChannel = (projectId: string, payload: any) =>
+  api.post(`/projects/${projectId}/channels`, payload);
 
-export const getProjectChannels = (projectId: string) =>
+export const getChannels = (projectId: string) =>
   api.get(`/projects/${projectId}/channels`);
 
-export const deleteChannel = (channelId: string) =>
-  api.delete(`/channels/${channelId}`);
+export const editChannel = (
+  projectId: string,
+  channelId: string,
+  payload: EditChannelDTO
+) => api.patch(`/projects/${projectId}/channels/${channelId}`, payload);
+
+export const deleteChannel = (projectId: string, channelId: string) =>
+  api.delete(`/projects/${projectId}/channels/${channelId}`);

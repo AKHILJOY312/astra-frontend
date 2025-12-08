@@ -1,205 +1,191 @@
-// src/components/slack/MessageArea.tsx
-import { useState, useRef, useEffect } from "react";
-import {
-  Paperclip,
-  Smile,
-  Send,
-  Plus,
-  Reply,
-  ThumbsUp,
-  MoreHorizontal,
-} from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { useMessages } from "@/presentation/hooks/useMessages";
+import { messageGateway } from "@/data/gateway/MessageGateway";
+import { useChannels } from "@/presentation/hooks/useChannels";
+import { useAuth } from "@/presentation/hooks/useAuth";
+import { format } from "date-fns";
+import type { Message } from "@/domain/entities/message/Message";
 
-interface Message {
-  id: string;
-  user: string;
-  avatar: string;
-  text: string;
-  time: string;
+interface Props {
+  channelId: string;
 }
+interface SlackMessageListProps {
+  scrollRef: React.RefObject<HTMLDivElement>;
+  isLoading: boolean;
+  messages: Message[];
+  loadOlderMessages: () => void;
+}
+/* ------------------------------------------------------
+   MAIN SLACK MESSAGE AREA (WRAPPER)
+------------------------------------------------------ */
+export default function MessageArea({ channelId }: Props) {
+  const { projectId } = useParams<{ projectId: string }>();
+  const { channels } = useChannels(projectId!);
+  const {
+    messages,
+    activeChannelId,
+    scrollRef,
+    loadOlderMessages,
+  }: {
+    messages: Message[];
+    activeChannelId: string | null;
+    scrollRef: React.RefObject<HTMLDivElement>;
+    loadOlderMessages: () => void;
+  } = useMessages(projectId ?? null, channelId, channels);
 
-export default function MessageArea() {
-  const [message, setMessage] = useState("");
-  const [messages] = useState<Message[]>([
-    {
-      id: "1",
-      user: "Alex Rivera",
-      avatar: "A",
-      text: "Hey team! Ready for the demo today?",
-      time: "10:30 AM",
-    },
-    {
-      id: "2",
-      user: "Sarah Chen",
-      avatar: "S",
-      text: "Yes! I just finalized the Figma prototype. I'll share the link in 5 mins",
-      time: "10:32 AM",
-    },
-  ]);
+  const isLoading = !messages.length && activeChannelId === channelId;
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  // Auto-scroll on new messages
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = scrollRef.current;
+    if (!el) return;
+
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: "smooth",
+    });
   }, [messages]);
 
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-    textarea.style.height = "auto";
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
-  }, [message]);
+  return (
+    <div className="flex flex-col flex-1 overflow-hidden h-full pt-8 bg-[#1A1D21] text-gray-100">
+      {/* Slack Message List */}
+      <SlackMessageList
+        scrollRef={scrollRef}
+        isLoading={isLoading}
+        messages={messages}
+        loadOlderMessages={loadOlderMessages}
+      />
 
-  const handleSend = () => {
-    if (!message.trim()) return;
-    // setMessages(...) + API call here
-    setMessage("");
+      {/* Slack Input */}
+      <SlackMessageInput channelId={channelId} projectId={projectId} />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------
+   SLACK MESSAGE LIST
+------------------------------------------------------ */
+function SlackMessageList({
+  scrollRef,
+  isLoading,
+  messages,
+  loadOlderMessages,
+}: SlackMessageListProps) {
+  return (
+    <div
+      ref={scrollRef}
+      onScroll={(e) => {
+        const el = e.currentTarget;
+        if (el.scrollTop === 0) loadOlderMessages();
+      }}
+      className="flex-1 overflow-y-auto min-h-0 px-6 py-4 space-y-6 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+    >
+      {isLoading ? (
+        <div className="text-center text-gray-400">Loading messages...</div>
+      ) : messages.length === 0 ? (
+        <div className="text-center text-gray-400">No messages yet.</div>
+      ) : (
+        messages.map((msg: Message) => (
+          <SlackMessageBubble key={msg.id} message={msg} />
+        ))
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------
+   SLACK MESSAGE INPUT
+------------------------------------------------------ */
+
+interface MessageInputProps {
+  channelId: string;
+  projectId: string | undefined;
+}
+
+function SlackMessageInput({ channelId, projectId }: MessageInputProps) {
+  const [text, setText] = useState("");
+
+  const send = () => {
+    if (!text.trim()) return;
+
+    messageGateway.sendMessage({
+      text: text.trim(),
+      channelId,
+      projectId,
+    });
+
+    setText("");
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      send();
     }
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-[#36393f]">
-      {/* ← THIS LINE FIXED EVERYTHING */}
-      <div className="flex-1 overflow-y-auto pt-12">
-        {" "}
-        {/* ← 48px = header height */}
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          {messages.length === 0 ? (
-            <div className="text-center py-32">
-              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 opacity-20" />
-              <h2 className="text-2xl font-bold text-white mb-2">#general</h2>
-              <p className="text-gray-400">
-                This is the very beginning of #general.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 text-xs text-gray-500">
-                <div className="flex-1 h-px bg-gray-700" />
-                <span>Today</span>
-                <div className="flex-1 h-px bg-gray-700" />
-              </div>
+    <div className="border-t border-[#2A2D31] p-4 bg-[#1A1D21]">
+      <div className="flex items-center gap-3 bg-[#2A2D31] rounded-xl px-4 py-3">
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Message in this channel"
+          className="flex-1 bg-transparent text-gray-100 outline-none"
+        />
 
-              {messages.map((msg, i) => {
-                const showAvatar = i === 0 || messages[i - 1].user !== msg.user;
+        <button
+          onClick={send}
+          disabled={!text.trim()}
+          className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-40"
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  );
+}
 
-                return (
-                  <div
-                    key={msg.id}
-                    className="group flex gap-3 hover:bg-white/5 px-3 py-2 -mx-3 rounded-lg transition"
-                  >
-                    {showAvatar ? (
-                      <>
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex shrink-0 items-center justify-center text-white font-bold">
-                          {msg.avatar}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-baseline gap-2">
-                            <span className="font-semibold text-white">
-                              {msg.user}
-                            </span>
-                            <span className="text-xs text-gray-400">
-                              {msg.time}
-                            </span>
-                          </div>
-                          <p className="text-gray-100 mt-0.5 break-words">
-                            {msg.text}
-                          </p>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="w-10 shrink-0">
-                          <span className="text-xs text-gray-500 invisible">
-                            00:00
-                          </span>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-gray-100 break-words">
-                            {msg.text}
-                          </p>
-                        </div>
-                      </>
-                    )}
+/* ------------------------------------------------------
+   SLACK MESSAGE BUBBLE
+------------------------------------------------------ */
+function SlackMessageBubble({ message }: { message: Message }) {
+  const { user } = useAuth();
+  const isOwn = message.senderId === user?.id;
+  const time = format(new Date(message.createdAt), "HH:mm");
 
-                    <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1">
-                      <button className="p-1.5 hover:bg-white/10 rounded">
-                        <Smile className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-white/10 rounded">
-                        <Reply className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-white/10 rounded">
-                        <ThumbsUp className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-white/10 rounded">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-              <div ref={messagesEndRef} />
-            </div>
-          )}
-        </div>
+  return (
+    <div className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
+      {/* Avatar */}
+      <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-sm font-bold">
+        {message.senderName.substring(0, 1).toUpperCase()}
       </div>
 
-      {/* Input — fixed at bottom */}
-      <div className="border-t border-white/10">
-        <div className="max-w-4xl mx-auto p-4">
-          <div className="bg-[#40444b] rounded-lg shadow-lg overflow-hidden">
-            <div className="flex items-end gap-3 p-3">
-              <button className="mb-2 p-2 hover:bg-white/10 rounded-lg transition">
-                <Plus className="w-5 h-5 text-gray-400" />
-              </button>
-
-              <textarea
-                ref={textareaRef}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Message #general"
-                rows={1}
-                className="flex-1 bg-transparent text-white placeholder-gray-400 resize-none outline-none max-h-32 min-h-6"
-              />
-
-              <div className="flex items-center gap-1 mb-2">
-                <button className="p-2 hover:bg-white/10 rounded-lg transition">
-                  <Paperclip className="w-5 h-5 text-gray-400" />
-                </button>
-                <button className="p-2 hover:bg-white/10 rounded-lg transition">
-                  <Smile className="w-5 h-5 text-gray-400" />
-                </button>
-                {message.trim() ? (
-                  <button
-                    onClick={handleSend}
-                    className="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition"
-                  >
-                    <Send className="w-5 h-5" />
-                  </button>
-                ) : (
-                  <div className="p-2">
-                    <Send className="w-5 h-5 text-gray-600" />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <p className="mt-2 text-xs text-gray-500 text-center">
-            <kbd className="px-1 bg-white/10 rounded">Enter</kbd> to send •{" "}
-            <kbd className="px-1 bg-white/10 rounded">Shift + Enter</kbd> for
-            new line
-          </p>
+      {/* Content */}
+      <div className="max-w-xl">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold">
+            {isOwn ? "You" : message.senderName}
+          </span>
+          <span className="text-xs text-gray-400">{time}</span>
         </div>
+
+        <div
+          className={`
+            mt-1 px-4 py-2 rounded-lg whitespace-pre-wrap leading-relaxed 
+            ${isOwn ? "bg-blue-600 text-white" : "bg-[#2A2D31] text-gray-200"}
+          `}
+        >
+          {message.text}
+        </div>
+
+        {/* Attachment Indicator */}
+        {message.hasAttachments && (
+          <div className="text-xs text-gray-400 mt-2">📎 Attachment</div>
+        )}
       </div>
     </div>
   );

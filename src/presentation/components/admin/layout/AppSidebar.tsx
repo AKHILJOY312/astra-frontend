@@ -314,7 +314,7 @@ const AppSidebar: React.FC = () => {
               />
               <img
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/images/logo/AstraLogo1.svg"
                 alt="Logo"
                 width={150}
                 height={40}

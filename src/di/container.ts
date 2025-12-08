@@ -47,6 +47,8 @@ import type { IRazorpayService } from "@/application/services/IRazorpayService";
 import { RazorpayServiceImpl } from "@/data/repo/RazorpayServiceImpl";
 import type { IUserSubscriptionRepository } from "@/application/repo/IUserSubscriptionRepository";
 import { UserSubscriptionRepositoryImpl } from "@/data/repo/UserSubscriptionRepositoryImpl";
+import { EditChannelUseCase } from "@/application/use-cases/channel/EditChannelUseCase";
+import { DeleteChannelUseCase } from "@/application/use-cases/channel/DeleteChannelUseCase";
 
 const container = new Container();
 
@@ -183,6 +185,15 @@ container
 container
   .bind<ListChannelsUseCase>(TYPES.ListChannelsUseCase)
   .to(ListChannelsUseCase)
+  .inTransientScope();
+container
+  .bind<EditChannelUseCase>(TYPES.EditChannelUseCase)
+  .to(EditChannelUseCase)
+  .inTransientScope();
+
+container
+  .bind<DeleteChannelUseCase>(TYPES.DeleteChannelUseCase)
+  .to(DeleteChannelUseCase)
   .inTransientScope();
 
 export { container, TYPES };
