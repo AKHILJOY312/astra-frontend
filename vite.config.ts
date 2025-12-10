@@ -22,6 +22,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    allowedHosts: ["glaiked-harry-unphotographed.ngrok-free.dev"],
     proxy: {
       "/api": {
         target: "http://localhost:3000",
