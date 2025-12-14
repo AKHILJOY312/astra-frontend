@@ -31,6 +31,7 @@ export default function ChannelSidebar() {
   const { projectId } = useParams<{ projectId: string }>();
 
   const { channels, loading, activeChannelId } = useChannels(projectId!);
+
   const { projects } = useProjects();
 
   const [channelsCollapsed, setChannelsCollapsed] = useState(false);
@@ -371,6 +372,7 @@ type CreateChannelModalProps = {
 };
 function CreateChannelModal({ projectId, onClose }: CreateChannelModalProps) {
   const { createChannel } = useChannels(projectId);
+  const [error, setError] = useState<string | null>(null);
 
   const [channelName, setChannelName] = useState("");
   const [description, setDescription] = useState("");
@@ -385,14 +387,24 @@ function CreateChannelModal({ projectId, onClose }: CreateChannelModalProps) {
   );
 
   const handleSubmit = async () => {
-    await createChannel({
-      channelName,
-      description,
-      visibleToRoles,
-      permissionsByRole,
-    });
+    setError(null);
 
-    onClose();
+    try {
+      await createChannel({
+        channelName,
+        description,
+        visibleToRoles,
+        permissionsByRole,
+      });
+
+      onClose(); // only close on success
+    } catch (err: any) {
+      console.log("Create channel error:", err);
+
+      setError(
+        err.response?.data?.message || err.message || "Something went wrong"
+      );
+    }
   };
 
   return (
@@ -457,6 +469,11 @@ function CreateChannelModal({ projectId, onClose }: CreateChannelModalProps) {
             </select>
           </div>
         ))}
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/20 text-red-400 text-sm rounded-lg">
+            {error}
+          </div>
+        )}
 
         {/* Buttons */}
         <div className="flex justify-end gap-2 mt-6">
@@ -492,6 +509,7 @@ function EditChannelModal({
 
   const [channelName, setChannelName] = useState(channel.channelName);
   const [description, setDescription] = useState(channel.description || "");
+  const [error, setError] = useState<string | null>(null);
 
   // Initialize from actual channel data
   const [visibleToRoles, setVisibleToRoles] = useState<Role[]>(roles);
@@ -500,17 +518,21 @@ function EditChannelModal({
   >(channel.permissionsByRole);
 
   const handleSubmit = async () => {
-    await editChannel(channel.id, {
-      channelName: channelName.trim() || undefined,
-      description: description.trim() || undefined,
-      visibleToRoles: visibleToRoles.length > 0 ? visibleToRoles : undefined,
-      permissionsByRole:
-        Object.keys(permissionsByRole).length > 0
-          ? permissionsByRole
-          : undefined,
-    });
+    try {
+      await editChannel(channel.id, {
+        channelName: channelName.trim() || undefined,
+        description: description.trim() || undefined,
+        visibleToRoles: visibleToRoles.length > 0 ? visibleToRoles : undefined,
+        permissionsByRole:
+          Object.keys(permissionsByRole).length > 0
+            ? permissionsByRole
+            : undefined,
+      });
 
-    onClose();
+      onClose();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Could not update channel");
+    }
   };
 
   return (
@@ -578,7 +600,11 @@ function EditChannelModal({
             </div>
           ))}
         </div>
-
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/20 text-red-400 text-sm rounded-lg">
+            {error}
+          </div>
+        )}
         <div className="flex justify-end gap-3 mt-8">
           <button
             onClick={onClose}

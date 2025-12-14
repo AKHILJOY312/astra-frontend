@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/presentation/redux/store/store";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "@/presentation/redux/thunk/authThunks";
+import { useAuth } from "@/presentation/hooks/useAuth";
 
 // Helper to clsx-like class merging
 const cn = (...inputs: (string | undefined | false)[]) =>
@@ -45,7 +46,26 @@ export default function SlackSidebar() {
     dispatch(logoutUser());
     navigate("/login");
   }
-  const user = { name: "John Doe", image: "", initials: "JD" };
+  function getInitials(name?: string): string {
+    if (!name) return "";
+
+    const parts = name.trim().split(" ");
+
+    // If only one name → take first 2 letters
+    if (parts.length === 1) {
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+
+    // If full name → take first letter of first & last word
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  const userData = useAuth();
+  const user = {
+    name: userData.user?.name || "",
+    image: "",
+    initials: getInitials(userData.user?.name),
+  };
 
   return (
     <aside className="flex h-screen w-[70px] flex-col items-center gap-y-4 bg-[#381349] pb-2 pt-3">
@@ -72,9 +92,10 @@ export default function SlackSidebar() {
       {/* Navigation Items */}
       <SidebarButton
         icon={Home}
-        label="Home"
+        label="Projects"
         isActive={activeItem === "home"}
         onClick={() => setActiveItem("home")}
+        route="/projects"
       />
       <SidebarButton
         icon={MessagesSquare}
@@ -180,6 +201,7 @@ interface SidebarButtonProps {
   label: string;
   isActive?: boolean;
   onClick?: () => void;
+  route?: string;
 }
 
 function SidebarButton({
@@ -187,10 +209,17 @@ function SidebarButton({
   label,
   isActive,
   onClick,
+  route,
 }: SidebarButtonProps) {
+  const navigate = useNavigate(); // ⬅️ Add this
+
+  function handleClick() {
+    if (route) navigate(route); // ⬅️ Navigate if route is given
+    if (onClick) onClick(); // Keep your active state logic
+  }
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className="group flex flex-col items-center justify-center gap-y-0.5"
     >
       <div

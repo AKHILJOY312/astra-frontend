@@ -7,7 +7,14 @@ export const createProject = (payload: {
   imageUrl?: string | null;
 }) => api.post("/projects", payload);
 
-export const getUserProjects = () => api.get("/projects/me");
+export const getUserProjects = (params: {
+  page: number;
+  limit: number;
+  search?: string;
+}) =>
+  api.get("/projects", {
+    params,
+  });
 
 export const getProjectById = (projectId: string) =>
   api.get(`/projects/${projectId}`);

@@ -1,15 +1,17 @@
 // src/presentation/pages/user/Dashboard.tsx
-import { Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { openCreateProjectModal } from "@/presentation/redux/slice/uiSlice";
 import { useProjects } from "@/presentation/hooks/useProjects";
 
 import CreateProjectModal from "@/presentation/components/user/common/CreateProjectModal";
 import ProjectCard from "@/presentation/components/user/common/ProjectCard";
+import Button from "@/presentation/components/admin/ui/button/Button";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
-  const { projects, loading } = useProjects();
+  const { projects, loading, page, totalPages, loadProjects } = useProjects();
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <>
@@ -70,6 +72,44 @@ export default function Dashboard() {
             </div>
           )}
         </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-12">
+            <div className="flex items-center gap-2 bg-white dark:bg-gray-900 p-2 rounded-xl shadow-sm border dark:border-gray-800">
+              <Button
+                variant="primary"
+                size="sm"
+                disabled={page === 1}
+                onClick={() => loadProjects({ page: page - 1 })}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+
+              {pages.map((p) => (
+                <button
+                  key={p}
+                  onClick={() => loadProjects({ page: p })}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition
+            ${
+              p === page
+                ? "bg-blue-600 text-white"
+                : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+            }`}
+                >
+                  {p}
+                </button>
+              ))}
+
+              <Button
+                variant="primary"
+                size="sm"
+                disabled={page === totalPages}
+                onClick={() => loadProjects({ page: page + 1 })}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       <CreateProjectModal />

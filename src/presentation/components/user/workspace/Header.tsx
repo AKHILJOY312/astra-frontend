@@ -15,7 +15,6 @@ const cn = (...inputs: (string | undefined | false)[]) =>
 
 export default function SlackHeader() {
   let navigate = useNavigate();
-  console.log;
   function handleupGrade() {
     navigate("/upgrade");
   }

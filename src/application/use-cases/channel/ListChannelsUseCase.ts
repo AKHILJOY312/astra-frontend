@@ -10,9 +10,8 @@ export class ListChannelsUseCase {
   ) {}
 
   async execute(projectId: string): Promise<Channel[]> {
-    console.log("Fetching channels for Project ID in UseCase:", projectId);
     const result = await this.channelRepo.getByProject(projectId);
-    console.log("Channels fetched in UseCase: ", result);
+
     return result;
   }
 }

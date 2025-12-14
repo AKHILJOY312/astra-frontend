@@ -23,19 +23,27 @@ const createProjectUC = container.get<CreateProjectUseCase>(
 
 export const useProjects = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { projects, loading, error, currentProject } = useSelector(
-    (state: RootState) => state.project
-  );
+  const { projects, loading, error, currentProject, page, search, totalPages } =
+    useSelector((state: RootState) => state.project);
 
-  const loadProjects = useCallback(async () => {
-    dispatch(setProjectLoading());
-    try {
-      const data = await listProjectsUC.execute();
-      dispatch(setProjects(data));
-    } catch (err: any) {
-      dispatch(setProjectError(err.message || "Failed to load projects"));
-    }
-  }, [dispatch]);
+  const loadProjects = useCallback(
+    async (params?: Partial<{ page: number; search: string }>) => {
+      dispatch(setProjectLoading());
+
+      try {
+        const response = await listProjectsUC.execute({
+          page: params?.page ?? page,
+          limit: 8,
+          search: params?.search ?? search,
+        });
+        console.log("checking the datat:", response);
+        dispatch(setProjects(response));
+      } catch (err: any) {
+        dispatch(setProjectError("Failed to load projects"));
+      }
+    },
+    [dispatch, page, search]
+  );
 
   const createProject = async (
     name: string,
@@ -85,6 +93,9 @@ export const useProjects = () => {
     projects,
     loading,
     error,
+    page,
+    totalPages,
+    loadProjects,
     currentProject,
     refreshProjects: loadProjects,
     createProject,

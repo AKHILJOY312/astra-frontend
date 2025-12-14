@@ -8,8 +8,10 @@ interface ProjectState {
   currentProject: Project | null;
   loading: boolean;
   error: string | null;
+  page: number;
+  totalPages: number;
+  search: string;
 
-  // new
   limits: {
     maxProjects: number;
     maxMembersPerProject: number;
@@ -24,6 +26,9 @@ const initialState: ProjectState = {
   currentProject: null,
   loading: false,
   error: null,
+  page: 1,
+  totalPages: 1,
+  search: "",
 
   limits: null,
   currentPlan: null,
@@ -33,14 +38,22 @@ const projectSlice = createSlice({
   name: "project",
   initialState,
   reducers: {
-    setProjects: (state, action: PayloadAction<Project[]>) => {
-      state.projects = action.payload;
+    setProjects: (
+      state,
+      action: PayloadAction<{
+        projects: Project[];
+        page: number;
+        totalPages: number;
+      }>
+    ) => {
+      state.projects = action.payload.projects;
+      state.page = action.payload.page;
+      state.totalPages = action.payload.totalPages;
       state.loading = false;
-      state.error = null;
 
       // update currentProjects count in limits if exists
       if (state.limits) {
-        state.limits.currentProjects = action.payload.length;
+        state.limits.currentProjects = action.payload.projects.length;
       }
     },
     setCurrentProject: (state, action: PayloadAction<Project | null>) => {

@@ -31,7 +31,7 @@ class MessageGateway {
   private socket: SocketType | null = null;
 
   connect(token: string): void {
-    //console.log("📡 [MessageGateway.connect] Called with token:", token);
+    //console.log(" [MessageGateway.connect] Called with token:", token);
 
     this.socket = io("http://localhost:3000", {
       auth: { token },
@@ -41,26 +41,26 @@ class MessageGateway {
     //console.log("🔌 [MessageGateway] Socket instance created:", this.socket);
 
     this.socket.on("connect", () => {
-      //console.log("✅ [MessageGateway] Connected to Socket.IO server");
-      //console.log("➡️ Socket ID:", this.socket?.id);
+      //console.log(" [MessageGateway] Connected to Socket.IO server");
+      //console.log(" Socket ID:", this.socket?.id);
     });
 
     this.socket.on("connect_error", (err) => {
-      console.error("❌ [MessageGateway] Connect error:", err.message);
+      console.error(" [MessageGateway] Connect error:", err.message);
       console.error(err);
     });
 
     this.socket.on("disconnect", (reason) => {
-      console.warn("⚠️ [MessageGateway] Socket disconnected:", reason);
+      console.warn(" [MessageGateway] Socket disconnected:", reason);
     });
-    this.socket.onAny((event, ...args) => {
-      //console.log(`📡 [SOCKET-EVENT] ${event}`, args);
-    });
+    // this.socket.onAny((event, ...args) => {
+    //   //console.log(`📡 [SOCKET-EVENT] ${event}`, args);
+    // });
   }
 
   joinChannel(channelId: string): void {
-    //console.log("📥 [MessageGateway.joinChannel] Joining channel:", channelId);
-    //console.log("➡️ Socket connected?", this.socket?.connected);
+    //console.log(" [MessageGateway.joinChannel] Joining channel:", channelId);
+    //console.log(" Socket connected?", this.socket?.connected);
 
     this.socket?.emit("channel:join", channelId);
   }
@@ -70,10 +70,10 @@ class MessageGateway {
     channelId: string;
     projectId?: string;
   }): void {
-    //console.log("✉️ [MessageGateway.sendMessage] Sending message");
-    //console.log("➡️ Payload:", payload);
-    //console.log("➡️ Socket connected?", this.socket?.connected);
-    //console.log("➡️ Socket ID:", this.socket?.id);
+    //console.log(" [MessageGateway.sendMessage] Sending message");
+    //console.log(" Payload:", payload);
+    //console.log(" Socket connected?", this.socket?.connected);
+    //console.log(" Socket ID:", this.socket?.id);
 
     if (!this.socket?.connected) {
       console.error(
@@ -82,12 +82,12 @@ class MessageGateway {
       return;
     }
 
-    //console.log("📤 [MessageGateway] Emitting 'message:send'");
+    //console.log(" [MessageGateway] Emitting 'message:send'");
     this.socket.emit("message:send", payload);
   }
 
   leaveChannel(channelId: string): void {
-    //console.log("📤 [MessageGateway.leaveChannel] Leaving channel:", channelId);
+    //console.log(" [MessageGateway.leaveChannel] Leaving channel:", channelId);
     this.socket?.emit("channel:leave", { channelId });
   }
 
@@ -105,18 +105,18 @@ class MessageGateway {
     }) => void
   ): () => void {
     //console.log(
-    //   "👂 [MessageGateway.subscribeToNewMessages] Subscribing to 'message:new'"
+    //   " [MessageGateway.subscribeToNewMessages] Subscribing to 'message:new'"
     // );
 
     const handler = (msg: any) => {
-      //console.log("📩 [MessageGateway] Received 'message:new' event:", msg);
+      //console.log(" [MessageGateway] Received 'message:new' event:", msg);
       callback(msg);
     };
 
     this.socket?.on("message:new", handler);
 
     return () => {
-      //console.log("🧹 [MessageGateway] Unsubscribing from 'message:new'");
+      //console.log(" [MessageGateway] Unsubscribing from 'message:new'");
       this.socket?.off("message:new", handler);
     };
   }
@@ -124,19 +124,19 @@ class MessageGateway {
   disconnect(): void {
     //console.log("🔌 [MessageGateway.disconnect] Disconnecting socket...");
     this.socket?.disconnect();
-    //console.log("❎ [MessageGateway] Socket disconnected.");
+    //console.log(" [MessageGateway] Socket disconnected.");
     this.socket = null;
   }
 
   updateToken(token: string) {
-    //console.log("🔄 [MessageGateway.updateToken] Updating token:", token);
+    //console.log(" [MessageGateway.updateToken] Updating token:", token);
 
     if (this.socket) {
       //console.log("🔧 Socket exists — updating auth & reconnecting...");
       this.socket.auth = { token };
       this.socket.connect();
     } else {
-      //console.log("⚠️ No socket instance found — creating new connection...");
+      //console.log(" No socket instance found — creating new connection...");
       this.connect(token);
     }
   }

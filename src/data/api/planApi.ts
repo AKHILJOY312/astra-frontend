@@ -1,12 +1,14 @@
 // src/data/api/planApi.ts
+import type { Plan } from "@/domain/types/index.";
 import apiCaller from "@/lib/apicaller";
 
 export const getPlans = (page: number, limit: number) =>
   apiCaller.get("/admin/plans", { params: { page, limit } });
 
-export const createPlan = (plan: any) => apiCaller.post("/admin/plans", plan);
+export const createPlan = (plan: Partial<Plan>) =>
+  apiCaller.post("/admin/plans", plan);
 
-export const updatePlan = (id: string, plan: any) =>
+export const updatePlan = (id: string, plan: Partial<Plan>) =>
   apiCaller.put(`/admin/plans/${id}`, plan);
 
 export const deletePlan = (id: string) =>

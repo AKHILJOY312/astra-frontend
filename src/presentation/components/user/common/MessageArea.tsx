@@ -27,14 +27,16 @@ export default function MessageArea({ channelId }: Props) {
     activeChannelId,
     scrollRef,
     loadOlderMessages,
+    isFetching,
   }: {
     messages: Message[];
     activeChannelId: string | null;
     scrollRef: React.RefObject<HTMLDivElement>;
     loadOlderMessages: () => void;
+    isFetching: boolean;
   } = useMessages(projectId ?? null, channelId, channels);
 
-  const isLoading = !messages.length && activeChannelId === channelId;
+  const isLoading = isFetching && activeChannelId === channelId;
 
   // Auto-scroll on new messages
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function MessageArea({ channelId }: Props) {
       top: el.scrollHeight,
       behavior: "smooth",
     });
-  }, [messages]);
+  }, [messages, scrollRef]);
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden h-full pt-8 bg-[#1A1D21] text-gray-100">

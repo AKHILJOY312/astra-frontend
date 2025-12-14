@@ -23,6 +23,7 @@ export function useMessages(
   );
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const channelExists = channels.some((c) => c.id === channelId);
 
@@ -39,12 +40,12 @@ export function useMessages(
 
     dispatch(clearTextMessages());
     dispatch(setActiveChannel(channelId));
-
+    setIsFetching(true);
     api
       .get(`/projects/${projectId}/channels/${channelId}/messages?limit=20`)
       .then((res) => {
         const data = res.data.data;
-
+        setIsFetching(false);
         dispatch(setMessages(data));
 
         // store next cursor
@@ -101,7 +102,7 @@ export function useMessages(
       setHasMore(false);
       return;
     }
-    // 🔥 Save old scroll position before adding
+    //  Save old scroll position before adding
     const el = scrollRef.current;
     if (!el) return;
     const prevHeight = el.scrollHeight;
@@ -111,7 +112,7 @@ export function useMessages(
     // update cursor
     setCursor(data[0].createdAt);
 
-    // 🔥 Maintain scroll position after prepending
+    //  Maintain scroll position after prepending
     setTimeout(() => {
       const newHeight = el.scrollHeight;
       el.scrollTop = newHeight - prevHeight;
@@ -122,5 +123,6 @@ export function useMessages(
     activeChannelId,
     scrollRef,
     loadOlderMessages,
+    isFetching,
   };
 }
