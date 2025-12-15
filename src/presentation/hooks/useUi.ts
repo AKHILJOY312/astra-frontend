@@ -18,6 +18,8 @@ import {
   closeMobileMenu,
   openViewMembersModal,
   closeViewMembersModal,
+  openEditProjectModal,
+  closeEditProjectModal,
 } from "@/presentation/redux/slice/uiSlice";
 
 export const useUi = () => {
@@ -33,6 +35,7 @@ export const useUi = () => {
     upgradePlanModal,
     mobileMenuOpen,
     viewMembersModalOpen,
+    editProjectModalOpen,
   } = useAppSelector((state) => state.ui);
 
   // 🎯 ACTIONS (wrapped with callbacks)
@@ -107,6 +110,14 @@ export const useUi = () => {
       () => dispatch(closeViewMembersModal()),
       [dispatch]
     ),
+    openEditProject: useCallback(
+      () => dispatch(openEditProjectModal()),
+      [dispatch]
+    ),
+    closeEditProjectModal: useCallback(
+      () => dispatch(closeEditProjectModal()),
+      [dispatch]
+    ),
   };
 
   return {
@@ -119,6 +130,7 @@ export const useUi = () => {
     upgradePlanModal,
     mobileMenuOpen,
     viewMembersModalOpen,
+    editProjectModalOpen,
 
     // actions
     ...actions,

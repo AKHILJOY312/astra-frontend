@@ -21,7 +21,7 @@ export const TYPES = {
   CreateProjectUseCase: Symbol.for("CreateProjectUseCase"),
   ListUserProjectsUseCase: Symbol.for("ListUserProjectsUseCase"),
   GetProjectByIdUseCase: Symbol.for("GetProjectByIdUseCase"),
-
+  UpdateProjectUseCase: Symbol.for("UpdateProjectUseCase"),
   // Members
   AddMemberUseCase: Symbol.for("AddMemberUseCase"),
   GetProjectMembersUseCase: Symbol.for("GetProjectMembersUseCase"),

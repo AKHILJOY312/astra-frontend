@@ -13,10 +13,12 @@ import {
   setMembersLoading,
   setMembers,
   setMembersError,
+  updateProjectSuccess,
 } from "../redux/slice/projectSlice";
 import type { RootState, AppDispatch } from "../redux/store/store";
 import { openUpgradePlanModal } from "../redux/slice/uiSlice";
 import { GetProjectMembersUseCase } from "@/application/use-cases";
+import type { UpdateProjectUseCase } from "@/application/use-cases/project/UpdateProjectUseCase";
 
 const listProjectsUC = container.get<ListUserProjectsUseCase>(
   TYPES.ListUserProjectsUseCase
@@ -28,7 +30,9 @@ const createProjectUC = container.get<CreateProjectUseCase>(
 const listUserInProject = container.get<GetProjectMembersUseCase>(
   TYPES.GetProjectMembersUseCase
 );
-
+const updateProjectUC = container.get<UpdateProjectUseCase>(
+  TYPES.UpdateProjectUseCase
+);
 export const useProjects = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -94,13 +98,8 @@ export const useProjects = () => {
     } catch (err: unknown) {
       let message = "Failed to create project";
 
-      if (
-        err &&
-        typeof err === "object" &&
-        "response" in err &&
-        err.response?.data
-      ) {
-        const data = err.response.data as {
+      if (err && typeof err === "object" && "response" in err && err.response) {
+        const data = err.response as {
           error: string;
           upgradeRequired?: boolean;
         };
@@ -116,6 +115,22 @@ export const useProjects = () => {
     }
   };
 
+  const updateProject = async (
+    projectId: string,
+    payload: { projectName: string; description?: string }
+  ) => {
+    dispatch(clearProjectError());
+
+    try {
+      const updated = await updateProjectUC.execute(projectId, payload);
+      dispatch(updateProjectSuccess(updated));
+      return updated;
+    } catch {
+      dispatch(setProjectError("Failed to update project"));
+      throw error;
+    }
+  };
+
   useEffect(() => {
     loadProjects();
   }, [loadProjects]);
@@ -128,7 +143,7 @@ export const useProjects = () => {
     totalPages,
     members,
     membersLoading,
-
+    updateProject,
     loadProjects,
     currentProject,
     refreshProjects: loadProjects,

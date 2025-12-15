@@ -54,6 +54,7 @@ import { EditChannelUseCase } from "@/application/use-cases/channel/EditChannelU
 import { DeleteChannelUseCase } from "@/application/use-cases/channel/DeleteChannelUseCase";
 import type { IAdminUsersRepository } from "@/application/repo/IAdminUsersReopsitory";
 import { AdminUserRepositoryImpl } from "@/data/repo/AdminUserRepositoryImpl";
+import { UpdateProjectUseCase } from "@/application/use-cases/project/UpdateProjectUseCase";
 
 const container = new Container();
 
@@ -168,6 +169,10 @@ container
 container
   .bind<GetProjectByIdUseCase>(TYPES.GetProjectByIdUseCase)
   .to(GetProjectByIdUseCase)
+  .inTransientScope();
+container
+  .bind<UpdateProjectUseCase>(TYPES.UpdateProjectUseCase)
+  .to(UpdateProjectUseCase)
   .inTransientScope();
 
 // Membership use cases

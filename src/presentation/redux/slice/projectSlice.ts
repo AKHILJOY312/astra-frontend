@@ -76,13 +76,22 @@ const projectSlice = createSlice({
       }
       if (state.limits) state.limits.currentProjects = state.projects.length;
     },
-    updateProject: (state, action: PayloadAction<Project>) => {
+    // updateProject: (state, action: PayloadAction<Project>) => {
+    //   const idx = state.projects.findIndex((p) => p.id === action.payload.id);
+    //   if (idx !== -1) state.projects[idx] = action.payload;
+    //   if (state.currentProject?.id === action.payload.id) {
+    //     state.currentProject = action.payload;
+    //   }
+    // },
+    updateProjectSuccess: (state, action: PayloadAction<Project>) => {
       const idx = state.projects.findIndex((p) => p.id === action.payload.id);
       if (idx !== -1) state.projects[idx] = action.payload;
+
       if (state.currentProject?.id === action.payload.id) {
         state.currentProject = action.payload;
       }
     },
+
     setProjectLoading: (state) => {
       state.loading = true;
       state.error = null;
@@ -126,15 +135,16 @@ export const {
   setCurrentProject,
   addProject,
   removeProject,
-  updateProject,
+  // updateProject,
   setProjectLoading,
   setProjectError,
   clearProjectError,
-  setPlanLimits, // new
+  setPlanLimits,
   clearMembers,
   setMembersError,
   setMembers,
   setMembersLoading,
+  updateProjectSuccess,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

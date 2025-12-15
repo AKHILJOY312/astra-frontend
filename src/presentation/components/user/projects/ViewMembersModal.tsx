@@ -8,7 +8,7 @@ export default function ViewMembersModal({ projectId }: { projectId: string }) {
   const dispatch = useDispatch();
   const { loadProjectMembers, members, membersLoading } = useProjects();
   const { viewMembersModalOpen } = useUi();
-  console.log("members: ", members);
+
   useEffect(() => {
     if (viewMembersModalOpen && projectId) {
       loadProjectMembers(projectId);

@@ -16,6 +16,15 @@ export const getUserProjects = (params: {
     params,
   });
 
+export const updateProject = (
+  projectId: string,
+  payload: {
+    projectName: string;
+    description?: string;
+    imageUrl?: string | null;
+  }
+) => api.patch(`/projects/${projectId}`, payload);
+
 export const getProjectById = (projectId: string) =>
   api.get(`/projects/${projectId}`);
 

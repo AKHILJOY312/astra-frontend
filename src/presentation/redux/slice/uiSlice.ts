@@ -5,6 +5,7 @@ interface UIState {
   sidebarOpen: boolean;
   theme: "light" | "dark";
   createProjectModal: boolean;
+  editProjectModalOpen: boolean;
   inviteMemberModal: boolean;
   createChannelModal: boolean;
   upgradePlanModal: boolean;
@@ -16,6 +17,7 @@ const initialState: UIState = {
   sidebarOpen: true,
   theme: "light",
   createProjectModal: false,
+  editProjectModalOpen: false,
   inviteMemberModal: false,
   createChannelModal: false,
   upgradePlanModal: false,
@@ -75,6 +77,12 @@ const uiSlice = createSlice({
     closeViewMembersModal(state) {
       state.viewMembersModalOpen = false;
     },
+    openEditProjectModal(state) {
+      state.editProjectModalOpen = true;
+    },
+    closeEditProjectModal(state) {
+      state.editProjectModalOpen = false;
+    },
   },
 });
 
@@ -95,6 +103,8 @@ export const {
   closeMobileMenu,
   openViewMembersModal,
   closeViewMembersModal,
+  openEditProjectModal,
+  closeEditProjectModal,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

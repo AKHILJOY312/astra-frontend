@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 import { useProjects } from "@/presentation/hooks/useProjects";
 import { useChannels } from "@/presentation/hooks/useChannels";
 import {
+  openEditProjectModal,
   openInviteMemberModal,
   openViewMembersModal,
 } from "@/presentation/redux/slice/uiSlice";
@@ -28,6 +29,7 @@ import { DropdownItem } from "../../ui/dropdown/DropdownItem";
 
 import type { Channel } from "@/domain/entities/channel/Channel";
 import { setActiveChannel } from "@/presentation/redux/slice/channelSlice";
+import { setCurrentProject } from "@/presentation/redux/slice/projectSlice";
 
 export default function ChannelSidebar() {
   const dispatch = useDispatch();
@@ -151,8 +153,14 @@ export default function ChannelSidebar() {
               View Members
             </DropdownItem>
 
-            <DropdownItem icon={<Settings className="w-4 h-4" />}>
-              Project Settings
+            <DropdownItem
+              icon={<Settings className="w-4 h-4" />}
+              onClick={() => {
+                dispatch(setCurrentProject(currentProject));
+                dispatch(openEditProjectModal());
+              }}
+            >
+              Edit Project
             </DropdownItem>
           </div>
         </div>
@@ -341,7 +349,7 @@ export default function ChannelSidebar() {
       {/* ───────────────────────────────────
           BOTTOM USER BAR
       ─────────────────────────────────── */}
-      <div className="border-t border-white/10 p-3 shrink-0">
+      {/* <div className="border-t border-white/10 p-3 shrink-0">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="w-9 h-9 rounded-full bg-linear-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white font-bold text-sm">
@@ -359,7 +367,7 @@ export default function ChannelSidebar() {
             <Settings className="w-4 h-4" />
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
