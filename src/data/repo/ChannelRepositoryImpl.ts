@@ -8,8 +8,8 @@ import type { Channel } from "@/domain/entities/channel/Channel";
 import * as channelApi from "../api/channelApi";
 export class ChannelRepositoryImpl implements IChannelRepository {
   async create(projectId: string, channel: CreateChannelDTO): Promise<Channel> {
-    const { data } = await channelApi.createChannel(projectId, channel);
-    return channelResponseToEntity(data.channel || data);
+    const response = await channelApi.createChannel(projectId, channel);
+    return channelResponseToEntity(response.data.data);
   }
 
   async getByProject(projectId: string): Promise<Channel[]> {
@@ -40,12 +40,12 @@ export class ChannelRepositoryImpl implements IChannelRepository {
     channelId: string,
     channel: EditChannelDTO
   ): Promise<Channel> {
-    const { data } = await channelApi.editChannel(
+    const response = await channelApi.editChannel(
       projectId,
       channelId,
       channel
     );
-    return channelResponseToEntity(data.channel || data);
+    return channelResponseToEntity(response.data);
   }
 
   async delete(projectId: string, channelId: string): Promise<void> {

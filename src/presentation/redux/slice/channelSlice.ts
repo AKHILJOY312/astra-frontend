@@ -5,6 +5,7 @@ interface ChannelState {
   channels: Channel[];
   loading: boolean;
   activeChannelId: string | null;
+  activeChannel: Channel | null;
   error: string | null;
 }
 
@@ -12,6 +13,7 @@ const initialState: ChannelState = {
   channels: [],
   loading: false,
   activeChannelId: null,
+  activeChannel: null,
   error: null,
 };
 
@@ -46,13 +48,22 @@ const channelSlice = createSlice({
     },
     updateChannel(state, action: PayloadAction<Channel>) {
       const idx = state.channels.findIndex((c) => c.id === action.payload.id);
-      if (idx !== -1) state.channels[idx] = action.payload;
+
+      if (idx !== -1) {
+        state.channels[idx] = action.payload;
+      }
+
+      //  KEEP ACTIVE CHANNEL IN SYNC
+      if (state.activeChannelId === action.payload.id) {
+        state.activeChannel = action.payload;
+      }
     },
     removeChannel(state, action: PayloadAction<string>) {
       state.channels = state.channels.filter((c) => c.id !== action.payload);
     },
-    setActiveChannel(state, action: PayloadAction<string | null>) {
-      state.activeChannelId = action.payload;
+    setActiveChannel(state, action: PayloadAction<Channel | null>) {
+      state.activeChannelId = action.payload?.id ?? null;
+      state.activeChannel = action.payload;
     },
   },
 });

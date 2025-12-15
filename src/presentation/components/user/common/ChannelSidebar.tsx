@@ -34,11 +34,8 @@ import { setCurrentProject } from "@/presentation/redux/slice/projectSlice";
 export default function ChannelSidebar() {
   const dispatch = useDispatch();
   const { projectId } = useParams<{ projectId: string }>();
-
   const { channels, loading, activeChannelId } = useChannels(projectId!);
-
   const { projects } = useProjects();
-
   const [channelsCollapsed, setChannelsCollapsed] = useState(false);
   const [dmsCollapsed, setDmsCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,8 +69,8 @@ export default function ChannelSidebar() {
     setChannelToEdit(channel);
     setIsEditModalOpen(true);
   };
-  const handleChannelClick = (channelId: string) => {
-    dispatch(setActiveChannel(channelId!));
+  const handleChannelClick = (channel: Channel) => {
+    dispatch(setActiveChannel(channel));
   };
 
   const isCurrentUserManager = true; // Replace with actual permission check
@@ -234,7 +231,7 @@ export default function ChannelSidebar() {
                     className="relative group" // ← Important: wrapper for hover
                   >
                     <button
-                      onClick={() => handleChannelClick(ch.id)}
+                      onClick={() => handleChannelClick(ch)}
                       className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all
               ${
                 activeChannelId === ch.id
@@ -373,7 +370,7 @@ export default function ChannelSidebar() {
 }
 
 type Role = "manager" | "lead" | "member";
-type Permission = "view" | "message" | "manager";
+type Permission = "manager" | "view" | "message";
 
 const roles: Role[] = ["manager", "lead", "member"];
 type CreateChannelModalProps = {

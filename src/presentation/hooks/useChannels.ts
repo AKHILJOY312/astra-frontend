@@ -19,6 +19,7 @@ import {
   setChannelLoading,
   setChannelError,
   clearChannelError,
+  setActiveChannel,
 } from "../redux/slice/channelSlice";
 
 import type { RootState, AppDispatch } from "../redux/store/store";
@@ -74,6 +75,7 @@ export const useChannels = (projectId: string) => {
       const newChannel = await createChannelUC.execute(projectId, dto);
 
       dispatch(addChannel(newChannel));
+      dispatch(setActiveChannel(newChannel));
       return newChannel;
     } catch (err: any) {
       dispatch(setChannelError(err.message || "Failed to create channel"));
