@@ -18,9 +18,9 @@ export class ProjectMembershipRepositoryImpl
     return new ProjectMembership(data);
   }
 
-  async getMembers(projectId: string): Promise<ProjectMembership[]> {
+  async getMembers(projectId: string) {
     const { data } = await membershipApi.getProjectMembers(projectId);
-    return data.map((m: any) => new ProjectMembership(m));
+    return data.data;
   }
 
   async removeMember(projectId: string, memberId: string): Promise<void> {

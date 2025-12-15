@@ -8,6 +8,7 @@ import MessageArea from "@/presentation/components/user/common/MessageArea";
 import { setCurrentProject } from "@/presentation/redux/slice/projectSlice";
 import { useProjects } from "@/presentation/hooks/useProjects";
 import { useChannels } from "@/presentation/hooks/useChannels";
+import ViewMembersModal from "@/presentation/components/user/projects/ViewMembersModal";
 
 export default function ProjectDetail() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -37,6 +38,7 @@ export default function ProjectDetail() {
           )}
         </div>
       </div>
+      <ViewMembersModal projectId={projectId!} />
     </div>
   );
 }

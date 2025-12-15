@@ -11,6 +11,9 @@ interface ProjectState {
   page: number;
   totalPages: number;
   search: string;
+  members: [];
+  membersLoading: boolean;
+  membersError: string | null;
 
   limits: {
     maxProjects: number;
@@ -29,6 +32,9 @@ const initialState: ProjectState = {
   page: 1,
   totalPages: 1,
   search: "",
+  members: [],
+  membersLoading: false,
+  membersError: null,
 
   limits: null,
   currentPlan: null,
@@ -89,7 +95,19 @@ const projectSlice = createSlice({
       state.error = null;
     },
 
-    // new: set plan limits
+    setMembers(state, action) {
+      state.members = action.payload;
+      state.membersLoading = false;
+    },
+    setMembersLoading(state) {
+      state.membersLoading = true;
+    },
+    setMembersError(state, action) {
+      state.membersError = action.payload;
+    },
+    clearMembers(state) {
+      state.members = [];
+    },
     setPlanLimits: (
       state,
       action: PayloadAction<{
@@ -113,6 +131,10 @@ export const {
   setProjectError,
   clearProjectError,
   setPlanLimits, // new
+  clearMembers,
+  setMembersError,
+  setMembers,
+  setMembersLoading,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

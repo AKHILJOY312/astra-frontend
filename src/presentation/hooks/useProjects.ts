@@ -10,9 +10,13 @@ import {
   setProjectLoading,
   setProjectError,
   clearProjectError,
+  setMembersLoading,
+  setMembers,
+  setMembersError,
 } from "../redux/slice/projectSlice";
 import type { RootState, AppDispatch } from "../redux/store/store";
 import { openUpgradePlanModal } from "../redux/slice/uiSlice";
+import { GetProjectMembersUseCase } from "@/application/use-cases";
 
 const listProjectsUC = container.get<ListUserProjectsUseCase>(
   TYPES.ListUserProjectsUseCase
@@ -21,10 +25,23 @@ const createProjectUC = container.get<CreateProjectUseCase>(
   TYPES.CreateProjectUseCase
 );
 
+const listUserInProject = container.get<GetProjectMembersUseCase>(
+  TYPES.GetProjectMembersUseCase
+);
+
 export const useProjects = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { projects, loading, error, currentProject, page, search, totalPages } =
-    useSelector((state: RootState) => state.project);
+  const {
+    projects,
+    loading,
+    error,
+    currentProject,
+    page,
+    search,
+    totalPages,
+    members,
+    membersLoading,
+  } = useSelector((state: RootState) => state.project);
 
   const loadProjects = useCallback(
     async (params?: Partial<{ page: number; search: string }>) => {
@@ -36,13 +53,27 @@ export const useProjects = () => {
           limit: 8,
           search: params?.search ?? search,
         });
-        console.log("checking the datat:", response);
         dispatch(setProjects(response));
       } catch (err: any) {
         dispatch(setProjectError("Failed to load projects"));
       }
     },
     [dispatch, page, search]
+  );
+
+  const loadProjectMembers = useCallback(
+    async (projectId: string) => {
+      dispatch(setMembersLoading());
+
+      try {
+        const members = await listUserInProject.execute(projectId);
+        console.log("listUserInProject.execute(projectId); ", members);
+        dispatch(setMembers(members));
+      } catch {
+        dispatch(setMembersError("Failed to load members"));
+      }
+    },
+    [dispatch]
   );
 
   const createProject = async (
@@ -95,10 +126,14 @@ export const useProjects = () => {
     error,
     page,
     totalPages,
+    members,
+    membersLoading,
+
     loadProjects,
     currentProject,
     refreshProjects: loadProjects,
     createProject,
+    loadProjectMembers,
     clearError: () => dispatch(clearProjectError()),
   };
 };

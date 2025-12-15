@@ -27,7 +27,7 @@ export class ListUserProjectsUseCase {
 
   async execute(input: ListUserProjectsInput): Promise<ListUserProjectsOutput> {
     const response = this.projectRepo.getUserProjects(input);
-    console.log(response);
+
     return response;
   }
 }

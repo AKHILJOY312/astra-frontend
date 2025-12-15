@@ -18,7 +18,10 @@ import { useParams } from "react-router-dom";
 
 import { useProjects } from "@/presentation/hooks/useProjects";
 import { useChannels } from "@/presentation/hooks/useChannels";
-import { openInviteMemberModal } from "@/presentation/redux/slice/uiSlice";
+import {
+  openInviteMemberModal,
+  openViewMembersModal,
+} from "@/presentation/redux/slice/uiSlice";
 
 import { Dropdown } from "../../ui/dropdown/Dropdown";
 import { DropdownItem } from "../../ui/dropdown/DropdownItem";
@@ -36,7 +39,6 @@ export default function ChannelSidebar() {
 
   const [channelsCollapsed, setChannelsCollapsed] = useState(false);
   const [dmsCollapsed, setDmsCollapsed] = useState(false);
-  // const [activeChannel, setActiveChannel] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -142,7 +144,7 @@ export default function ChannelSidebar() {
             <DropdownItem
               icon={<Users className="w-4 h-4" />}
               onClick={() => {
-                dispatch(openInviteMemberModal());
+                dispatch(openViewMembersModal());
                 setIsProjectMenuOpen(false);
               }}
             >
@@ -161,7 +163,7 @@ export default function ChannelSidebar() {
         onClick={() => dispatch(openInviteMemberModal())}
         className="p-1.5 hover:bg-white/10 rounded transition"
       >
-        <Plus className="w-4 h-4" />
+        <Plus className="w-4 h-4" /> Invite Members
       </button>
 
       {/* ───────────────────────────────────

@@ -9,6 +9,7 @@ interface UIState {
   createChannelModal: boolean;
   upgradePlanModal: boolean;
   mobileMenuOpen: boolean;
+  viewMembersModalOpen: boolean;
 }
 
 const initialState: UIState = {
@@ -19,6 +20,7 @@ const initialState: UIState = {
   createChannelModal: false,
   upgradePlanModal: false,
   mobileMenuOpen: false,
+  viewMembersModalOpen: false,
 };
 
 const uiSlice = createSlice({
@@ -67,6 +69,12 @@ const uiSlice = createSlice({
     closeMobileMenu: (state) => {
       state.mobileMenuOpen = false;
     },
+    openViewMembersModal(state) {
+      state.viewMembersModalOpen = true;
+    },
+    closeViewMembersModal(state) {
+      state.viewMembersModalOpen = false;
+    },
   },
 });
 
@@ -85,6 +93,8 @@ export const {
   closeUpgradePlanModal,
   toggleMobileMenu,
   closeMobileMenu,
+  openViewMembersModal,
+  closeViewMembersModal,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

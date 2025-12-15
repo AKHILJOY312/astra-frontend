@@ -27,9 +27,8 @@ export class ProjectRepositoryImpl implements IProjectRepository {
     if (!response.data.success) {
       throw new Error(response.data.error || "Failed to load projects");
     }
-    console.log(response.data);
+
     const { data, page, limit, totalPages, totalCount } = response.data;
-    console.log("this is it", response.data);
 
     return {
       projects: data.map(projectResponseToEntity),

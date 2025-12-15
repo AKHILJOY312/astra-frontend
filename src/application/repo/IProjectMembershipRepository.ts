@@ -1,6 +1,5 @@
 // src/application/repo/ProjectMembershipRepository.ts
 import { ProjectMembership } from "../../domain/entities/project/ProjectMembership";
-import type { AddMemberDTO } from "../use-cases/index";
 
 export interface IProjectMembershipRepository {
   addMember(
