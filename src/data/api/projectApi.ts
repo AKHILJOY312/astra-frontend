@@ -1,18 +1,19 @@
 // src/data/api/projectApi.ts
 import api from "../../lib/apicaller";
+import { API_ROUTES } from "./apiRoutes.constants";
 
 export const createProject = (payload: {
   projectName: string;
   description?: string;
   imageUrl?: string | null;
-}) => api.post("/projects", payload);
+}) => api.post(API_ROUTES.PROJECTS.ROOT, payload);
 
 export const getUserProjects = (params: {
   page: number;
   limit: number;
   search?: string;
 }) =>
-  api.get("/projects", {
+  api.get(API_ROUTES.PROJECTS.ROOT, {
     params,
   });
 
@@ -23,13 +24,13 @@ export const updateProject = (
     description?: string;
     imageUrl?: string | null;
   }
-) => api.patch(`/projects/${projectId}`, payload);
+) => api.patch(API_ROUTES.PROJECTS.BY_ID(projectId), payload);
 
 export const getProjectById = (projectId: string) =>
-  api.get(`/projects/${projectId}`);
+  api.get(API_ROUTES.PROJECTS.BY_ID(projectId));
 
 export const deleteProject = (projectId: string) =>
-  api.delete(`/projects/${projectId}`);
+  api.delete(API_ROUTES.PROJECTS.BY_ID(projectId));
 
 export const upgradePlan = (planId: string) =>
-  api.post("/subscription/upgrade", { planId });
+  api.post(API_ROUTES.SUBSCRIPTION.UPGRADE, { planId });

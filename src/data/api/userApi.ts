@@ -1,14 +1,15 @@
 import api from "@/lib/apicaller";
+import { API_ROUTES } from "./apiRoutes.constants";
 
-export const getMyProfile = () => api.get("/users/me");
+export const getMyProfile = () => api.get(API_ROUTES.USERS.ME);
 
 export const updateProfile = (payload: { name: string; email: string }) =>
-  api.patch("/users/me", payload);
+  api.patch(API_ROUTES.USERS.ME, payload);
 
-export const deleteAccount = () => api.delete("/users/me");
+export const deleteAccount = () => api.delete(API_ROUTES.USERS.ME);
 
 export const getUploadUrl = (fileType: string) =>
-  api.post("/users/me/profile-image/upload-url", { fileType });
+  api.post(API_ROUTES.USERS.PROFILE_IMAGE_UPLOAD, { fileType });
 
 export const saveProfileImage = (imageUrl: string) =>
-  api.patch("/users/me/profile-image", { imageUrl });
+  api.patch(API_ROUTES.USERS.PROFILE_IMAGE_SAVE, { imageUrl });
