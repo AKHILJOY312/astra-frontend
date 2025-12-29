@@ -9,7 +9,7 @@ import {
   DialogClose,
 } from "@/components/atoms/dialogue/index";
 import Button from "@/components/atoms/button/Button";
-import { X } from "lucide-react";
+// import { X } from "lucide-react";
 import type { Plan } from "@/types";
 
 interface PaymentDetails {
@@ -45,9 +45,7 @@ export const PaymentStatusModal: React.FC<Props> = ({
 
       <DialogContent className="fixed z-9999 max-w-md bg-white dark:bg-gray-900 p-6 rounded-xl shadow-2xl">
         {/* CLOSE BUTTON */}
-        <DialogClose className="absolute right-4 top-4 text-gray-500 hover:text-gray-800">
-          <X className="w-5 h-5" />
-        </DialogClose>
+        <DialogClose className="absolute right-4 top-4 text-gray-500 hover:text-gray-800"></DialogClose>
 
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
@@ -79,12 +77,8 @@ export const PaymentStatusModal: React.FC<Props> = ({
               </p>
             </div>
 
-            <Button
-              onClick={() =>
-                (window.location.href = "/billing/payment-details")
-              }
-            >
-              View Payment Details
+            <Button onClick={() => (window.location.href = "/projects")}>
+              Go to Projects
             </Button>
           </div>
         ) : (
@@ -102,11 +96,9 @@ export const PaymentStatusModal: React.FC<Props> = ({
               <Button onClick={onRetry}>Retry Payment</Button>
               <Button
                 variant="outline"
-                onClick={() =>
-                  (window.location.href = "/billing/payment-details")
-                }
+                onClick={() => (window.location.href = "/projects")}
               >
-                View Payment Details
+                Go to Projects
               </Button>
             </div>
           </div>

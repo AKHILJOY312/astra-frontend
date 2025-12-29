@@ -2,9 +2,8 @@ import {
   createRazorpayOrder,
   verifyPayment,
 } from "@/services/subscription.service";
-import { logger } from "@/utils/logger";
 import { useState } from "react";
-
+import axios from "axios";
 // Razorpay handler response
 interface RazorpayResponse {
   razorpay_order_id: string;
@@ -40,7 +39,7 @@ interface RazorpayOrder {
   amount: number | string;
   currency: string;
   planName: string;
-  orderId: string;
+  razorpayOrderId: string;
 }
 
 // Payload for verification
@@ -103,16 +102,16 @@ export const useRazorpay = () => {
         return;
       }
 
-      const response = (await createRazorpayOrder(planId)).data;
-      const order: RazorpayOrder = response.data;
-      logger.debug(order);
+      const response = await createRazorpayOrder(planId);
+      const order: RazorpayOrder = response.data.data;
+
       const options: RazorpayOptions = {
         key: order.keyId,
         amount: order.amount,
         currency: order.currency,
         name: "Astra",
         description: `Upgrade to ${order.planName}`,
-        order_id: order.orderId,
+        order_id: order.razorpayOrderId,
         handler: async (response: RazorpayResponse) => {
           try {
             await verifyPayment({
@@ -155,8 +154,14 @@ export const useRazorpay = () => {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Something went wrong";
+      let message = "Something went wrong";
+
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data?.message ?? message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+
       setPaymentDetails({ type: "error", errorMessage: message });
       setPaymentStatus("failed");
       setModalOpen(true);

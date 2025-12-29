@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
   const [visible, setVisible] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, role } = useAuth();
   const toggleDrawer = () => setVisible(!visible);
   const navigate = useNavigate();
   const scrollTo = (id: string) => {
@@ -61,6 +61,11 @@ const Header = () => {
             <Button onClick={() => navigate("/register")}>Sign Up</Button>
           </div>
         </>
+      )}
+      {role == "admin" && (
+        <div className="flex items-center gap-4 ml-6">
+          <Button onClick={() => navigate("/admin/dashboard")}>Admin</Button>
+        </div>
       )}
     </>
   );

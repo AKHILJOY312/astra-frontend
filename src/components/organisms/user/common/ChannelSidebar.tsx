@@ -6,7 +6,7 @@ import {
   Plus,
   ChevronDown,
   ChevronRight,
-  Search,
+  // Search,
   Settings,
   Info,
   Calendar,
@@ -39,8 +39,8 @@ export default function ChannelSidebar() {
   const { channels, loading, activeChannelId } = useChannels(projectId!);
   const { projects } = useProjects();
   const [channelsCollapsed, setChannelsCollapsed] = useState(false);
-  const [dmsCollapsed, setDmsCollapsed] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [dmsCollapsed, setDmsCollapsed] = useState(false);
+  // const [searchQuery, setSearchQuery] = useState("");
   const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const currentProject = projects.find((p) => p.id === projectId);
@@ -62,11 +62,11 @@ export default function ChannelSidebar() {
     .join("")
     .toUpperCase()
     .slice(0, 2);
-  const dms = [
-    { id: "d1", name: "Alice Johnson", online: true, unread: 2 },
-    { id: "d2", name: "Bob Smith", online: false },
-    { id: "d3", name: "Charlie Brown", online: true },
-  ];
+  // const dms = [
+  //   { id: "d1", name: "Alice Johnson", online: true, unread: 2 },
+  //   { id: "d2", name: "Bob Smith", online: false },
+  //   { id: "d3", name: "Charlie Brown", online: true },
+  // ];
   const handleEditChannel = (channel: Channel) => {
     setChannelToEdit(channel);
     setIsEditModalOpen(true);
@@ -178,7 +178,7 @@ export default function ChannelSidebar() {
       ─────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto min-h-0">
         {/* Search */}
-        <div className="p-3">
+        {/* <div className="p-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
@@ -189,7 +189,7 @@ export default function ChannelSidebar() {
               className="w-full pl-10 pr-3 py-1.5 bg-[#2D2F33] rounded-md text-sm placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-white/20"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* ───────────────────────────────────
             CHANNEL LIST (REAL DATA)
@@ -206,12 +206,11 @@ export default function ChannelSidebar() {
                 <ChevronDown className="w-4 h-4" />
               )}
               Channels
-              {/* ← Fixed: No longer a <button> inside <button> */}
               <div
                 role="button"
                 tabIndex={0}
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent triggering parent button
+                  e.stopPropagation();
                   setOpen(true);
                 }}
                 onKeyDown={(e) => {
@@ -296,7 +295,7 @@ export default function ChannelSidebar() {
           )}
         </div>
         {/* DMS */}
-        <div className="px-2 mt-6">
+        {/* <div className="px-2 mt-6">
           <button
             onClick={() => setDmsCollapsed(!dmsCollapsed)}
             className="w-full flex items-center justify-between px-2 py-1 hover:bg-white/5 rounded text-xs font-semibold uppercase"
@@ -338,7 +337,7 @@ export default function ChannelSidebar() {
                 )}
               </button>
             ))}
-        </div>
+        </div> */}
         {/* Extra padding */}
         {/* Modal */}
         {open && (
