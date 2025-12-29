@@ -94,6 +94,26 @@ const projectSlice = createSlice({
     clearMembers(state) {
       state.members = [];
     },
+    deleteMember: (state, action: PayloadAction<{ memberId: string }>) => {
+      state.members = state.members.filter(
+        (m) => m.id !== action.payload.memberId
+      );
+    },
+
+    updateMemberRole: (
+      state,
+      action: PayloadAction<{
+        memberId: string;
+        role: "member" | "lead" | "manager";
+      }>
+    ) => {
+      const member = state.members.find(
+        (m) => m.id === action.payload.memberId
+      );
+      if (member) {
+        member.role = action.payload.role;
+      }
+    },
     setPlanLimits: (
       state,
       action: PayloadAction<{
@@ -122,6 +142,8 @@ export const {
   setMembers,
   setMembersLoading,
   updateProjectSuccess,
+  deleteMember,
+  updateMemberRole,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

@@ -10,6 +10,8 @@ import {
   setMembers,
   setMembersError,
   updateProjectSuccess,
+  deleteMember,
+  updateMemberRole,
 } from "../redux/slice/projectSlice";
 import type { RootState, AppDispatch } from "../redux/store/store";
 import { openUpgradePlanModal } from "../redux/slice/uiSlice";
@@ -18,7 +20,11 @@ import {
   userCreateProject,
   userUpdateProject,
 } from "@/services/project.service";
-import { getProjectMembers } from "@/services/membership.service";
+import {
+  changeMemberRole,
+  getProjectMembers,
+  removeMember,
+} from "@/services/membership.service";
 import axios from "axios";
 
 export const useProjects = () => {
@@ -127,6 +133,42 @@ export const useProjects = () => {
     }
   };
 
+  const changeMemberRoleAsync = async (
+    projectId: string,
+    memberId: string,
+    role: "member" | "lead" | "manager"
+  ) => {
+    try {
+      await changeMemberRole(projectId, memberId, role);
+
+      // Optimistically update Redux store
+      dispatch(updateMemberRole({ memberId, role }));
+
+      // Optional: refetch to ensure sync (in case of race conditions)
+      // await loadProjectMembers(projectId);
+    } catch (err) {
+      console.error("Failed to change member role:", err);
+      dispatch(setMembersError("Failed to update role"));
+      throw err;
+    }
+  };
+
+  const removeMemberAsync = async (projectId: string, memberId: string) => {
+    try {
+      await removeMember(projectId, memberId);
+
+      // Optimistically remove from store
+      dispatch(deleteMember({ memberId }));
+
+      // Optional: refetch members
+      // await loadProjectMembers(projectId);
+    } catch (err) {
+      console.error("Failed to remove member:", err);
+      dispatch(setMembersError("Failed to remove member"));
+      throw err;
+    }
+  };
+
   useEffect(() => {
     loadProjects();
   }, [loadProjects]);
@@ -145,6 +187,8 @@ export const useProjects = () => {
     refreshProjects: loadProjects,
     createProject,
     loadProjectMembers,
+    changeMemberRole: changeMemberRoleAsync,
+    removeMember: removeMemberAsync,
     clearError: () => dispatch(clearProjectError()),
   };
 };
