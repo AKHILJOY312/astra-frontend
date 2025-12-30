@@ -7,11 +7,15 @@ import { useProjects } from "@/hooks/useProjects";
 import CreateProjectModal from "@/components/organisms/user/Projects/CreateProjectModal";
 import ProjectCard from "@/components/organisms/user/common/ProjectCard";
 import Button from "@/components/organisms/admin/ui/button/Button";
+import { useEffect } from "react";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const { projects, loading, page, totalPages, loadProjects } = useProjects();
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
   return (
     <>
       <div className="flex-1 mt-5 ml-3 lg:ml-3 transition-all duration-300">

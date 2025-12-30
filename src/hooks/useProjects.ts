@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setProjects,
@@ -51,6 +51,7 @@ export const useProjects = () => {
           limit: 8,
           search: params?.search ?? search,
         });
+
         dispatch(setProjects(response.data));
       } catch (err) {
         console.error(err);
@@ -117,7 +118,7 @@ export const useProjects = () => {
 
     try {
       const updated = await userUpdateProject(projectId, payload);
-      console.log(updated);
+
       dispatch(updateProjectSuccess(updated.data.data));
       return updated;
     } catch (err: unknown) {
@@ -169,9 +170,9 @@ export const useProjects = () => {
     }
   };
 
-  useEffect(() => {
-    loadProjects();
-  }, [loadProjects]);
+  // useEffect(() => {
+  //   loadProjects();
+  // }, []);
 
   return {
     projects,
