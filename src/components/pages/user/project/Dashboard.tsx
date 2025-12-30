@@ -13,6 +13,7 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const { projects, loading, page, totalPages, loadProjects } = useProjects();
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   useEffect(() => {
     loadProjects();
   }, [loadProjects]);

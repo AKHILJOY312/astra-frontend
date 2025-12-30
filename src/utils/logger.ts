@@ -1,11 +1,13 @@
+const isDev = import.meta.env.DEV;
+
 export const logger = {
-  info: (message?: any, ...optionalParams: any[]) => {
-    console.info("info:", message, ...optionalParams);
+  info: (...args: any[]) => {
+    if (isDev) console.info("info:", ...args);
   },
-  debug: (message?: any, ...optionalParams: any[]) => {
-    console.log("debug:", message, ...optionalParams);
+  debug: (...args: any[]) => {
+    if (isDev) console.log("debug:", ...args);
   },
-  error: (message?: any, ...optionalParams: any[]) => {
-    console.error("error:", message, ...optionalParams);
+  error: (...args: any[]) => {
+    if (isDev) console.error("error:", ...args);
   },
 };

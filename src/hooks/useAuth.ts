@@ -4,7 +4,7 @@ import { loginUser, loadUser, logoutUser } from "../redux/thunk/authThunks";
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
-  const { user, isAuthenticated, loading, error, role, accessToken } =
+  const { user, isAuthenticated, loading, error, role, accessToken, message } =
     useAppSelector((s) => s.auth);
 
   const login = (email: string, password: string) =>
@@ -22,6 +22,7 @@ export const useAuth = () => {
     load,
     logout,
     role,
+    message,
     accessToken,
   };
 };

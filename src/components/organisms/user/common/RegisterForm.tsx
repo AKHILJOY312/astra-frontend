@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { clearError, clearMessage } from "@/redux/slice/authSlice";
 import { registerUser } from "@/redux/thunk/authThunks";
-import type { AppDispatch, RootState } from "@/redux/store/store";
+import type { AppDispatch } from "@/redux/store/store";
 import {
   Eye,
   EyeOff,
@@ -13,6 +13,7 @@ import {
   XCircle,
   AlertCircle,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 // import { Formik, Form, Field, ErrorMessage } from "formik";
 // import * as Yup from "yup";
 
@@ -50,9 +51,7 @@ const RegisterForm: React.FC = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error, message } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { loading, error, message } = useAuth();
 
   // Password strength validation
   const getPasswordStrength = (password: string) => {

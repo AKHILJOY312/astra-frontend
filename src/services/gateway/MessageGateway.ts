@@ -55,9 +55,9 @@ class MessageGateway {
     this.socket.on("disconnect", (reason) => {
       console.warn(" [MessageGateway] Socket disconnected:", reason);
     });
-    this.socket.onAny((event, ...args) => {
-      // console.log(` [SOCKET-EVENT] ${event}`, args);
-    });
+    // this.socket.onAny((event, ...args) => {
+    //   console.log(` [SOCKET-EVENT] ${event}`, args);
+    // });
   }
 
   joinChannel(channelId: string): void {
