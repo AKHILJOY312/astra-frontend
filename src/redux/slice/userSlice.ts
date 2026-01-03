@@ -47,14 +47,15 @@ export const fetchUserProfile = createAsyncThunk<
   }
 });
 
-export const updateUserProfile = createAsyncThunk<
-  { name: string; email: string }, // Adjust this based on your API return
-  { name: string; email: string },
+export const updateUserName = createAsyncThunk<
+  { name: string }, // Adjust this based on your API return
+  { name: string },
   { rejectValue: string }
 >("user/updateProfile", async (payload, { rejectWithValue }) => {
   try {
-    const { data } = await userApi.updateProfile(payload);
-    return data.user;
+    const { data } = await userApi.updateName(payload);
+
+    return data;
   } catch (e) {
     const error = e as ApiError;
     return rejectWithValue(
@@ -98,6 +99,27 @@ export const uploadProfileImage = createAsyncThunk<
   }
 });
 
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (
+    { oldPassword, newPassword }: { oldPassword: string; newPassword: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await userApi.updatePassword({
+        oldPassword,
+        newPassword,
+      });
+      return response.data;
+    } catch (err) {
+      const error = err as ApiError;
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to change password"
+      );
+    }
+  }
+);
+
 /* =========================
    Slice
 ========================= */
@@ -127,10 +149,9 @@ const userSlice = createSlice({
       })
 
       /* -------- Update Profile -------- */
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
+      .addCase(updateUserName.fulfilled, (state, action) => {
         if (state.profile) {
           state.profile.name = action.payload.name;
-          state.profile.email = action.payload.email;
         }
         state.loading = false;
       })

@@ -3,8 +3,13 @@ import { API_ROUTES } from "./apiRoutes.constants";
 
 export const getMyProfile = () => api.get(API_ROUTES.USERS.ME);
 
-export const updateProfile = (payload: { name: string; email: string }) =>
+export const updateName = (payload: { name: string }) =>
   api.patch(API_ROUTES.USERS.ME, payload);
+
+export const updatePassword = (payload: {
+  oldPassword: string;
+  newPassword: string;
+}) => api.patch(API_ROUTES.USERS.RESET_PASSWORD, payload);
 
 export const deleteAccount = () => api.delete(API_ROUTES.USERS.ME);
 

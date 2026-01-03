@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import {
   Camera,
   Trash2,
@@ -13,18 +13,20 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   fetchUserProfile,
-  updateUserProfile,
+  updateUserName,
+
   // deleteUserAccount,
   uploadProfileImage,
 } from "@/redux/slice/userSlice";
-import { logoutUser } from "@/redux/thunk/authThunks";
+// import { logoutUser } from "@/redux/thunk/authThunks";
 import ImageCropModal from "@/components/organisms/user/Profile/ImageCropModal";
+import { ChangePasswordModal } from "@/components/organisms/user/Profile/ChangePasswordModal";
 
 const FALLBACK_IMAGE = "/images/user/DummyUser.jpg";
 
 const UserProfile = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [changePwdConfirmOpen, setChangePwdConfirmOpen] = useState(false);
 
@@ -35,7 +37,7 @@ const UserProfile = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   // const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [cropModalOpen, setCropModalOpen] = useState(false);
@@ -48,13 +50,12 @@ const UserProfile = () => {
   useEffect(() => {
     if (profile) {
       setName(profile.name);
-      setEmail(profile.email);
     }
   }, [profile]);
 
   /* ---------------- HANDLERS ---------------- */
   const handleUpdateProfile = () => {
-    dispatch(updateUserProfile({ name, email }));
+    dispatch(updateUserName({ name }));
     setEditOpen(false);
   };
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,10 +104,10 @@ const UserProfile = () => {
     // dispatch(deleteUserAccount());
     alert("Not done!");
   };
-  const confirmChangePassword = () => {
-    dispatch(logoutUser());
-    navigate("/forget-password");
-  };
+  // const confirmChangePassword = () => {
+  //   dispatch(logoutUser());
+  //   navigate("/forget-password");
+  // };
 
   if (loading) return <p className="p-6 text-gray-400">Loading profile...</p>;
   if (error) return <p className="p-6 text-red-400">{error}</p>;
@@ -240,7 +241,7 @@ const UserProfile = () => {
                 onClick={() => setEditOpen(true)}
                 className="w-full flex items-center justify-center gap-2 bg-[#1a1d21] hover:bg-[#2a2d31] border border-gray-700 hover:border-gray-600 px-5 py-3 rounded-lg transition-all duration-200 text-gray-200 font-medium"
               >
-                <Edit size={18} /> Edit Profile
+                <Edit size={18} /> Edit Name
               </button>
 
               <button
@@ -293,17 +294,7 @@ const UserProfile = () => {
                 placeholder="Enter your name"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email
-              </label>
-              <input
-                className="w-full bg-[#1a1d21] border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 rounded-lg text-white placeholder-gray-500 transition-all outline-none"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-              />
-            </div>
+
             <button
               onClick={handleUpdateProfile}
               className="w-full bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -314,32 +305,10 @@ const UserProfile = () => {
         </Modal>
       )}
       {changePwdConfirmOpen && (
-        <Modal
-          title="Change Password"
+        <ChangePasswordModal
+          open={changePwdConfirmOpen}
           onClose={() => setChangePwdConfirmOpen(false)}
-        >
-          <p className="text-gray-300 text-sm mb-6 text-center">
-            You will be logged out and redirected to the forgot password page.
-            <br />
-            Do you want to continue?
-          </p>
-
-          <div className="flex gap-3">
-            <button
-              onClick={confirmChangePassword}
-              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium transition-all"
-            >
-              Yes, Continue
-            </button>
-
-            <button
-              onClick={() => setChangePwdConfirmOpen(false)}
-              className="flex-1 bg-[#1a1d21] hover:bg-[#2a2d31] border border-gray-700 text-gray-200 py-3 rounded-lg font-medium transition-all"
-            >
-              Cancel
-            </button>
-          </div>
-        </Modal>
+        />
       )}
 
       {/* ================= DELETE CONFIRM MODAL ================= */}
