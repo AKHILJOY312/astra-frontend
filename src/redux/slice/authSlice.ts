@@ -11,7 +11,7 @@ import {
 } from "../thunk/authThunks";
 import type { AuthState } from "@/types";
 import { tokenService } from "@/utils/tokenService";
-import { updateUserName } from "./userSlice";
+import { updateUserName, verifyOtpAndUpdateEmail } from "./userSlice";
 
 const initialState: AuthState = {
   user: null,
@@ -139,6 +139,11 @@ const authSlice = createSlice({
           state.user.name = action.payload.name;
         }
         state.loading = false;
+      })
+      .addCase(verifyOtpAndUpdateEmail.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user.email = action.payload;
+        }
       })
       .addCase(loginSuccess.fulfilled, (state, action) => {
         state.accessToken = action.payload.token;

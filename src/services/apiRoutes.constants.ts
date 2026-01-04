@@ -47,5 +47,7 @@ export const API_ROUTES = {
     PROFILE_IMAGE_UPLOAD: "/user/profile-image/upload-url",
     PROFILE_IMAGE_SAVE: "/user/profile-image",
     RESET_PASSWORD: "/user/change-password",
+    REQUEST_EMAIL_OTP: "user/change-email/request",
+    VERIFY_EMAIL_OTP: "user/change-email/verify",
   },
 } as const;

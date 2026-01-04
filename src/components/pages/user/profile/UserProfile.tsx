@@ -21,6 +21,7 @@ import {
 // import { logoutUser } from "@/redux/thunk/authThunks";
 import ImageCropModal from "@/components/organisms/user/Profile/ImageCropModal";
 import { ChangePasswordModal } from "@/components/organisms/user/Profile/ChangePasswordModal";
+import { ChangeEmailModal } from "@/components/organisms/user/Profile/ChangeEmailModal";
 
 const FALLBACK_IMAGE = "/images/user/DummyUser.jpg";
 
@@ -29,7 +30,7 @@ const UserProfile = () => {
   // const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [changePwdConfirmOpen, setChangePwdConfirmOpen] = useState(false);
-
+  const [changeEmailModalOpen, setChangeEmailModalOpen] = useState(false);
   const { profile, loading, error } = useAppSelector((state) => state.user);
 
   /* ---------------- UI STATES ---------------- */
@@ -250,17 +251,32 @@ const UserProfile = () => {
               >
                 Change Password
               </button>
-
-              <button
+              {/* <button
                 onClick={() => setDeleteOpen(true)}
                 className="w-full flex items-center justify-center gap-2 text-red-400 hover:text-red-300 bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/30 px-5 py-3 rounded-lg transition-all duration-200 font-medium"
               >
                 <Trash2 size={18} /> Delete Account
+              </button> */}
+              <button
+                onClick={() => setChangeEmailModalOpen(true)}
+                className="w-full flex items-center justify-center gap-2 text-red-400 hover:text-red-300 bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/30 px-5 py-3 rounded-lg transition-all duration-200 font-medium"
+              >
+                <Trash2 size={18} /> Change Email
               </button>
             </div>
           </div>
         </div>
       </div>
+      {/* ================= Change Email Modal ================= */}
+      {changeEmailModalOpen && (
+        <ChangeEmailModal
+          open={changeEmailModalOpen}
+          onClose={() => {
+            setChangeEmailModalOpen(false);
+          }}
+        />
+      )}
+
       {/* ================= CROP IMAGE MODAL ================= */}
       {cropModalOpen && imagePreview && (
         <ImageCropModal

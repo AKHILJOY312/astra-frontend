@@ -18,3 +18,9 @@ export const getUploadUrl = (fileType: string) =>
 
 export const saveProfileImage = (fileKey: string) =>
   api.patch(API_ROUTES.USERS.PROFILE_IMAGE_SAVE, { fileKey });
+
+export const sendOtp = (newEmail: string) =>
+  api.post(API_ROUTES.USERS.REQUEST_EMAIL_OTP, { newEmail });
+
+export const verifyAndUpdateEmail = (emailChangeOtp: string) =>
+  api.post(API_ROUTES.USERS.VERIFY_EMAIL_OTP, { emailChangeOtp });

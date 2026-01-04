@@ -119,7 +119,41 @@ export const changePassword = createAsyncThunk(
     }
   }
 );
+export const sendOtpToNewEmail = createAsyncThunk(
+  "auth/sendOtpToNewEmail",
+  async ({ newEmail }: { newEmail: string }, { rejectWithValue }) => {
+    try {
+      const response = await userApi.sendOtp(newEmail);
+      return response;
+    } catch (error) {
+      const err = error as ApiError;
+      return (
+        rejectWithValue(err.response?.data?.message) || "Failed to send Otp"
+      );
+    }
+  }
+);
 
+// CORRECT
+export const verifyOtpAndUpdateEmail = createAsyncThunk(
+  "auth/verifyOtpAndUpdateEmail",
+  async (
+    { emailChangeOtp }: { emailChangeOtp: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await userApi.verifyAndUpdateEmail(emailChangeOtp);
+
+      return response.data.newEmail; // Ensure you return .data
+    } catch (error) {
+      const err = error as ApiError;
+      // Return the result of rejectWithValue directly
+      return rejectWithValue(
+        err.response?.data?.message || "Invalid OTP or expired"
+      );
+    }
+  }
+);
 /* =========================
    Slice
 ========================= */
@@ -162,6 +196,11 @@ const userSlice = createSlice({
           state.profile.imageUrl = action.payload;
         }
         state.loading = false;
+      })
+      .addCase(verifyOtpAndUpdateEmail.fulfilled, (state, action) => {
+        if (state.profile) {
+          state.profile.email = action.payload;
+        }
       });
     // (Rejected cases follow the same pattern as fetchUserProfile)
   },
