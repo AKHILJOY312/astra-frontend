@@ -61,7 +61,7 @@ export default function InviteMemberModal() {
     setServerError("");
     try {
       await addMember(currentProject.id, {
-        userEmail: values.email.trim(),
+        newMemberEmail: values.email.trim(),
         role: values.role,
       });
 

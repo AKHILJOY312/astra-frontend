@@ -12,7 +12,7 @@ export const userRoutes: RouteItem[] = [
     path: "/register",
     component: "SignUp",
     exact: true,
-    layout: "auth",
+    layout: "none",
     filePath: "user/auth/",
   },
   {
@@ -92,6 +92,13 @@ export const userRoutes: RouteItem[] = [
     layout: "app",
     protected: true,
     filePath: "user/profile/",
+  },
+  {
+    path: "/invite",
+    component: "InvitePage",
+    layout: "auth",
+    protected: false,
+    filePath: "user/project/",
   },
   // {
   //   path: '/',

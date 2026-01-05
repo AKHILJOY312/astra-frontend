@@ -14,9 +14,13 @@ import EditProjectModal from "@/components/organisms/user/Projects/EditProjectMo
 export default function ProjectDetail() {
   const { projectId } = useParams<{ projectId: string }>();
   const dispatch = useDispatch();
-  const { projects } = useProjects();
+  const { projects, loadProjects, loading } = useProjects();
   const { activeChannelId } = useChannels(projectId!);
-
+  useEffect(() => {
+    if (projects.length === 0 && !loading) {
+      loadProjects();
+    }
+  }, [projects.length, loadProjects, loading]);
   useEffect(() => {
     if (projectId) {
       const project = projects.find((p) => p.id === projectId);

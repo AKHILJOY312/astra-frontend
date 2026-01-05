@@ -2,7 +2,7 @@
 import Sidebar from "@/components/organisms/user/Workspace/Sidebar";
 import UpgradePlanModal from "@/components/organisms/user/common/UpgradePlanModal";
 import { PlanLimitBanner } from "@/components/organisms/user/common/PlanLimitBanner";
-import InviteMemberModal from "@/components/organisms/user/common/InviteMemberModal";
+import InviteMemberModal from "@/components/organisms/user/Projects/InviteMemberModal";
 import Header from "@/components/organisms/user/Workspace/Header";
 import CreateProjectModal from "@/components/organisms/user/Projects/CreateProjectModal";
 export default function UserLayout({

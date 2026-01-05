@@ -25,6 +25,7 @@ export const API_ROUTES = {
     ROOT: "/projects",
     BY_ID: (projectId: string) => `/projects/${projectId}`,
     MEMBERS: (projectId: string) => `/projects/${projectId}/members`,
+    MEMBERS_INVITATION: () => `/invite`,
     MEMBER_BY_ID: (projectId: string, memberId: string) =>
       `/projects/${projectId}/members/${memberId}`,
     MEMBER_ROLE: (projectId: string, memberId: string) =>
