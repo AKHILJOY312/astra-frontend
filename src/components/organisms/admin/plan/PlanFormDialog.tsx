@@ -39,7 +39,7 @@ const planSchema = Yup.object()
     name: Yup.string()
       .trim()
       .min(3, "Name must be at least 3 characters")
-      .max(50, "Name is too long")
+      .max(15, "Name is too long")
       .required("Name is required")
       .test("no-invalid-patterns", "Give a proper plan name", (value) => {
         if (!value) return true; // required already handled
@@ -68,10 +68,12 @@ const planSchema = Yup.object()
 
     price: Yup.number()
       .min(0, "Price cannot be negative")
+      .max(4, " Every large number")
       .required("Price is required"),
 
     finalAmount: Yup.number()
       .min(0, "Final amount cannot be negative")
+      .max(4, " Every large number")
       .required("Final amount is required")
       .test(
         "final<=price",
@@ -177,7 +179,7 @@ export default function PlanFormDialog({ plan, open, onClose }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto mt-10">
         <DialogHeader>
           <DialogTitle className="text-2xl">
             {plan ? "Edit Plan" : "Create New Plan"}

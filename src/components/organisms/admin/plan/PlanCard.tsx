@@ -13,8 +13,12 @@ export default function PlanCard({ plan }: { plan: Plan }) {
   return (
     <Card className="p-5 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200 dark:border-white/[0.05] cursor-pointer group">
       <CardContent className="p-0">
-        <div className="flex justify-between items-start mb-3">
-          <h3 className="font-semibold text-lg text-gray-800 dark:text-white/90">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+          <h3
+            className="font-semibold text-lg text-gray-800 dark:text-white/90 
+                 line-clamp-2 break-words hyphens-auto 
+                 min-w-0 flex-1"
+          >
             {plan.name}
           </h3>
           <Badge variant={plan.isActive ? "light" : "solid"}>
