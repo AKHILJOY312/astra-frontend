@@ -24,7 +24,7 @@ export default function CreateProjectModal() {
       .trim()
       .required("Project name is required")
       .min(3, "Project name must have at least 3 letter")
-      .max(10, "Project name must be at most 10 characters"),
+      .max(15, "Project name must be at most 15 characters"),
     description: Yup.string()
       .trim()
       .max(500, "Description must be at most 500 characters"),

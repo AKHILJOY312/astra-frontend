@@ -68,18 +68,33 @@ const planSchema = Yup.object()
 
     price: Yup.number()
       .min(0, "Price cannot be negative")
-      .max(4, " Every large number")
-      .required("Price is required"),
+      .required("Price is required")
+      .test(
+        "max-integer-digits",
+        "Price must not have more than 6 digits before the decimal point",
+        (value) => {
+          if (value == null) return true;
+          return Math.floor(Math.abs(value)).toString().length <= 6;
+        }
+      ),
 
     finalAmount: Yup.number()
       .min(0, "Final amount cannot be negative")
-      .max(4, " Every large number")
       .required("Final amount is required")
+      .test(
+        "max-integer-digits",
+        "Final amount must not have more than 6 digits before the decimal point",
+        (value) => {
+          if (value == null) return true;
+          return Math.floor(Math.abs(value)).toString().length <= 6;
+        }
+      )
       .test(
         "final<=price",
         "Final amount must not be greater than actual price",
         function (value) {
-          return value <= this.parent.price;
+          const price = this.parent.price;
+          return value != null && price != null ? value <= price : true;
         }
       ),
 
