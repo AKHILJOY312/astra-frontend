@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import {
   Camera,
   Trash2,
@@ -18,7 +17,7 @@ import {
   // deleteUserAccount,
   uploadProfileImage,
 } from "@/redux/slice/userSlice";
-// import { logoutUser } from "@/redux/thunk/authThunks";
+
 import ImageCropModal from "@/components/organisms/user/Profile/ImageCropModal";
 import { ChangePasswordModal } from "@/components/organisms/user/Profile/ChangePasswordModal";
 import { ChangeEmailModal } from "@/components/organisms/user/Profile/ChangeEmailModal";
@@ -29,7 +28,6 @@ const FALLBACK_IMAGE = "/images/user/DummyUser.jpg";
 
 const UserProfile = () => {
   const dispatch = useAppDispatch();
-  // const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [changePwdConfirmOpen, setChangePwdConfirmOpen] = useState(false);
   const [changeEmailModalOpen, setChangeEmailModalOpen] = useState(false);
@@ -39,30 +37,16 @@ const UserProfile = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  // const [name, setName] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [uploadError, setUploadError] = useState<string>("");
-  // const [about, setAbout] = useState("");
-  // const [phone, setPhone] = useState("");
-  // const [link, setLink] = useState("");
+
   const hasProfileDetails = profile?.about || profile?.phone || profile?.link;
 
   /* ---------------- FETCH PROFILE ---------------- */
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (profile) {
-  //     setName(profile.name);
-  //     setAbout(profile.about || "");
-  //     setPhone(profile.phone || "");
-  //     setLink(profile.link || "");
-  //   }
-  // }, [profile]);
 
   /* ---------------- HANDLERS ---------------- */
 
@@ -86,7 +70,7 @@ const UserProfile = () => {
       setUploadError(
         "Invalid file type. Only JPG, PNG, WebP, and GIF are allowed."
       );
-      e.target.value = ""; // Clear input
+      e.target.value = "";
       return;
     }
 
@@ -101,21 +85,10 @@ const UserProfile = () => {
     setCropModalOpen(true);
   };
 
-  // const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
-
-  //   dispatch(uploadProfileImage(file));
-  // };
-
   const handleDeleteAccount = () => {
     // dispatch(deleteUserAccount());
     alert("Not done!");
   };
-  // const confirmChangePassword = () => {
-  //   dispatch(logoutUser());
-  //   navigate("/forget-password");
-  // };
 
   if (loading) return <p className="p-6 text-gray-400">Loading profile...</p>;
   if (error) return <p className="p-6 text-red-400">{error}</p>;
