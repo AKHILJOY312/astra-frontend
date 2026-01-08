@@ -47,9 +47,9 @@ export const fetchUserProfile = createAsyncThunk<
   }
 });
 
-export const updateUserName = createAsyncThunk<
-  { name: string }, // Adjust this based on your API return
-  { name: string },
+export const updateUserProfile = createAsyncThunk<
+  { name: string; about: string; phone: string; link: string }, // Adjust this based on your API return
+  { name: string; about: string; phone: string; link: string },
   { rejectValue: string }
 >("user/updateProfile", async (payload, { rejectWithValue }) => {
   try {
@@ -183,9 +183,9 @@ const userSlice = createSlice({
       })
 
       /* -------- Update Profile -------- */
-      .addCase(updateUserName.fulfilled, (state, action) => {
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
         if (state.profile) {
-          state.profile.name = action.payload.name;
+          Object.assign(state.profile, action.payload);
         }
         state.loading = false;
       })

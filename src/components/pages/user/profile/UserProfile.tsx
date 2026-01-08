@@ -13,7 +13,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   fetchUserProfile,
-  updateUserName,
+  updateUserProfile,
 
   // deleteUserAccount,
   uploadProfileImage,
@@ -22,6 +22,8 @@ import {
 import ImageCropModal from "@/components/organisms/user/Profile/ImageCropModal";
 import { ChangePasswordModal } from "@/components/organisms/user/Profile/ChangePasswordModal";
 import { ChangeEmailModal } from "@/components/organisms/user/Profile/ChangeEmailModal";
+import { Modal } from "@/components/molecules/user/profile/Modal";
+import EditProfileModal from "@/components/organisms/user/Profile/EditProfileModal";
 
 const FALLBACK_IMAGE = "/images/user/DummyUser.jpg";
 
@@ -37,28 +39,33 @@ const UserProfile = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   // const [email, setEmail] = useState("");
   // const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [uploadError, setUploadError] = useState<string>("");
+  // const [about, setAbout] = useState("");
+  // const [phone, setPhone] = useState("");
+  // const [link, setLink] = useState("");
+  const hasProfileDetails = profile?.about || profile?.phone || profile?.link;
+
   /* ---------------- FETCH PROFILE ---------------- */
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (profile) {
-      setName(profile.name);
-    }
-  }, [profile]);
+  // useEffect(() => {
+  //   if (profile) {
+  //     setName(profile.name);
+  //     setAbout(profile.about || "");
+  //     setPhone(profile.phone || "");
+  //     setLink(profile.link || "");
+  //   }
+  // }, [profile]);
 
   /* ---------------- HANDLERS ---------------- */
-  const handleUpdateProfile = () => {
-    dispatch(updateUserName({ name }));
-    setEditOpen(false);
-  };
+
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -136,7 +143,7 @@ const UserProfile = () => {
         <div className="bg-[#232529] border border-gray-800 rounded-lg shadow-xl overflow-hidden">
           {/* Header Section with Profile Image */}
           <div className="bg-linear-to-r from-purple-900/20 to-blue-900/20 p-8 border-b border-gray-800">
-            <div className="flex items-start gap-6">
+            <div className="flex items-start gap-6 pb-7">
               <div className="relative group">
                 <img
                   src={profile.imageUrl || FALLBACK_IMAGE}
@@ -179,6 +186,74 @@ const UserProfile = () => {
                   </div>
                 </div>
               </div>
+            </div>
+            {/* PROFILE DETAILS */}
+            <div className="relative bg-[#1a1d21] border border-gray-800 rounded-lg p-5 space-y-4">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold text-white">Profile Details</h4>
+
+                <button
+                  onClick={() => setEditOpen(true)}
+                  className="p-2 rounded-md border border-gray-700 hover:border-gray-600 hover:bg-[#2a2d31] text-gray-300 transition-all"
+                  aria-label="Edit profile"
+                >
+                  <Edit size={16} />
+                </button>
+              </div>
+
+              {hasProfileDetails ? (
+                <>
+                  {/* About */}
+                  {profile.about && (
+                    <div>
+                      <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">
+                        About
+                      </p>
+                      <p className="text-gray-300 text-sm leading-relaxed">
+                        {profile.about}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Phone */}
+                  {profile.phone && (
+                    <div>
+                      <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">
+                        Phone
+                      </p>
+                      <p className="text-gray-300 text-sm">{profile.phone}</p>
+                    </div>
+                  )}
+
+                  {/* Link */}
+                  {profile.link && (
+                    <div>
+                      <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">
+                        Website
+                      </p>
+                      <a
+                        href={profile.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="!text-purple-400 hover:!text-purple-300 text-sm underline underline-offset-2 transition-colors"
+                      >
+                        {profile.link}
+                      </a>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-6">
+                  <p className="text-gray-500 text-sm">
+                    No profile details added yet.
+                  </p>
+                  <p className="text-gray-600 text-xs mt-1">
+                    Add a bio, phone number, or website to complete your
+                    profile.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -239,13 +314,6 @@ const UserProfile = () => {
             {/* ACTION BUTTONS */}
             <div className="space-y-3 pt-2">
               <button
-                onClick={() => setEditOpen(true)}
-                className="w-full flex items-center justify-center gap-2 bg-[#1a1d21] hover:bg-[#2a2d31] border border-gray-700 hover:border-gray-600 px-5 py-3 rounded-lg transition-all duration-200 text-gray-200 font-medium"
-              >
-                <Edit size={18} /> Edit Name
-              </button>
-
-              <button
                 onClick={() => setChangePwdConfirmOpen(true)}
                 className="w-full bg-[#1a1d21] hover:bg-[#2a2d31] border border-gray-700 hover:border-gray-600 px-5 py-3 rounded-lg transition-all duration-200 text-gray-200 font-medium"
               >
@@ -297,29 +365,21 @@ const UserProfile = () => {
       )}
       {/* ================= EDIT PROFILE MODAL ================= */}
       {editOpen && (
-        <Modal onClose={() => setEditOpen(false)} title="Edit Profile">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Name
-              </label>
-              <input
-                className="w-full bg-[#1a1d21] border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 rounded-lg text-white placeholder-gray-500 transition-all outline-none"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name"
-              />
-            </div>
-
-            <button
-              onClick={handleUpdateProfile}
-              className="w-full bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              Save Changes
-            </button>
-          </div>
-        </Modal>
+        <EditProfileModal
+          open={editOpen}
+          onClose={() => setEditOpen(false)}
+          initialValues={{
+            name: profile.name,
+            about: profile.about || "",
+            phone: profile.phone || "",
+            link: profile.link || "",
+          }}
+          onSave={(values) => {
+            dispatch(updateUserProfile(values));
+          }}
+        />
       )}
+
       {changePwdConfirmOpen && (
         <ChangePasswordModal
           open={changePwdConfirmOpen}
@@ -363,27 +423,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-
-/* ================= REUSABLE MODAL ================= */
-const Modal = ({
-  title,
-  children,
-  onClose,
-}: {
-  title: string;
-  children: React.ReactNode;
-  onClose: () => void;
-}) => (
-  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div className="bg-[#232529] border border-gray-800 rounded-xl w-full max-w-md p-6 shadow-2xl">
-      <h3 className="text-xl font-semibold mb-6 text-white">{title}</h3>
-      {children}
-      <button
-        onClick={onClose}
-        className="mt-4 text-sm text-gray-400 hover:text-gray-300 w-full transition-colors"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-);

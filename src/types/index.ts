@@ -195,6 +195,9 @@ export type IUserProfile = {
   email: string;
   imageUrl: string;
   isVerified: boolean;
+  about: string | null;
+  phone: string | null;
+  link: string | null;
   createdAt: Date;
   plan: IProfilePlan | null;
 };
