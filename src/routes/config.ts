@@ -100,6 +100,13 @@ export const userRoutes: RouteItem[] = [
     protected: false,
     filePath: "user/project/",
   },
+  {
+    path: "/history",
+    component: "UserBillingHistory",
+    layout: "app",
+    protected: true,
+    filePath: "user/upgrade/",
+  },
   // {
   //   path: '/',
   //   component: 'Dashboard',

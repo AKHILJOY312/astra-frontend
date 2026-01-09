@@ -14,10 +14,10 @@ export const updatePassword = (payload: {
 export const deleteAccount = () => api.delete(API_ROUTES.USERS.ME);
 
 export const getUploadUrl = (fileType: string) =>
-  api.post(API_ROUTES.USERS.PROFILE_IMAGE_UPLOAD, { fileType });
+  api.post(API_ROUTES.USERS.PROFILE_IMAGE, { fileType });
 
 export const saveProfileImage = (fileKey: string) =>
-  api.patch(API_ROUTES.USERS.PROFILE_IMAGE_SAVE, { fileKey });
+  api.patch(API_ROUTES.USERS.PROFILE_IMAGE, { fileKey });
 
 export const sendOtp = (newEmail: string) =>
   api.post(API_ROUTES.USERS.REQUEST_EMAIL_OTP, { newEmail });

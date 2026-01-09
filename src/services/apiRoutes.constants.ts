@@ -41,12 +41,12 @@ export const API_ROUTES = {
     UPGRADE: "/subscription/upgrade",
     RAZORPAY_ORDER: "/subscription/razorpay/order",
     RAZORPAY_CAPTURE: "/subscription/razorpay/capture",
+    PAYMENT_HISTORY: "/subscription/history",
   },
 
   USERS: {
     ME: "/user/me",
-    PROFILE_IMAGE_UPLOAD: "/user/profile-image/upload-url",
-    PROFILE_IMAGE_SAVE: "/user/profile-image",
+    PROFILE_IMAGE: "/user/profile-image",
     RESET_PASSWORD: "/user/change-password",
     REQUEST_EMAIL_OTP: "user/change-email/request",
     VERIFY_EMAIL_OTP: "user/change-email/verify",

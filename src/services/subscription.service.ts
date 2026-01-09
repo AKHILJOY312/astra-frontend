@@ -7,3 +7,9 @@ export const createRazorpayOrder = (planId: string) =>
 
 export const verifyPayment = (payload: VerifyPayment) =>
   apiCaller.post(API_ROUTES.SUBSCRIPTION.RAZORPAY_CAPTURE, payload);
+
+export const getPaymentHistoryForMe = (params: {
+  page: number;
+  limit: number;
+  search?: string;
+}) => apiCaller.get(API_ROUTES.SUBSCRIPTION.PAYMENT_HISTORY, { params });
