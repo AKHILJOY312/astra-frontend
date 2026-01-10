@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import ChannelSidebar from "@/components/organisms/user/common/ChannelSidebar";
-import MessageArea from "@/components/organisms/user/common/MessageArea";
+import MessageArea from "@/components/organisms/user/Message/MessageArea";
 import { setCurrentProject } from "@/redux/slice/projectSlice";
 import { useProjects } from "@/hooks/useProjects";
 import { useChannels } from "@/hooks/useChannels";
