@@ -33,6 +33,8 @@ export const API_ROUTES = {
     CHANNELS: (projectId: string) => `/projects/${projectId}/channels`,
     CHANNEL_BY_ID: (projectId: string, channelId: string) =>
       `/projects/${projectId}/channels/${channelId}`,
+    UPLOAD_URL: (projectId: string, channelId: string) =>
+      `/projects/${projectId}/channels/${channelId}/upload-url`,
   },
 
   SUBSCRIPTION: {

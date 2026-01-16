@@ -17,12 +17,30 @@ interface ServerToClientEvents {
   }) => void;
 }
 
+// interface ClientToServerEvents {
+//   "channel:join": (channelId: string) => void;
+//   "message:send": (payload: {
+//     text: string;
+//     channelId: string;
+//     projectId?: string;
+//   }) => void;
+//   "channel:leave": (data: { channelId: string }) => void;
+// }
+// In your MessageGateway file (where ClientToServerEvents is defined)
+
 interface ClientToServerEvents {
   "channel:join": (channelId: string) => void;
   "message:send": (payload: {
     text: string;
     channelId: string;
     projectId?: string;
+    attachments?: Array<{
+      fileName: string;
+      fileType: string;
+      fileSize: number;
+      fileUrl: string;
+      key?: string;
+    }>;
   }) => void;
   "channel:leave": (data: { channelId: string }) => void;
 }
@@ -71,6 +89,13 @@ class MessageGateway {
     text: string;
     channelId: string;
     projectId?: string;
+    attachments?: Array<{
+      fileName: string;
+      fileType: string;
+      fileSize: number;
+      fileUrl: string;
+      key?: string;
+    }>;
   }): void {
     // console.log(" [MessageGateway.sendMessage] Sending message");
     // console.log(" Payload:", payload);
