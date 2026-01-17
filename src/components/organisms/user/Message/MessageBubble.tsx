@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import type { Message } from "@/types";
 import { format } from "date-fns";
+import { MessageAttachments } from "./MessageAttachments";
 
 /* ------------------------------------------------------
    SLACK MESSAGE BUBBLE
@@ -26,18 +27,21 @@ export function MessageBubble({ message }: { message: Message }) {
           <span className="text-xs text-gray-400">{time}</span>
         </div>
 
-        <div
-          className={`
-            mt-1 px-4 py-2 rounded-lg whitespace-pre-wrap leading-relaxed 
-            ${isOwn ? "bg-blue-600 text-white" : "bg-[#2A2D31] text-gray-200"}
-          `}
-        >
-          {message.text}
-        </div>
+        {/* Text bubble */}
+        {message.text && (
+          <div
+            className={`
+              mt-1 px-4 py-2 rounded-lg whitespace-pre-wrap leading-relaxed
+              ${isOwn ? "bg-blue-600 text-white" : "bg-[#2A2D31] text-gray-200"}
+            `}
+          >
+            {message.text}
+          </div>
+        )}
 
-        {/* Attachment Indicator */}
-        {message.hasAttachments && (
-          <div className="text-xs text-gray-400 mt-2">📎 Attachment</div>
+        {/* Attachments */}
+        {message.attachments?.length > 0 && (
+          <MessageAttachments attachments={message.attachments} />
         )}
       </div>
     </div>
