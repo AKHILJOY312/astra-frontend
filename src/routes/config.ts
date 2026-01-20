@@ -114,6 +114,20 @@ export const userRoutes: RouteItem[] = [
   //   exact: true,
   //   protected: true,
   // },
+  {
+    path: PATHS.TASK.LIST_TASK,
+    component: "ProjectBoardPage",
+    layout: "app",
+    protected: true,
+    filePath: "user/task/",
+  },
+  {
+    path: PATHS.TASK.DETAIL_TASK,
+    component: "TaskDetailPage",
+    layout: "app",
+    protected: true,
+    filePath: "user/task/",
+  }
 ];
 
 export const adminRoutes: RouteItem[] = [

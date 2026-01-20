@@ -31,6 +31,11 @@ export const PATHS = {
     PAYMENT_FAILED: "/payment/failed",
     BILLING_HISTORY: "/billing/history",
   },
+  //Task
+  TASK: {
+    LIST_TASK: "/projects/:projectId/task",
+    DETAIL_TASK: "/projects/:projectId/task/:taskId",
+  },
   // --- Admin ---
   ADMIN: {
     LOGIN: "/admin/login",

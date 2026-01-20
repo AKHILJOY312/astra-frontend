@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useProjects } from "@/hooks/useProjects";
 import { useChannels } from "@/hooks/useChannels";
@@ -48,12 +48,13 @@ export default function ChannelSidebar() {
   const description = currentProject?.description || "No description";
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [channelToEdit, setChannelToEdit] = useState<Channel | null>(null);
+  const navigate = useNavigate();
   const createdAt = currentProject?.createdAt
     ? new Date(currentProject.createdAt).toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
     : "—";
 
   const initials = projectName
@@ -92,9 +93,8 @@ export default function ChannelSidebar() {
           {projectName}
         </span>
         <ChevronDown
-          className={`w-4 h-4 transition-transform ${
-            isProjectMenuOpen ? "rotate-180" : ""
-          }`}
+          className={`w-4 h-4 transition-transform ${isProjectMenuOpen ? "rotate-180" : ""
+            }`}
         />
       </button>
 
@@ -151,7 +151,14 @@ export default function ChannelSidebar() {
             >
               View Members
             </DropdownItem>
-
+            <DropdownItem
+              icon={<Users className="w-4 h-4" />}
+              onClick={() => {
+                navigate(`/projects/${projectId}/task`);
+              }}
+            >
+              View Tasks
+            </DropdownItem>
             <DropdownItem
               icon={<Settings className="w-4 h-4" />}
               onClick={() => {
@@ -247,11 +254,10 @@ export default function ChannelSidebar() {
                     <button
                       onClick={() => handleChannelClick(ch)}
                       className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all
-              ${
-                activeChannelId === ch.id
-                  ? "bg-white/10 text-white font-medium"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
-              }`}
+              ${activeChannelId === ch.id
+                          ? "bg-white/10 text-white font-medium"
+                          : "text-gray-400 hover:text-white hover:bg-white/5"
+                        }`}
                     >
                       {/* Channel icon */}
                       {ch.unreadCount ? (

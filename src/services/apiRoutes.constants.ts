@@ -40,6 +40,16 @@ export const API_ROUTES = {
     GET_URL: (attachmentId: string) => `/attachments/${attachmentId}`,
   },
 
+  TASKS: {
+    ROOT: (projectId: string) => `/projects/${projectId}/tasks`,
+    BY_ID: (taskId: string) => `/projects/tasks/${taskId}`,
+    STATUS: (taskId: string) => `/projects/tasks/${taskId}/status`,
+    ATTACHMENT_UPLOAD: (projectId: string) =>
+      `/projects/${projectId}/tasks/attachments/upload-url`,
+    MEMBERS_SEARCH: (projectId: string) =>
+      `/projects/${projectId}/tasks/members/search`,
+  },
+
   SUBSCRIPTION: {
     PLANS: "/subscription/plans",
     LIMITS: "/subscription/limits",

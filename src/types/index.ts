@@ -291,3 +291,113 @@ export type MessagesState = {
   activeChannelId: string | null;
   list: Message[];
 };
+
+//---------------------------------------------------
+//Tasks
+//---------------------------------------------------
+
+export type TaskStatus = "todo" | "inprogress" | "done";
+
+export type TaskPriority = "low" | "medium" | "high";
+
+export interface TaskAttachment {
+  id: string;
+  fileName: string;
+  fileKey: string;
+  fileType: string;
+  size: number;
+  uploadedAt: string;
+  uploadedBy: User;
+}
+export type assignedUser = {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl: string;
+
+};
+export interface Task {
+  id: string;
+  projectId: string;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate: string | null;
+
+  assignedTo: assignedUser | null;
+  createdBy: User;
+
+  attachments: TaskAttachment[];
+  isDeleted: boolean;
+}
+
+export interface AssignableMember {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl: string | null;
+}
+
+export interface CreateTaskRequest {
+  projectId: string;
+  title: string;
+  description?: string;
+  priority: TaskPriority;
+  dueDate?: string;
+  assignedTo: string;
+  attachments?: string[];
+}
+
+export interface UpdateTaskStatusRequest {
+
+  status: TaskStatus;
+}
+
+export interface ListTasksQuery {
+  projectId: string;
+  status?: TaskStatus;
+  assignedToMe?: boolean;
+}
+
+export interface TaskResponse {
+  task: Task;
+}
+
+export interface TaskListResponse {
+  tasks: Task[];
+}
+
+/* ---------- MEMBERS ---------- */
+
+export interface SearchMembersRequest {
+  projectId: string;
+  query: string;
+}
+
+export interface SearchMembersResponse {
+  members: AssignableMember[];
+}
+
+/* ---------- ATTACHMENTS ---------- */
+
+export interface TaskAttachmentUploadRequest {
+  taskId: string;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+}
+
+export interface TaskAttachmentUploadResponse {
+  uploadUrl: string;
+  fileKey: string; expiresAt?: string;
+}
+
+export type TaskState = {
+  tasks: Task[];
+  loading: boolean;
+  activeTaskId: string | null;
+  activeTask: Task | null;
+  error: string | null;
+  isManager: boolean;
+};
