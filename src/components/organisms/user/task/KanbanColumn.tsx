@@ -1,53 +1,44 @@
-import TaskCardHeader from "@/components/molecules/user/task/TaskCardHeader";
+import type { Task, TaskStatus } from "@/types";
+import { STATUS_LABELS } from "@/utils/constants";
+import { TaskCard } from "./TaskCard";
 
-interface Task {
-    id: string;
-    title: string;
-    priority: "high" | "medium" | "low";
+interface KanbanColumnProps {
+  status: TaskStatus;
+  tasks: Task[];
+  onOpenTask: (task: Task) => void;
 }
 
-interface Props {
-    title: string;
-    tasks: Task[];
-}
-
-export default function KanbanColumn({
-    title,
-    tasks,
-}: Props) {
-    return (
-        <div
-            className="
-        flex flex-col gap-3 p-3 rounded-xl
-        bg-[#1a1d21] border border-gray-800
-        min-h-[300px]
-      "
-        >
-            <h2 className="text-gray-300 text-sm font-semibold">
-                {title}
-            </h2>
-
-            {tasks.length === 0 && (
-                <div className="text-gray-500 text-xs italic">
-                    No tasks
-                </div>
-            )}
-
-            {tasks.map((task) => (
-                <div
-                    key={task.id}
-                    className="
-            bg-[#232529] rounded-lg p-3
-            hover:bg-[#2a2d31]
-            transition cursor-pointer
-          "
-                >
-                    <TaskCardHeader
-                        title={task.title}
-                        priority={task.priority}
-                    />
-                </div>
-            ))}
+export const KanbanColumn = ({
+  status,
+  tasks,
+  onOpenTask,
+}: KanbanColumnProps) => {
+  return (
+    <div className="flex-shrink-0 w-[85vw] sm:w-[350px] lg:w-full snap-center">
+      <div className="flex items-center justify-between mb-5 px-2">
+        <div className="flex items-center gap-2">
+          <h2 className="font-bold text-gray-200 uppercase tracking-widest text-xs">
+            {STATUS_LABELS[status] || status}
+          </h2>
+          <span className="bg-[#232529] text-[10px] px-2 py-0.5 rounded-full text-gray-400 font-mono">
+            {tasks.length}
+          </span>
         </div>
-    );
-}
+      </div>
+
+      <div className="space-y-4 min-h-[60vh] rounded-2xl bg-[#16191d]/40 p-3 ring-1 ring-white/5 backdrop-blur-sm">
+        {tasks.length > 0 ? (
+          tasks.map((task) => (
+            <TaskCard key={task.id} task={task} onOpen={onOpenTask} />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-gray-800/50 rounded-2xl">
+            <p className="text-gray-600 text-xs font-medium">
+              No tasks in {status}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

@@ -305,6 +305,8 @@ export interface TaskAttachment {
   fileName: string;
   fileKey: string;
   fileType: string;
+  fileUrl: string;
+  fileSize: number;
   size: number;
   uploadedAt: string;
   uploadedBy: User;
@@ -314,7 +316,6 @@ export type assignedUser = {
   name: string;
   email: string;
   avatarUrl: string;
-
 };
 export interface Task {
   id: string;
@@ -340,17 +341,20 @@ export interface AssignableMember {
 }
 
 export interface CreateTaskRequest {
-  projectId: string;
   title: string;
   description?: string;
   priority: TaskPriority;
   dueDate?: string;
   assignedTo: string;
-  attachments?: string[];
+  attachments?: {
+    fileName: string;
+    fileUrl: string;
+    fileType: string;
+    fileSize: number;
+  }[];
 }
 
 export interface UpdateTaskStatusRequest {
-
   status: TaskStatus;
 }
 
@@ -385,12 +389,13 @@ export interface TaskAttachmentUploadRequest {
   taskId: string;
   fileName: string;
   fileSize: number;
-  mimeType: string;
+  fileType: string;
 }
 
 export interface TaskAttachmentUploadResponse {
   uploadUrl: string;
-  fileKey: string; expiresAt?: string;
+  fileKey: string;
+  expiresAt?: string;
 }
 
 export type TaskState = {
@@ -401,3 +406,5 @@ export type TaskState = {
   error: string | null;
   isManager: boolean;
 };
+
+export type DispositionType = "view" | "download" | "task";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Download, Eye, File, ImageOff } from "lucide-react";
 import { getAttachmentAccessUrl } from "@/services/attachments.service";
-import type { Attachment } from "@/types";
+import type { Attachment, DispositionType } from "@/types";
 
 export function MessageAttachments({
   attachments,
@@ -11,7 +11,7 @@ export function MessageAttachments({
   const [imageError, setImageError] = useState(false);
   const handleAccess = async (
     attachmentId: string,
-    disposition: "view" | "download"
+    disposition: DispositionType,
   ) => {
     const url = await getAttachmentAccessUrl(attachmentId, disposition);
 
