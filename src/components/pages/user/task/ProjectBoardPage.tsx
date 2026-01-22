@@ -78,6 +78,7 @@ export default function KanbanBoard() {
 
       {activeTask && (
         <TaskDetailsModal
+          projectId={projectId!}
           isManager={isManager}
           task={activeTask}
           currentUserId={user?.id}

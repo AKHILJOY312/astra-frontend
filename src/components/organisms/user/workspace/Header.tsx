@@ -1,13 +1,5 @@
 import useGoBack from "@/hooks/useGoBack";
-import {
-  Search,
-  HelpCircle,
-  Bell,
-  Mic,
-  Headphones,
-  ArrowLeft,
-  Sparkles,
-} from "lucide-react";
+import { Bell, Mic, Headphones, ArrowLeft, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const cn = (...inputs: (string | undefined | false)[]) =>
@@ -66,7 +58,7 @@ export default function SlackHeader() {
           <button
             className={cn(
               "p-2 rounded-md transition",
-              userStatus === "online" ? "text-red-400" : "hover:bg-white/10"
+              userStatus === "online" ? "text-red-400" : "hover:bg-white/10",
             )}
           >
             {userStatus === "online" ? (

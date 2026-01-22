@@ -353,7 +353,13 @@ export interface CreateTaskRequest {
     fileSize: number;
   }[];
 }
-
+export interface EditTaskRequest {
+  title?: string;
+  description?: string;
+  priority?: TaskPriority;
+  dueDate?: string;
+  assignedTo?: string;
+}
 export interface UpdateTaskStatusRequest {
   status: TaskStatus;
 }
