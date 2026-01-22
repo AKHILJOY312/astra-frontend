@@ -5,7 +5,7 @@ import { useTasks } from "@/hooks/useTasks";
 import { useAuth } from "@/hooks/useAuth";
 import type { TaskStatus } from "@/types";
 
-import TaskDetailsModal from "./TaskDetailPage";
+import TaskDetailsModal from "@/components/molecules/user/task/TaskDetailPage";
 import CreateTaskModal from "@/components/organisms/user/task/CreateTaskModal";
 import { KanbanColumn } from "@/components/organisms/user/task/KanbanColumn";
 

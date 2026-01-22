@@ -1,7 +1,8 @@
-import { Flag, Calendar } from "lucide-react";
-import { PRIORITY_COLORS } from "@/utils/constants";
 import type { TaskPriority } from "@/types";
+import { PRIORITY_COLORS } from "@/utils/constants";
+import { Calendar, Flag } from "lucide-react";
 
+// --- Sub-Component: Task Metadata (Fixed Null Type Error) ---
 export const TaskMetadata = ({
   priority,
   dueDate,

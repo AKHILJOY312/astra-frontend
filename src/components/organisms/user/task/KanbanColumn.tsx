@@ -1,6 +1,6 @@
 import type { Task, TaskStatus } from "@/types";
 import { STATUS_LABELS } from "@/utils/constants";
-import { TaskCard } from "./TaskCard";
+import { TaskCard } from "@/components/atoms/user/task/TaskCard";
 
 interface KanbanColumnProps {
   status: TaskStatus;
