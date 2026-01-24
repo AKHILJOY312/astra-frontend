@@ -1,5 +1,5 @@
 // src/presentation/redux/slices/uiSlice.ts
-import type { UiAlertType } from "@/types/uiTypes";
+import type { UiAlertType } from "@/types/ui.types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface UIState {
