@@ -414,3 +414,35 @@ export type TaskState = {
 };
 
 export type DispositionType = "view" | "download" | "task";
+
+//payment hisotry billing hisotry
+
+export type Subscription = {
+  planName: string;
+  startDate: string;
+  endDate: string;
+  status: "active" | "expired" | "cancelled";
+  amount: number;
+};
+export type Payment = {
+  paymentId: string;
+  invoiceNumber?: string;
+  planName: string;
+  amount: number;
+  currency: string;
+  status: "pending" | "captured" | "failed";
+  method: string;
+  paidAt: string;
+  canDownloadInvoice: boolean;
+};
+export type Pagination = {
+  page: number;
+  limit: number;
+  totalPages: number;
+  totalItems: number;
+};
+export type BillingResponse = {
+  subscription: Subscription | null;
+  payments: Payment[];
+  pagination: Pagination;
+};
