@@ -14,7 +14,7 @@ export default function SlackHeader() {
   const userStatus = "online"; // online, away, dnd
 
   return (
-    <header className="fixed top-0 left-[70px] right-0 z-40 flex h-12 justify-end  border-b border-white/10 bg-[#4F1B60] px-4 text-white py-2">
+    <header className="sticky top-0 left-[70px] right-0 z-40 flex h-12 justify-end  border-b border-white/10 bg-[#4F1B60] px-4 text-white py-2">
       <button
         onClick={goBack}
         className="flex items-center gap-2 rounded-lg px-3 py-1.5 hover:bg-white/10 transition"
