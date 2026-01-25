@@ -17,9 +17,9 @@ export const KanbanColumn = ({
     <div className="flex-shrink-0 w-[85vw] sm:w-[350px] lg:w-full snap-center">
       <div className="flex items-center justify-between mb-5 px-2">
         <div className="flex items-center gap-2">
-          <h2 className="font-bold text-gray-200 uppercase tracking-widest text-xs">
+          <h4 className="font-bold text-gray-200 uppercase tracking-widest text-xs">
             {STATUS_LABELS[status] || status}
-          </h2>
+          </h4>
           <span className="bg-[#232529] text-[10px] px-2 py-0.5 rounded-full text-gray-400 font-mono">
             {tasks.length}
           </span>

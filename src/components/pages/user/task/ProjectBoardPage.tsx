@@ -40,7 +40,7 @@ export default function KanbanBoard() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Layout className="text-blue-500" size={24} />
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight pt-20">
               Project Board
             </h1>
           </div>
@@ -64,14 +64,19 @@ export default function KanbanBoard() {
           <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       ) : (
-        <div className="flex overflow-x-auto pb-8 gap-4 md:gap-6 snap-x snap-mandatory lg:grid lg:grid-cols-3 lg:max-w-[1600px] lg:mx-auto">
+        <div className=" flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:gap-6 lg:max-w-[1600px] lg:mx-auto">
           {KANBAN_ORDER.map((status) => (
-            <KanbanColumn
+            <div
               key={status}
-              status={status}
-              tasks={tasks.filter((t) => t.status === status)}
-              onOpenTask={openTask}
-            />
+              // w-full makes it take the whole width on mobile
+              className="w-full"
+            >
+              <KanbanColumn
+                status={status}
+                tasks={tasks.filter((t) => t.status === status)}
+                onOpenTask={openTask}
+              />
+            </div>
           ))}
         </div>
       )}
