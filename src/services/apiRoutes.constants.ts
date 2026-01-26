@@ -49,6 +49,11 @@ export const API_ROUTES = {
     MEMBERS_SEARCH: (projectId: string) =>
       `/projects/${projectId}/tasks/members/search`,
   },
+  VIDEO_CALL: {
+    ROOT: "/meetings",
+    CODE: (code: string) => `/meetings/${code}`,
+    END: "/meetings/leave",
+  },
 
   SUBSCRIPTION: {
     PLANS: "/subscription/plans",
