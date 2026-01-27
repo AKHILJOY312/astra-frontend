@@ -2,15 +2,16 @@ import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/redux/store/store";
 import {
-  setTasks,
   addTask,
   updateTask,
   removeTask,
-  setTaskLoading,
   setTaskError,
   clearTaskError,
-  updateTaskStatusLocally,
   setActiveTask,
+  appendTasks,
+  setColumnLoading,
+  setInitialTasks,
+  moveTask,
 } from "@/redux/slice/taskSlice";
 import {
   UserCreateTask,
@@ -27,29 +28,77 @@ import type {
   SearchMembersRequest,
   EditTaskRequest,
   Task,
+  TaskStatus,
 } from "@/types";
 import axios from "axios";
+const PAGE_SIZE = 4;
 
 export const useTasks = (projectId: string) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { tasks, loading, error, activeTask, activeTaskId, isManager } =
-    useSelector((state: RootState) => state.task);
+  const { columns, error, activeTask, activeTaskId, isManager } = useSelector(
+    (state: RootState) => state.task,
+  );
 
   // ---------------------------
   // Load Tasks
   // ---------------------------
-  const loadTasks = useCallback(async () => {
-    dispatch(setTaskLoading());
 
-    try {
-      const response = await listTasks(projectId);
-      dispatch(setTasks(response.data.data));
-    } catch (err) {
-      console.error(err);
-      dispatch(setTaskError("Failed to load tasks"));
-    }
-  }, [dispatch, projectId]);
+  const loadInitialTask = useCallback(
+    async (status: TaskStatus) => {
+      dispatch(setColumnLoading({ status, data: true }));
+
+      try {
+        const res = await listTasks(projectId, {
+          status,
+          limit: PAGE_SIZE,
+          cursor: null,
+        });
+        dispatch(
+          setInitialTasks({
+            status,
+            data: {
+              tasks: res.data.data.tasks,
+              cursor: res.data.data.pageInfo.nextCursor,
+              hasMore: res.data.data.pageInfo.hasMore,
+              isManager: res.data.data.isManager,
+            },
+          }),
+        );
+      } catch (err) {
+        console.error(err);
+        dispatch(setTaskError("Failed To load tasks"));
+      }
+    },
+    [dispatch, projectId],
+  );
+
+  const loadMoreTasks = useCallback(
+    async (status: TaskStatus) => {
+      const column = columns[status];
+      if (column.loading || !column.hasMore) return;
+
+      dispatch(setColumnLoading({ status, data: true }));
+
+      const res = await listTasks(projectId, {
+        status,
+        cursor: column.cursor,
+        limit: PAGE_SIZE,
+      });
+
+      dispatch(
+        appendTasks({
+          status,
+          data: {
+            tasks: res.data.data.tasks,
+            cursor: res.data.data.nextCursor,
+            hasMore: res.data.data.hasMore,
+          },
+        }),
+      );
+    },
+    [columns, dispatch, projectId],
+  );
 
   // ---------------------------
   // Create Task
@@ -98,19 +147,19 @@ export const useTasks = (projectId: string) => {
   // Update Task Status (Kanban)
   // ---------------------------
   const changeTaskStatus = async (
-    taskId: string,
+    task: Task,
     payload: UpdateTaskStatusRequest,
   ) => {
-    // Optimistic update
     dispatch(
-      updateTaskStatusLocally({
-        taskId,
-        status: payload.status,
+      moveTask({
+        task,
+        from: task.status,
+        to: payload.status,
       }),
     );
 
     try {
-      await updateTaskStatus(taskId, payload);
+      await updateTaskStatus(task.id, payload);
     } catch (err) {
       console.error(err);
       dispatch(setTaskError("Failed to update task status"));
@@ -121,10 +170,10 @@ export const useTasks = (projectId: string) => {
   // ---------------------------
   // Delete Task
   // ---------------------------
-  const deleteTaskAsync = async (taskId: string) => {
+  const deleteTaskAsync = async (task: Task) => {
     try {
-      await deleteTaskApi(taskId);
-      dispatch(removeTask(taskId));
+      await deleteTaskApi(task.id);
+      dispatch(removeTask(task));
     } catch (err) {
       console.error(err);
       dispatch(setTaskError("Failed to delete task"));
@@ -159,14 +208,14 @@ export const useTasks = (projectId: string) => {
   // };
 
   return {
-    tasks,
-    loading,
+    columns,
     error,
     activeTask,
     activeTaskId,
     isManager,
 
-    loadTasks,
+    loadInitialTask,
+    loadMoreTasks,
     createTask,
     updateTask: updateTaskAsync,
     changeTaskStatus,

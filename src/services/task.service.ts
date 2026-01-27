@@ -5,6 +5,7 @@ import type {
   SearchMembersResponse,
   TaskAttachmentUploadRequest,
   TaskAttachmentUploadResponse,
+  TaskStatus,
   UpdateTaskStatusRequest,
 } from "@/types";
 import api from "./api";
@@ -16,8 +17,16 @@ export const UserCreateTask = (
 ) => {
   return api.post(API_ROUTES.TASKS.ROOT(projectId), payload);
 };
-export const listTasks = (projectId: string) => {
-  return api.get(API_ROUTES.TASKS.ROOT(projectId));
+
+export const listTasks = (
+  projectId: string,
+  params: {
+    status: TaskStatus;
+    limit?: number;
+    cursor?: string | null;
+  },
+) => {
+  return api.get(API_ROUTES.TASKS.ROOT(projectId), { params });
 };
 
 export const UserEditTask = (taskId: string, payload: EditTaskRequest) => {

@@ -17,8 +17,8 @@ interface TaskDetailsModalProps {
   currentUserId?: string;
   onClose: () => void;
   onUpdate: (taskId: string, data: EditTaskRequest) => void;
-  onDelete: (taskId: string) => void;
-  onChangeStatus: (taskId: string, status: TaskStatus) => void;
+  onDelete: (task: Task) => void;
+  onChangeStatus: (task: Task, status: TaskStatus) => void;
 }
 
 export default function TaskDetailsModal({
@@ -124,7 +124,7 @@ export default function TaskDetailsModal({
                   {allowedNextStatuses.map((s) => (
                     <button
                       key={s}
-                      onClick={() => onChangeStatus(task.id, s)}
+                      onClick={() => onChangeStatus(task, s)}
                       className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white transition-all active:scale-95"
                     >
                       <CheckCircle2 size={14} /> Move to {STATUS_LABELS[s]}
@@ -136,7 +136,7 @@ export default function TaskDetailsModal({
               <ModalFooter
                 isManager={isManager}
                 isEditing={false}
-                onDelete={() => onDelete(task.id)}
+                onDelete={() => onDelete(task)}
                 onEdit={() => setIsEditing(true)}
                 // These are ignored in View Mode by our ModalFooter logic
                 onSave={() => {}}

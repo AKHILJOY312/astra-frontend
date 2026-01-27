@@ -15,22 +15,24 @@ export default function KanbanBoard() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const {
-    tasks,
-    loading,
+    columns,
     activeTask,
     createTask,
     openTask,
     closeTask,
+    loadMoreTasks,
     changeTaskStatus,
     deleteTask,
     updateTask,
-    loadTasks,
+    loadInitialTask,
     isManager,
   } = useTasks(projectId!);
 
   useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
+    loadInitialTask("todo");
+    loadInitialTask("inprogress");
+    loadInitialTask("done");
+  }, [loadInitialTask]);
 
   const KANBAN_ORDER: TaskStatus[] = ["todo", "inprogress", "done"];
 
@@ -40,7 +42,7 @@ export default function KanbanBoard() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Layout className="text-blue-500" size={24} />
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight pt-20">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
               Project Board
             </h1>
           </div>
@@ -59,27 +61,23 @@ export default function KanbanBoard() {
         )}
       </header>
 
-      {loading ? (
-        <div className="flex h-96 items-center justify-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      ) : (
-        <div className=" flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:gap-6 lg:max-w-[1600px] lg:mx-auto">
-          {KANBAN_ORDER.map((status) => (
-            <div
+      <div className=" flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:gap-6 lg:max-w-[1600px] lg:mx-auto">
+        {KANBAN_ORDER.map((status) => {
+          const column = columns[status];
+
+          return (
+            <KanbanColumn
               key={status}
-              // w-full makes it take the whole width on mobile
-              className="w-full"
-            >
-              <KanbanColumn
-                status={status}
-                tasks={tasks.filter((t) => t.status === status)}
-                onOpenTask={openTask}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+              status={status}
+              tasks={column.tasks}
+              onOpenTask={openTask}
+              onLoadMore={() => loadMoreTasks(status)}
+              hasMore={column.hasMore}
+              loading={column.loading}
+            />
+          );
+        })}
+      </div>
 
       {activeTask && (
         <TaskDetailsModal
@@ -93,9 +91,7 @@ export default function KanbanBoard() {
             deleteTask(id);
             closeTask();
           }}
-          onChangeStatus={(taskId, status) =>
-            changeTaskStatus(taskId, { status })
-          }
+          onChangeStatus={(task, status) => changeTaskStatus(task, { status })}
         />
       )}
 

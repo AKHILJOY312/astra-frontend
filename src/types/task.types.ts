@@ -112,11 +112,27 @@ export interface TaskAttachmentUploadResponse {
   expiresAt?: string;
 }
 
-export type TaskState = {
+// export type TaskState = {
+//   tasks: Task[];
+//   loading: boolean;
+//   activeTaskId: string | null;
+//   activeTask: Task | null;
+//   error: string | null;
+//   cursor: string | null;
+//   hasMore: boolean;
+//   isManager: boolean;
+// };
+export type ColumnState = {
   tasks: Task[];
+  cursor: string | null;
+  hasMore: boolean;
   loading: boolean;
-  activeTaskId: string | null;
+};
+
+export type TaskState = {
+  columns: Record<TaskStatus, ColumnState>;
   activeTask: Task | null;
+  activeTaskId: string | null;
   error: string | null;
   isManager: boolean;
 };
