@@ -87,8 +87,8 @@ export default function KanbanBoard() {
           currentUserId={user?.id}
           onClose={closeTask}
           onUpdate={updateTask}
-          onDelete={(id) => {
-            deleteTask(id);
+          onDelete={(task) => {
+            deleteTask(task);
             closeTask();
           }}
           onChangeStatus={(task, status) => changeTaskStatus(task, { status })}

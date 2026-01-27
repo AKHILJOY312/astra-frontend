@@ -91,8 +91,8 @@ export const useTasks = (projectId: string) => {
           status,
           data: {
             tasks: res.data.data.tasks,
-            cursor: res.data.data.nextCursor,
-            hasMore: res.data.data.hasMore,
+            cursor: res.data.data.pageInfo.nextCursor,
+            hasMore: res.data.data.pageInfo.hasMore,
           },
         }),
       );

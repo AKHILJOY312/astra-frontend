@@ -121,9 +121,9 @@ export const KanbanColumn = ({
                 className={`w-2.5 h-2.5 rounded-full ${getAccentColor(status)} shadow-lg`}
                 style={{ boxShadow: `0 0 8px currentColor` }}
               />
-              <h3 className="font-bold text-gray-100 tracking-wide text-sm uppercase">
+              <h4 className="font-bold text-gray-100 tracking-wide text-sm uppercase">
                 {STATUS_LABELS[status] || status}
-              </h3>
+              </h4>
             </div>
           </div>
         </div>

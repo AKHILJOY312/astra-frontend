@@ -83,7 +83,15 @@ const taskSlice = createSlice({
     ) {
       const column = state.columns[action.payload.status];
 
-      column.tasks.push(...action.payload.data.tasks);
+      // Create a Set of existing IDs for O(1) lookup
+      const existingIds = new Set(column.tasks.map((t) => t.id));
+
+      // Only append tasks that aren't already in the state
+      const newTasks = action.payload.data.tasks.filter(
+        (task) => !existingIds.has(task.id),
+      );
+
+      column.tasks.push(...newTasks);
       column.cursor = action.payload.data.cursor;
       column.hasMore = action.payload.data.hasMore;
       column.loading = false;
