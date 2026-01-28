@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { Task, TaskState, TaskStatus } from "@/types";
+import type { TaskComment, Task, TaskState, TaskStatus } from "@/types";
 
 const createColumn = (): {
   tasks: Task[];
@@ -140,6 +140,30 @@ const taskSlice = createSlice({
       });
     },
 
+    // Inside your taskSlice reducers:
+    addCommentToTask(
+      state,
+      action: PayloadAction<{
+        taskId: string;
+        status: TaskStatus;
+        comment: TaskComment;
+      }>,
+    ) {
+      const { taskId, status, comment } = action.payload;
+      const column = state.columns[status];
+      const task = column.tasks.find((t) => t.id === taskId);
+
+      if (task) {
+        // Add to the task in the list
+        if (!task.comments) task.comments = [];
+        task.comments.push(comment);
+
+        // Sync with activeTask if it's the one currently open
+        if (state.activeTask && state.activeTask.id === taskId) {
+          state.activeTask.comments.push(comment);
+        }
+      }
+    },
     // ---------------------------
     // Active Task
     // ---------------------------
@@ -161,6 +185,7 @@ export const {
   removeTask,
   moveTask,
   setActiveTask,
+  addCommentToTask,
 } = taskSlice.actions;
 
 export default taskSlice.reducer;

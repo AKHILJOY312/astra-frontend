@@ -12,6 +12,7 @@ import {
   setColumnLoading,
   setInitialTasks,
   moveTask,
+  addCommentToTask,
 } from "@/redux/slice/taskSlice";
 import {
   UserCreateTask,
@@ -21,6 +22,7 @@ import {
   searchProjectMembers,
   // requestTaskAttachmentUploadUrl,
   UserEditTask,
+  addCommentToTaskApi,
 } from "@/services/task.service";
 import type {
   CreateTaskRequest,
@@ -207,6 +209,32 @@ export const useTasks = (projectId: string) => {
   //   return await requestTaskAttachmentUploadUrl(projectId, payload);
   // };
 
+  const addCommentAsync = async (
+    projectId: string,
+    task: Task,
+    comment: string,
+  ) => {
+    dispatch(clearTaskError());
+    try {
+      // Call the specific comment API
+      const response = await addCommentToTaskApi(projectId, task.id, comment);
+
+      const newComment = response.data.data;
+
+      dispatch(
+        addCommentToTask({
+          taskId: task.id,
+          status: task.status,
+          comment: newComment,
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+      dispatch(setTaskError("Failed to add caption"));
+      throw err;
+    }
+  };
+
   return {
     columns,
     error,
@@ -220,6 +248,7 @@ export const useTasks = (projectId: string) => {
     updateTask: updateTaskAsync,
     changeTaskStatus,
     deleteTask: deleteTaskAsync,
+    addComment: addCommentAsync,
 
     openTask,
     closeTask,

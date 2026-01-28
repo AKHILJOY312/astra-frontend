@@ -5,7 +5,7 @@ import { useTasks } from "@/hooks/useTasks";
 import { useAuth } from "@/hooks/useAuth";
 import type { TaskStatus } from "@/types";
 
-import TaskDetailsModal from "@/components/molecules/user/task/TaskDetailPage";
+import TaskDetailsModal from "@/components/molecules/user/task/TaskDetailModal";
 import CreateTaskModal from "@/components/organisms/user/task/CreateTaskModal";
 import { KanbanColumn } from "@/components/organisms/user/task/KanbanColumn";
 
@@ -26,6 +26,7 @@ export default function KanbanBoard() {
     updateTask,
     loadInitialTask,
     isManager,
+    addComment,
   } = useTasks(projectId!);
 
   useEffect(() => {
@@ -92,6 +93,9 @@ export default function KanbanBoard() {
             closeTask();
           }}
           onChangeStatus={(task, status) => changeTaskStatus(task, { status })}
+          onAddingComment={(task, comment) =>
+            addComment(projectId!, task, comment)
+          }
         />
       )}
 

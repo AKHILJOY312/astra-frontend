@@ -38,7 +38,13 @@ export interface Task {
   createdBy: User;
 
   attachments: TaskAttachment[];
+  comments: TaskComment[];
   isDeleted: boolean;
+}
+export interface TaskComment {
+  author: User;
+  message: string;
+  createdAt: string;
 }
 
 export interface AssignableMember {

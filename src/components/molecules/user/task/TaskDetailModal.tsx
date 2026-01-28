@@ -8,6 +8,7 @@ import { ModalFooter } from "@/components/atoms/user/task/ModalFooter";
 import { ModalHeader } from "@/components/atoms/user/task/ModalHeader";
 import { TaskMetadata } from "@/components/atoms/user/task/TaskMetadata";
 import { TaskAttachments } from "@/components/molecules/user/task/TaskAttachments";
+import { TaskComments } from "./TaskComments";
 // import { useTasks } from "@/hooks/useTasks";
 
 // --- Main Page/Modal Component ---
@@ -19,6 +20,7 @@ interface TaskDetailsModalProps {
   onUpdate: (taskId: string, data: EditTaskRequest) => void;
   onDelete: (task: Task) => void;
   onChangeStatus: (task: Task, status: TaskStatus) => void;
+  onAddingComment: (task: Task, comment: string) => void;
 }
 
 export default function TaskDetailsModal({
@@ -30,9 +32,10 @@ export default function TaskDetailsModal({
   onUpdate,
   onDelete,
   onChangeStatus,
+  onAddingComment,
 }: TaskDetailsModalProps & { projectId: string }) {
   const [isEditing, setIsEditing] = useState(false);
-
+  console.log("What is coming form the tasks: ", task);
   // Status logic for View Mode
   const STATUS_FLOW: Record<TaskStatus, TaskStatus[]> = {
     todo: ["inprogress"],
@@ -116,7 +119,12 @@ export default function TaskDetailsModal({
                   {task.description || "No description."}
                 </p>
               </div>
-
+              <TaskComments
+                comment={task.comments || []}
+                onUpdate={(updatedComments) =>
+                  onAddingComment(task, updatedComments)
+                }
+              />
               <TaskAttachments attachments={task.attachments} />
 
               {isAssignedUser && allowedNextStatuses.length > 0 && (

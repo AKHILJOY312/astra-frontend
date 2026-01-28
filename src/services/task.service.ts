@@ -65,3 +65,14 @@ export const requestTaskAttachmentUploadUrl = async (
 
   return response.data.data;
 };
+
+//post api/tasks/:taskId/command
+export const addCommentToTaskApi = async (
+  projectId: string,
+  taskId: string,
+  message: string,
+) => {
+  return await api.post(API_ROUTES.TASKS.COMMENT(projectId, taskId), {
+    message,
+  });
+};
