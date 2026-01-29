@@ -2,7 +2,6 @@ import {
   LiveKitRoom,
   VideoConference,
   RoomAudioRenderer,
-  ControlBar,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
 import { useParams } from "react-router-dom";
