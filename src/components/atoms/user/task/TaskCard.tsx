@@ -15,7 +15,7 @@ export const TaskCard = ({ task, onOpen }: TaskCardProps) => {
   return (
     <div
       onClick={() => onOpen(task)}
-      className="group cursor-pointer rounded-xl border border-gray-800 bg-[#1c1f24] p-4 transition-all hover:border-blue-500/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] hover:-translate-y-1 active:scale-[0.98]"
+      className="w-full sm:max-w-xs mx-auto group cursor-pointer rounded-xl border border-gray-800 bg-[#1c1f24] p-4 transition-all hover:border-blue-500/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] hover:-translate-y-1 active:scale-[0.98]"
     >
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-start">
@@ -41,9 +41,9 @@ export const TaskCard = ({ task, onOpen }: TaskCardProps) => {
           </div>
         </div>
 
-        <h3 className="font-semibold text-sm md:text-base leading-tight group-hover:text-blue-400 transition-colors line-clamp-2">
+        <h5 className="font-semibold text-sm md:text-base leading-tight group-hover:text-blue-400 transition-colors line-clamp-2">
           {task.title}
-        </h3>
+        </h5>
 
         <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-800/50">
           <div className="flex items-center gap-2">

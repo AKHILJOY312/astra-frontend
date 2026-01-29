@@ -1,29 +1,47 @@
 // src/components/SocketInitializer.tsx
 import { useEffect } from "react";
-// Assuming these are your paths
 import { useAppSelector } from "@/redux/hooks";
 import { messageGateway } from "@/services/gateway/MessageGateway";
+import { meetingGateway } from "@/services/gateway/MeetingGateway ";
 
 function SocketInitializer() {
-  // Read the authentication state from Redux
   const token = useAppSelector((state) => state.auth.accessToken);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
-    // Only attempt to connect if the user is authenticated AND a token is present
-    if (isAuthenticated && token) {
-      console.log("Connecting socket with token:", token.slice(0, 10) + "...");
-      messageGateway.connect(token);
-    }
+    if (!isAuthenticated || !token) return;
 
-    // Cleanup function: Disconnect when the user logs out or the component unmounts
+    console.log(
+      "🔐 initializing socket with token",
+      token.slice(0, 10) + "...",
+    );
+
+    messageGateway.connect(token);
+
+    const socket = messageGateway.getSocket();
+    if (!socket) return;
+
+    const onConnect = () => {
+      console.log("🟢 socket connected", socket.id);
+      meetingGateway.connect(socket);
+    };
+
+    const onError = (err: any) => {
+      console.error("🔴 socket connection error", err.message);
+    };
+
+    socket.on("connect", onConnect);
+    socket.on("connect_error", onError);
+
     return () => {
+      socket.off("connect", onConnect);
+      socket.off("connect_error", onError);
+      meetingGateway.disconnect();
       messageGateway.disconnect?.();
     };
-    // The effect re-runs whenever isAuthenticated or token changes (e.g., login/logout)
   }, [isAuthenticated, token]);
 
-  return null; // This component renders nothing, it's purely for side effects
+  return null;
 }
 
 export default SocketInitializer;

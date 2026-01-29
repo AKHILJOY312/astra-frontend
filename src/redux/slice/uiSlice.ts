@@ -1,4 +1,5 @@
 // src/presentation/redux/slices/uiSlice.ts
+import type { UiAlertType } from "@/types/ui.types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface UIState {
@@ -11,6 +12,12 @@ interface UIState {
   upgradePlanModal: boolean;
   mobileMenuOpen: boolean;
   viewMembersModalOpen: boolean;
+
+  alert: {
+    visible: boolean;
+    type: UiAlertType;
+    message: string;
+  } | null;
 }
 
 const initialState: UIState = {
@@ -23,6 +30,7 @@ const initialState: UIState = {
   upgradePlanModal: false,
   mobileMenuOpen: false,
   viewMembersModalOpen: false,
+  alert: null,
 };
 
 const uiSlice = createSlice({
@@ -83,6 +91,19 @@ const uiSlice = createSlice({
     closeEditProjectModal(state) {
       state.editProjectModalOpen = false;
     },
+    showAlert: (
+      state,
+      action: PayloadAction<{ type: UiAlertType; message: string }>,
+    ) => {
+      state.alert = {
+        visible: true,
+        type: action.payload.type,
+        message: action.payload.message,
+      };
+    },
+    hideAlert: (state) => {
+      state.alert = null;
+    },
   },
 });
 
@@ -105,6 +126,9 @@ export const {
   closeViewMembersModal,
   openEditProjectModal,
   closeEditProjectModal,
+
+  showAlert,
+  hideAlert,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

@@ -1,49 +1,10 @@
 import { io, Socket } from "socket.io-client";
+import type {
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from "./events/messaging.events";
 
 type NewMessagePayload = Parameters<ServerToClientEvents["message:new"]>[0];
-
-// Define your event payloads once
-interface ServerToClientEvents {
-  "message:new": (message: {
-    id: string;
-    channelId: string;
-    senderId: string;
-    senderName: string;
-    text: string;
-    hasAttachments: boolean;
-    hasReplies: boolean;
-    createdAt: string;
-    updatedAt: string;
-  }) => void;
-}
-
-// interface ClientToServerEvents {
-//   "channel:join": (channelId: string) => void;
-//   "message:send": (payload: {
-//     text: string;
-//     channelId: string;
-//     projectId?: string;
-//   }) => void;
-//   "channel:leave": (data: { channelId: string }) => void;
-// }
-// In your MessageGateway file (where ClientToServerEvents is defined)
-
-interface ClientToServerEvents {
-  "channel:join": (channelId: string) => void;
-  "message:send": (payload: {
-    text: string;
-    channelId: string;
-    projectId?: string;
-    attachments?: Array<{
-      fileName: string;
-      fileType: string;
-      fileSize: number;
-      fileUrl: string;
-      key?: string;
-    }>;
-  }) => void;
-  "channel:leave": (data: { channelId: string }) => void;
-}
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -104,7 +65,7 @@ class MessageGateway {
 
     if (!this.socket?.connected) {
       console.error(
-        " [MessageGateway.sendMessage] Cannot send; socket not connected."
+        " [MessageGateway.sendMessage] Cannot send; socket not connected.",
       );
       return;
     }
@@ -129,7 +90,7 @@ class MessageGateway {
       hasReplies: boolean;
       createdAt: string;
       updatedAt: string;
-    }) => void
+    }) => void,
   ): () => void {
     // console.log(
     //   " [MessageGateway.subscribeToNewMessages] Subscribing to 'message:new'"
@@ -165,6 +126,9 @@ class MessageGateway {
       // console.log(" No socket instance found — creating new connection...");
       this.connect(token);
     }
+  }
+  getSocket() {
+    return this.socket;
   }
 }
 

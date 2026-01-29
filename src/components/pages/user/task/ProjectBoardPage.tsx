@@ -5,7 +5,7 @@ import { useTasks } from "@/hooks/useTasks";
 import { useAuth } from "@/hooks/useAuth";
 import type { TaskStatus } from "@/types";
 
-import TaskDetailsModal from "@/components/molecules/user/task/TaskDetailPage";
+import TaskDetailsModal from "@/components/molecules/user/task/TaskDetailModal";
 import CreateTaskModal from "@/components/organisms/user/task/CreateTaskModal";
 import { KanbanColumn } from "@/components/organisms/user/task/KanbanColumn";
 
@@ -15,22 +15,25 @@ export default function KanbanBoard() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const {
-    tasks,
-    loading,
+    columns,
     activeTask,
     createTask,
     openTask,
     closeTask,
+    loadMoreTasks,
     changeTaskStatus,
     deleteTask,
     updateTask,
-    loadTasks,
+    loadInitialTask,
     isManager,
+    addComment,
   } = useTasks(projectId!);
 
   useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
+    loadInitialTask("todo");
+    loadInitialTask("inprogress");
+    loadInitialTask("done");
+  }, [loadInitialTask]);
 
   const KANBAN_ORDER: TaskStatus[] = ["todo", "inprogress", "done"];
 
@@ -59,22 +62,23 @@ export default function KanbanBoard() {
         )}
       </header>
 
-      {loading ? (
-        <div className="flex h-96 items-center justify-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      ) : (
-        <div className="flex overflow-x-auto pb-8 gap-4 md:gap-6 snap-x snap-mandatory lg:grid lg:grid-cols-3 lg:max-w-[1600px] lg:mx-auto">
-          {KANBAN_ORDER.map((status) => (
+      <div className=" flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:gap-6 lg:max-w-[1600px] lg:mx-auto">
+        {KANBAN_ORDER.map((status) => {
+          const column = columns[status];
+
+          return (
             <KanbanColumn
               key={status}
               status={status}
-              tasks={tasks.filter((t) => t.status === status)}
+              tasks={column.tasks}
               onOpenTask={openTask}
+              onLoadMore={() => loadMoreTasks(status)}
+              hasMore={column.hasMore}
+              loading={column.loading}
             />
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
 
       {activeTask && (
         <TaskDetailsModal
@@ -84,12 +88,13 @@ export default function KanbanBoard() {
           currentUserId={user?.id}
           onClose={closeTask}
           onUpdate={updateTask}
-          onDelete={(id) => {
-            deleteTask(id);
+          onDelete={(task) => {
+            deleteTask(task);
             closeTask();
           }}
-          onChangeStatus={(taskId, status) =>
-            changeTaskStatus(taskId, { status })
+          onChangeStatus={(task, status) => changeTaskStatus(task, { status })}
+          onAddingComment={(task, comment) =>
+            addComment(projectId!, task, comment)
           }
         />
       )}

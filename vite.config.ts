@@ -15,10 +15,16 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      process: "process/browser",
+      buffer: "buffer",
     },
+  },
+  define: {
+    global: "window",
   },
   server: {
     port: 5173,

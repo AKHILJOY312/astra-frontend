@@ -127,7 +127,28 @@ export const userRoutes: RouteItem[] = [
     layout: "app",
     protected: true,
     filePath: "user/task/",
-  }
+  },
+  {
+    path: PATHS.VIDEO.PAGE,
+    component: "VideoCallPage",
+    layout: "app",
+    protected: true,
+    filePath: "user/video/",
+  },
+  {
+    path: PATHS.VIDEO.LOBBY,
+    component: "MeetingLobbyPage",
+    layout: "app",
+    protected: true,
+    filePath: "user/video/",
+  },
+  {
+    path: PATHS.VIDEO.MEETING,
+    component: "MeetingRoomPage",
+    layout: "app",
+    protected: true,
+    filePath: "user/video/",
+  },
 ];
 
 export const adminRoutes: RouteItem[] = [

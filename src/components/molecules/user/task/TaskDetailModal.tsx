@@ -8,6 +8,7 @@ import { ModalFooter } from "@/components/atoms/user/task/ModalFooter";
 import { ModalHeader } from "@/components/atoms/user/task/ModalHeader";
 import { TaskMetadata } from "@/components/atoms/user/task/TaskMetadata";
 import { TaskAttachments } from "@/components/molecules/user/task/TaskAttachments";
+import { TaskComments } from "./TaskComments";
 // import { useTasks } from "@/hooks/useTasks";
 
 // --- Main Page/Modal Component ---
@@ -17,8 +18,9 @@ interface TaskDetailsModalProps {
   currentUserId?: string;
   onClose: () => void;
   onUpdate: (taskId: string, data: EditTaskRequest) => void;
-  onDelete: (taskId: string) => void;
-  onChangeStatus: (taskId: string, status: TaskStatus) => void;
+  onDelete: (task: Task) => void;
+  onChangeStatus: (task: Task, status: TaskStatus) => void;
+  onAddingComment: (task: Task, comment: string) => void;
 }
 
 export default function TaskDetailsModal({
@@ -30,9 +32,10 @@ export default function TaskDetailsModal({
   onUpdate,
   onDelete,
   onChangeStatus,
+  onAddingComment,
 }: TaskDetailsModalProps & { projectId: string }) {
   const [isEditing, setIsEditing] = useState(false);
-
+  console.log("What is coming form the tasks: ", task);
   // Status logic for View Mode
   const STATUS_FLOW: Record<TaskStatus, TaskStatus[]> = {
     todo: ["inprogress"],
@@ -116,7 +119,12 @@ export default function TaskDetailsModal({
                   {task.description || "No description."}
                 </p>
               </div>
-
+              <TaskComments
+                comment={task.comments || []}
+                onUpdate={(updatedComments) =>
+                  onAddingComment(task, updatedComments)
+                }
+              />
               <TaskAttachments attachments={task.attachments} />
 
               {isAssignedUser && allowedNextStatuses.length > 0 && (
@@ -124,7 +132,7 @@ export default function TaskDetailsModal({
                   {allowedNextStatuses.map((s) => (
                     <button
                       key={s}
-                      onClick={() => onChangeStatus(task.id, s)}
+                      onClick={() => onChangeStatus(task, s)}
                       className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white transition-all active:scale-95"
                     >
                       <CheckCircle2 size={14} /> Move to {STATUS_LABELS[s]}
@@ -136,7 +144,7 @@ export default function TaskDetailsModal({
               <ModalFooter
                 isManager={isManager}
                 isEditing={false}
-                onDelete={() => onDelete(task.id)}
+                onDelete={() => onDelete(task)}
                 onEdit={() => setIsEditing(true)}
                 // These are ignored in View Mode by our ModalFooter logic
                 onSave={() => {}}

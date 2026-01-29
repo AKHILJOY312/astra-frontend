@@ -48,6 +48,13 @@ export const API_ROUTES = {
       `/projects/${projectId}/tasks/attachments/upload-url`,
     MEMBERS_SEARCH: (projectId: string) =>
       `/projects/${projectId}/tasks/members/search`,
+    COMMENT: (projectId: string, taskId: string) =>
+      `/projects/${projectId}/tasks/${taskId}/comment`,
+  },
+  VIDEO_CALL: {
+    ROOT: "/meetings",
+    CODE: (code: string) => `/meetings/${code}`,
+    END: "/meetings/leave",
   },
 
   SUBSCRIPTION: {

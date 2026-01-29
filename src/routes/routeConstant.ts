@@ -36,6 +36,11 @@ export const PATHS = {
     LIST_TASK: "/projects/:projectId/task",
     DETAIL_TASK: "/projects/:projectId/task/:taskId",
   },
+  VIDEO: {
+    PAGE: "/meeting",
+    LOBBY: "/meeting/:code/lobby",
+    MEETING: "/meeting/:code",
+  },
   // --- Admin ---
   ADMIN: {
     LOGIN: "/admin/login",
