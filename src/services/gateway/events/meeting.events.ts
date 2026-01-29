@@ -3,11 +3,11 @@ export interface ClientToSeverMeetingEvents {
 
   "meeting:leave": (payload: { meetingId: string }) => void;
 
-  "meeting:signal": (payload: {
-    meetingId: string;
-    targetSocketId: string;
-    signal: any;
-  }) => void;
+  // "meeting:signal": (payload: {
+  //   meetingId: string;
+  //   targetSocketId: string;
+  //   signal: any;
+  // }) => void;
 }
 
 export interface ServerToClientMeetingEvents {
@@ -18,9 +18,9 @@ export interface ServerToClientMeetingEvents {
 
   "meeting:user-left": (payload: { socketId: string }) => void;
 
-  "meeting:signal": (payload: {
-    fromSocketId: string;
-    signal: any;
-    meetingId: string;
-  }) => void;
+  // "meeting:signal": (payload: {
+  //   fromSocketId: string;
+  //   signal: any;
+  //   meetingId: string;
+  // }) => void;
 }

@@ -12,9 +12,6 @@ import "flatpickr/dist/flatpickr.css";
 import { ThemeProvider } from "@/context/ThemeContext.tsx";
 import QueryProvider from "@/context/QueryProvider.tsx";
 import { AppWrapper } from "@/context/AppProviders.tsx";
-import { Buffer } from "buffer";
-
-(window as any).Buffer = Buffer;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>

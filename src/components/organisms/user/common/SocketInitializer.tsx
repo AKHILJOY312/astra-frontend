@@ -22,12 +22,16 @@ function SocketInitializer() {
     if (!socket) return;
 
     const onConnect = () => {
-      console.log("🟢 socket connected", socket.id);
+      console.log(" socket connected", socket.id);
       meetingGateway.connect(socket);
     };
 
-    const onError = (err: any) => {
-      console.error("🔴 socket connection error", err.message);
+    const onError = (err: unknown) => {
+      if (err instanceof Error) {
+        console.error(" socket connection error", err.message);
+      } else {
+        console.error(" socket connection error", err);
+      }
     };
 
     socket.on("connect", onConnect);
