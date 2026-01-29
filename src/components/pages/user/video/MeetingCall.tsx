@@ -1,14 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { meetingGateway } from "@/services/gateway/MeetingGateway ";
 import { useMeetingCall } from "@/hooks/useMeetingCall";
 
-export default function MeetingCall() {
+interface MeetingCallProps {
+  meetingCode: string;
+}
+
+// Update your MeetingCall.tsx to ensure the refs are handled correctly
+export default function MeetingCall({ meetingCode }: MeetingCallProps) {
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
-  const [code, setCode] = useState("");
 
   const { localStream, remoteStream, joinMeeting, leaveMeeting } =
     useMeetingCall({ meetingGateway });
+
+  useEffect(() => {
+    joinMeeting(meetingCode);
+    return () => leaveMeeting();
+  }, [meetingCode]);
 
   // Attach local stream
   useEffect(() => {
@@ -20,52 +29,44 @@ export default function MeetingCall() {
   // Attach remote stream
   useEffect(() => {
     if (remoteVideoRef.current && remoteStream) {
+      console.log(
+        "🔗 Attaching remote stream to video element",
+        remoteStream.id,
+      );
       remoteVideoRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <h2 className="text-lg font-semibold">Meeting Call</h2>
-
-      <div className="flex gap-4">
+    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 h-[calc(100vh-80px)]">
+      <div className="relative">
         <video
           ref={localVideoRef}
           autoPlay
           muted
           playsInline
-          className="w-64 h-48 bg-black rounded"
+          className="w-full h-full bg-black rounded-lg object-cover mirror"
         />
+        <span className="absolute bottom-4 left-4 bg-black/50 px-2 py-1 rounded text-sm">
+          You (Local)
+        </span>
+      </div>
 
+      <div className="relative">
         <video
           ref={remoteVideoRef}
           autoPlay
           playsInline
-          className="w-64 h-48 bg-black rounded"
+          className="w-full h-full bg-black rounded-lg object-cover"
         />
-      </div>
-
-      <div className="flex gap-2">
-        <input
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="Meeting code"
-          className="border px-2 py-1 rounded text-black"
-        />
-
-        <button
-          onClick={() => joinMeeting(code)}
-          className="px-3 py-1 bg-green-600 text-white rounded"
-        >
-          Join
-        </button>
-
-        <button
-          onClick={leaveMeeting}
-          className="px-3 py-1 bg-red-600 text-white rounded"
-        >
-          Leave
-        </button>
+        {!remoteStream && (
+          <div className="absolute inset-0 flex items-center justify-center text-gray-500">
+            Waiting for others to join...
+          </div>
+        )}
+        <span className="absolute bottom-4 left-4 bg-black/50 px-2 py-1 rounded text-sm">
+          Remote User
+        </span>
       </div>
     </div>
   );

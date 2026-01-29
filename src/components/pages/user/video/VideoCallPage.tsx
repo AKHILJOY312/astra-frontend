@@ -1,3 +1,7 @@
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { userCreateMeeting } from "@/services/meetings.service";
+
 export default function VideoCallPage() {
   return (
     <div className="min-h-screen bg-[#1a1d21] flex items-center justify-center text-white">
@@ -5,82 +9,46 @@ export default function VideoCallPage() {
     </div>
   );
 }
+
 function CreateMeetingCard() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const handleCreateMeeting = async () => {
+    try {
+      setLoading(true);
+
+      const res = await userCreateMeeting();
+      const { code } = res.data.data;
+
+      navigate(`/meeting/${code}/lobby`);
+    } catch (error) {
+      console.error("Create meeting failed", error);
+      alert("Unable to create meeting");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full max-w-md bg-[#232529] border border-gray-800 rounded-xl p-6">
       <h2 className="text-xl font-semibold mb-4">Start a meeting</h2>
 
       <button
+        onClick={handleCreateMeeting}
+        disabled={loading}
         className="
           w-full py-2 rounded-lg font-medium
           bg-linear-to-r from-purple-600 to-blue-600
-          hover:opacity-90
+          hover:opacity-90 disabled:opacity-50
         "
       >
-        Create meeting
+        {loading ? "Creating…" : "Create meeting"}
       </button>
     </div>
   );
 }
 
-export function MeetingLobbyPage() {
-  return (
-    <div className="min-h-screen bg-[#1a1d21] flex items-center justify-center">
-      <div className="bg-[#232529] border border-gray-800 rounded-xl p-6 w-full max-w-lg">
-        <DevicePreview />
-        <DeviceControls />
-        <JoinActions />
-      </div>
-    </div>
-  );
-}
-function DevicePreview() {
-  return (
-    <div className="relative mb-4">
-      <video
-        autoPlay
-        muted
-        playsInline
-        className="w-full h-64 bg-black rounded-lg"
-      />
-
-      <span className="absolute bottom-2 left-2 text-sm text-gray-300">
-        You
-      </span>
-    </div>
-  );
-}
-function DeviceControls() {
-  return (
-    <div className="flex justify-center gap-4 mb-4">
-      <button className="p-3 rounded-full bg-[#1a1d21] hover:bg-[#2a2d31]">
-        🎤
-      </button>
-
-      <button className="p-3 rounded-full bg-[#1a1d21] hover:bg-[#2a2d31]">
-        🎥
-      </button>
-    </div>
-  );
-}
-function JoinActions() {
-  return (
-    <div className="flex gap-3">
-      <button
-        className="
-          flex-1 py-2 rounded-lg font-medium
-          bg-linear-to-r from-purple-600 to-blue-600
-        "
-      >
-        Join now
-      </button>
-
-      <button className="flex-1 py-2 rounded-lg bg-[#1a1d21] hover:bg-[#2a2d31] text-gray-300">
-        Cancel
-      </button>
-    </div>
-  );
-}
 export function MeetingRoomPage() {
   return (
     <div className="min-h-screen bg-[#1a1d21] flex flex-col">

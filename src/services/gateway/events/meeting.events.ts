@@ -18,5 +18,9 @@ export interface ServerToClientMeetingEvents {
 
   "meeting:user-left": (payload: { socketId: string }) => void;
 
-  "meeting:signal": (payload: { fromSocketId: string; signal: any }) => void;
+  "meeting:signal": (payload: {
+    fromSocketId: string;
+    signal: any;
+    meetingId: string;
+  }) => void;
 }

@@ -1,10 +1,10 @@
 import type { MeetingGateway } from "@/services/gateway/MeetingGateway ";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Peer from "simple-peer";
 
 interface UseMeetingCallDeps {
   meetingGateway: MeetingGateway;
 }
+
 interface UseMeetingCallResult {
   localStream: MediaStream | null;
   remoteStream: MediaStream | null;
@@ -12,115 +12,180 @@ interface UseMeetingCallResult {
   leaveMeeting: () => void;
 }
 
+const ICE_CONFIG = {
+  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+};
+
 export function useMeetingCall(deps: UseMeetingCallDeps): UseMeetingCallResult {
   const { meetingGateway } = deps;
 
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
 
-  const peerRef = useRef<Peer.Instance | null>(null);
+  const pcRef = useRef<RTCPeerConnection | null>(null);
   const meetingIdRef = useRef<string | null>(null);
-  const remoteSocketIdRef = useRef<string | null>(null);
+  const iceQueue = useRef<RTCIceCandidateInit[]>([]);
+  console.log(" useMeetingCall initialized");
+  // Track if we are currently making an offer to avoid state errors
+  const isMakingOffer = useRef(false);
 
-  //  Get local media once
   useEffect(() => {
-    let mounted = true;
-
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        if (mounted) setLocalStream(stream);
-      });
-
-    return () => {
-      mounted = false;
-    };
+    async function initMedia() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        setLocalStream(stream);
+      } catch (err) {
+        console.error(
+          " Media access denied. Peer connection will have no tracks.",
+          err,
+        );
+        // We set an empty stream or handle no-stream state so signaling can still proceed
+        setLocalStream(new MediaStream());
+      }
+    }
+    console.log(" Initializing media devices");
+    initMedia();
   }, []);
 
-  // Socket event bindings
-  useEffect(() => {
-    meetingGateway.onUserJoined(({ socketId, meetingId }) => {
-      meetingIdRef.current = meetingId;
-      remoteSocketIdRef.current = socketId;
+  // 2. Peer Connection Factory
+  const createPeerConnection = useCallback(
+    (targetSocketId: string) => {
+      console.log(" Creating/Getting PeerConnection for", targetSocketId);
+      if (pcRef.current) return pcRef.current;
 
-      // First user becomes initiator
-      createPeer(true);
-    });
+      const pc = new RTCPeerConnection(ICE_CONFIG);
 
-    meetingGateway.onSignal(({ fromSocketId, signal }) => {
-      if (!peerRef.current) {
-        remoteSocketIdRef.current = fromSocketId;
-        createPeer(false);
+      // CRITICAL: Add tracks to the PC immediately if stream exists
+      if (localStream) {
+        localStream
+          .getTracks()
+          .forEach((track) => pc.addTrack(track, localStream));
       }
 
-      peerRef.current!.signal(signal);
-    });
+      pc.ontrack = (event) => {
+        console.log(" REMOTE TRACK RECEIVED", event.streams[0]);
+        setRemoteStream(event.streams[0]);
+      };
 
-    meetingGateway.onUserLeft(() => {
-      destroyPeer();
-      setRemoteStream(null);
-    });
+      pc.onicecandidate = (event) => {
+        if (event.candidate && meetingIdRef.current) {
+          meetingGateway.sendSignal({
+            meetingId: meetingIdRef.current,
+            targetSocketId,
+            signal: { candidate: event.candidate },
+          });
+        }
+      };
 
-    return () => {
-      meetingGateway.offAll();
-    };
-  }, [meetingGateway, localStream]);
-
-  //  Peer creation logic
-  const createPeer = useCallback(
-    (initiator: boolean) => {
-      if (!localStream) return;
-      if (peerRef.current) return;
-
-      const peer = new Peer({
-        initiator,
-        trickle: false,
-        stream: localStream,
-      });
-
-      peer.on("signal", (signal) => {
-        meetingGateway.sendSignal({
-          meetingId: meetingIdRef.current!,
-          targetSocketId: remoteSocketIdRef.current!,
-          signal,
-        });
-      });
-
-      peer.on("stream", (stream) => {
-        setRemoteStream(stream);
-      });
-
-      peer.on("close", destroyPeer);
-      peer.on("error", destroyPeer);
-
-      peerRef.current = peer;
+      pcRef.current = pc;
+      return pc;
     },
     [localStream, meetingGateway],
   );
 
-  // Cleanup
+  // 3. Signaling Logic
+  useEffect(() => {
+    // Only start signaling if we have a local stream ready
+    console.log(" Setting up signaling listeners");
+    if (!localStream) return;
+
+    meetingGateway.onUserJoined(async ({ socketId, meetingId }) => {
+      meetingIdRef.current = meetingId;
+      const pc = createPeerConnection(socketId);
+
+      try {
+        isMakingOffer.current = true;
+        // The PC already has tracks from createPeerConnection
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        console.log("📡 Sending Offer to", socketId);
+        meetingGateway.sendSignal({
+          meetingId,
+          targetSocketId: socketId,
+          signal: { sdp: pc.localDescription },
+        });
+      } catch (err) {
+        console.error("Offer failed", err);
+      } finally {
+        isMakingOffer.current = false;
+      }
+    });
+    console.log(" Setting up signal handler");
+    meetingGateway.onSignal(async ({ fromSocketId, signal, meetingId }) => {
+      console.log(" Signal received from", fromSocketId, signal);
+      const pc = createPeerConnection(fromSocketId);
+      const myId = meetingGateway.socketId;
+      if (meetingId && !meetingIdRef.current) {
+        meetingIdRef.current = meetingId;
+      }
+      try {
+        if (signal.sdp) {
+          const desc = new RTCSessionDescription(signal.sdp);
+          const isOfferCollision =
+            desc.type === "offer" &&
+            (isMakingOffer.current || pc.signalingState !== "stable");
+
+          const isPolite = myId ? myId < fromSocketId : false;
+
+          if (isOfferCollision) {
+            if (!isPolite) return;
+            await pc.setLocalDescription({ type: "rollback" });
+          }
+
+          await pc.setRemoteDescription(desc);
+
+          if (desc.type === "offer") {
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+
+            console.log("📡 Sending Answer to", fromSocketId);
+            meetingGateway.sendSignal({
+              meetingId: meetingIdRef.current!,
+              targetSocketId: fromSocketId,
+              signal: { sdp: pc.localDescription },
+            });
+          }
+
+          // Flush ICE
+          while (iceQueue.current.length) {
+            const cand = iceQueue.current.shift();
+            if (cand) await pc.addIceCandidate(new RTCIceCandidate(cand));
+          }
+        } else if (signal.candidate) {
+          if (pc.remoteDescription) {
+            await pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
+          } else {
+            iceQueue.current.push(signal.candidate);
+          }
+        }
+      } catch (err) {
+        console.error("Signaling Error:", err);
+      }
+    });
+
+    return () => meetingGateway.offAll();
+  }, [localStream, meetingGateway, createPeerConnection]);
+
   function destroyPeer() {
-    peerRef.current?.destroy();
-    peerRef.current = null;
-  }
-
-  //  Public API
-  function joinMeeting(code: string) {
-    meetingGateway.joinMeeting(code);
-  }
-
-  function leaveMeeting() {
-    if (!meetingIdRef.current) return;
-
-    meetingGateway.leaveMeeting(meetingIdRef.current);
-    destroyPeer();
+    if (pcRef.current) {
+      pcRef.current.close();
+      pcRef.current = null;
+    }
     setRemoteStream(null);
+    iceQueue.current = [];
   }
 
   return {
     localStream,
     remoteStream,
-    joinMeeting,
-    leaveMeeting,
+    joinMeeting: (code) => meetingGateway.joinMeeting(code),
+    leaveMeeting: () => {
+      if (meetingIdRef.current)
+        meetingGateway.leaveMeeting(meetingIdRef.current);
+      destroyPeer();
+    },
   };
 }

@@ -12,7 +12,13 @@ type MeetingSocket = Socket<
 export class MeetingGateway {
   private socket: MeetingSocket | null = null;
 
+  get socketId(): string | undefined {
+    return this.socket?.id;
+  }
+
   connect(socket: MeetingSocket) {
+    console.log("🟢 meeting gateway connected", socket.id);
+
     this.socket = socket;
   }
 
@@ -25,6 +31,7 @@ export class MeetingGateway {
 
   joinMeeting(code: string) {
     this.ensureSocket();
+    console.log("📡 emit meeting:join", code);
     this.socket!.emit("meeting:join", { code });
   }
 
@@ -33,30 +40,19 @@ export class MeetingGateway {
     this.socket!.emit("meeting:leave", { meetingId });
   }
 
-  sendSignal(payload: {
-    meetingId: string;
-    targetSocketId: string;
-    signal: any;
-  }) {
-    this.ensureSocket();
-    this.socket!.emit("meeting:signal", payload);
-  }
-
   // ---------- listeners ----------
 
   onUserJoined(cb: (payload: { socketId: string; meetingId: string }) => void) {
     this.ensureSocket();
-    this.socket!.on("meeting:user-joined", cb);
+    this.socket!.on("meeting:user-joined", (payload) => {
+      console.log("📥 meeting:user-joined", payload);
+      cb(payload);
+    });
   }
 
   onUserLeft(cb: (payload: { socketId: string }) => void) {
     this.ensureSocket();
     this.socket!.on("meeting:user-left", cb);
-  }
-
-  onSignal(cb: (payload: { fromSocketId: string; signal: any }) => void) {
-    this.ensureSocket();
-    this.socket!.on("meeting:signal", cb);
   }
 
   offAll() {
