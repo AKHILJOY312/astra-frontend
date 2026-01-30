@@ -73,20 +73,7 @@ export const userRoutes: RouteItem[] = [
     protected: true,
     filePath: "user/upgrade/",
   },
-  {
-    path: PATHS.BILLING.PAYMENT_SUCCESS,
-    component: "PaymentSuccess",
-    layout: "main",
-    protected: true,
-    filePath: "user/upgrade/",
-  },
-  {
-    path: PATHS.BILLING.PAYMENT_FAILED,
-    component: "PaymentFailed",
-    layout: "main",
-    protected: true,
-    filePath: "user/upgrade/",
-  },
+
   {
     path: PATHS.USER.PROFILE,
     component: "UserProfile",
@@ -121,13 +108,7 @@ export const userRoutes: RouteItem[] = [
     protected: true,
     filePath: "user/task/",
   },
-  {
-    path: PATHS.TASK.DETAIL_TASK,
-    component: "TaskDetailPage",
-    layout: "app",
-    protected: true,
-    filePath: "user/task/",
-  },
+
   {
     path: PATHS.VIDEO.PAGE,
     component: "VideoCallPage",

@@ -17,7 +17,7 @@ export class MeetingGateway {
   }
 
   connect(socket: MeetingSocket) {
-    console.log("🟢 meeting gateway connected", socket.id);
+    console.log(" meeting gateway connected", socket.id);
 
     this.socket = socket;
   }
@@ -31,7 +31,7 @@ export class MeetingGateway {
 
   joinMeeting(code: string) {
     this.ensureSocket();
-    console.log("📡 emit meeting:join", code);
+    console.log(" emit meeting:join", code);
     this.socket!.emit("meeting:join", { code });
   }
 
@@ -45,7 +45,7 @@ export class MeetingGateway {
   onUserJoined(cb: (payload: { socketId: string; meetingId: string }) => void) {
     this.ensureSocket();
     this.socket!.on("meeting:user-joined", (payload) => {
-      console.log("📥 meeting:user-joined", payload);
+      console.log(" meeting:user-joined", payload);
       cb(payload);
     });
   }
