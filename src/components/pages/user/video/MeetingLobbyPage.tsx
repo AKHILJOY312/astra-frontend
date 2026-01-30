@@ -1,3 +1,4 @@
+import { Camera, CameraOff, Mic, MicOff } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -56,11 +57,11 @@ export function MeetingLobbyPage() {
 
         <div className="flex justify-center gap-4 mb-4">
           <button onClick={toggleMic} className="p-3 rounded-full bg-[#1a1d21]">
-            {micOn ? "🎤" : "🔇"}
+            {micOn ? <Mic /> : <MicOff />}
           </button>
 
           <button onClick={toggleCam} className="p-3 rounded-full bg-[#1a1d21]">
-            {camOn ? "🎥" : "🚫"}
+            {camOn ? <Camera /> : <CameraOff />}
           </button>
         </div>
 
