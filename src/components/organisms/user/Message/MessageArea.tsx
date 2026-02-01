@@ -49,6 +49,7 @@ export default function MessageArea({ channelId }: Props) {
     <div className="flex flex-col flex-1 overflow-hidden h-full bg-[#1A1D21] text-gray-100">
       {/* Slack Message List */}
       <MessageList
+        projectId={projectId!}
         scrollRef={scrollRef}
         isLoading={isLoading}
         messages={messages}

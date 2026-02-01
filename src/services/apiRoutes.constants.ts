@@ -56,7 +56,10 @@ export const API_ROUTES = {
     CODE: (code: string) => `/meetings/${code}`,
     END: "/meetings/leave",
   },
-
+  MESSAGE: {
+    LIST: (projectId: string, channelId: string) =>
+      `/projects/${projectId}/channels/${channelId}/messages`,
+  },
   SUBSCRIPTION: {
     PLANS: "/subscription/plans",
     LIMITS: "/subscription/limits",

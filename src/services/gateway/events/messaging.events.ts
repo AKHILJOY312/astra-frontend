@@ -28,4 +28,11 @@ export interface ClientToServerEvents {
     }>;
   }) => void;
   "channel:leave": (data: { channelId: string }) => void;
+  "message:reply": (payload: {
+    projectId: string;
+    channelId: string;
+    parentMessageId: string;
+    senderId: string;
+    text: string;
+  }) => void;
 }

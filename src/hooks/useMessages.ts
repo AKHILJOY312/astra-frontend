@@ -7,19 +7,20 @@ import {
   clearTextMessages,
   prependOldMessages,
 } from "../redux/slice/messageSlice";
+
 import { messageGateway } from "@/services/gateway/MessageGateway";
-import api from "@/services/api";
 import type { Channel } from "@/types";
+import { fetchMessages, fetchOlderMessages } from "@/services/messages.service";
 
 export function useMessages(
   projectId: string | null,
   channelId: string | null,
-  channels: Channel[]
+  channels: Channel[],
 ) {
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => state.messages.list);
   const activeChannelId = useAppSelector(
-    (state) => state.messages.activeChannelId
+    (state) => state.messages.activeChannelId,
   );
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState(null);
@@ -41,28 +42,26 @@ export function useMessages(
     dispatch(clearTextMessages());
     dispatch(setActiveChannel(channelId));
     setIsFetching(true);
-    api
-      .get(`/projects/${projectId}/channels/${channelId}/messages?limit=20`)
-      .then((res) => {
-        const data = res.data.data;
-        setIsFetching(false);
-        dispatch(setMessages(data));
+    fetchMessages(projectId, channelId).then((res) => {
+      const data = res.data.data;
+      setIsFetching(false);
+      dispatch(setMessages(data));
 
-        // store next cursor
-        if (data.length > 0) {
-          setCursor(data[0].createdAt);
-        } else {
-          setHasMore(false);
-        }
+      // store next cursor
+      if (data.length > 0) {
+        setCursor(data[0].createdAt);
+      } else {
+        setHasMore(false);
+      }
 
-        //  Scroll to bottom on first load
-        setTimeout(() => {
-          scrollRef.current?.scrollTo({
-            top: scrollRef.current.scrollHeight,
-            behavior: "instant",
-          });
-        }, 20);
-      });
+      //  Scroll to bottom on first load
+      setTimeout(() => {
+        scrollRef.current?.scrollTo({
+          top: scrollRef.current.scrollHeight,
+          behavior: "instant",
+        });
+      }, 20);
+    });
 
     messageGateway.joinChannel(channelId);
 
@@ -93,9 +92,7 @@ export function useMessages(
   const loadOlderMessages = async () => {
     if (!cursor || !hasMore) return;
 
-    const res = await api.get(
-      `/projects/${projectId}/channels/${channelId}/messages?cursor=${cursor}&limit=20`
-    );
+    const res = await fetchOlderMessages(projectId!, channelId!, cursor);
 
     const data = res.data.data;
     if (data.length === 0) {

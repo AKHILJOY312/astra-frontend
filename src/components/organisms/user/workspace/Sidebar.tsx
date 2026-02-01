@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Home,
-  MessagesSquare,
   Bell,
   // MoreHorizontal,
   Plus,
@@ -10,6 +9,7 @@ import {
   Settings,
   Hash,
   type LucideIcon,
+  VideoIcon,
   // Globe,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -100,10 +100,11 @@ export default function SlackSidebar() {
         route="/projects"
       />
       <SidebarButton
-        icon={MessagesSquare}
-        label="DMs"
+        icon={VideoIcon}
+        label="Meetings"
         isActive={activeItem === "dms"}
         onClick={() => setActiveItem("dms")}
+        route="/meeting"
       />
       <SidebarButton
         icon={Bell}
@@ -251,20 +252,20 @@ function SidebarButton({
           "flex h-9 w-9 items-center justify-center rounded-lg p-2 transition-all",
           isActive
             ? "bg-white/20"
-            : "bg-transparent hover:rounded-xl hover:bg-white/10"
+            : "bg-transparent hover:rounded-xl hover:bg-white/10",
         )}
       >
         <Icon
           className={cn(
             "h-5 w-5 text-white transition-all group-hover:scale-110",
-            isActive && "scale-110"
+            isActive && "scale-110",
           )}
         />
       </div>
       <span
         className={cn(
           "text-[11px] transition-colors",
-          isActive ? "text-white" : "text-white/70 group-hover:text-white"
+          isActive ? "text-white" : "text-white/70 group-hover:text-white",
         )}
       >
         {label}
