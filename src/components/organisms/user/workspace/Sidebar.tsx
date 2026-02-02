@@ -3,11 +3,11 @@ import {
   Home,
   Bell,
   // MoreHorizontal,
-  Plus,
+  // Plus,
   ChevronDown,
   LogOut,
   Settings,
-  Hash,
+  // Hash,
   type LucideIcon,
   VideoIcon,
   // Globe,
@@ -111,21 +111,22 @@ export default function SlackSidebar() {
         label="Activity"
         isActive={activeItem === "activity"}
         onClick={() => setActiveItem("activity")}
+        route="/tasks"
       />
-      <SidebarButton
+      {/* <SidebarButton
         icon={Hash}
         label="Channels"
         isActive={activeItem === "channels"}
         onClick={() => setActiveItem("channels")}
-      />
+      /> */}
 
       {/* New Message Button */}
-      <div className="mt-2">
+      {/* <div className="mt-2">
         <button className="group flex h-12 w-12 items-center justify-center rounded-lg bg-transparent transition-all hover:rounded-xl hover:bg-white/10">
           <Plus className="h-6 w-6 text-white/70 transition-all group-hover:scale-110 group-hover:text-white" />
         </button>
         <span className="mt-1 block text-[11px] text-white/70">New</span>
-      </div>
+      </div> */}
 
       {/* Spacer */}
       <div className="flex-1" />

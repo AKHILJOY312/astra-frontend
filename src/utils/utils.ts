@@ -1,3 +1,4 @@
+import type { MyTasks } from "@/types/myTasks.types";
 import { type ClassValue, clsx } from "clsx";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
@@ -32,7 +33,7 @@ export function getCookie(cname: string) {
 type FromType = { type?: "default" | "edit" };
 export function canSubmitFrom<TFieldValues extends FieldValues>(
   form: UseFormReturn<TFieldValues>,
-  options?: FromType
+  options?: FromType,
 ) {
   if (!options) options = { type: "default" };
   switch (options.type) {
@@ -47,3 +48,15 @@ export function canSubmitFrom<TFieldValues extends FieldValues>(
       return !form.formState.isValid || form.formState.isSubmitting;
   }
 }
+
+export const groupTasksByStatus = (tasks: MyTasks[]) => {
+  return tasks.reduce(
+    (acc, task) => {
+      const status = task.status;
+      if (!acc[status]) acc[status] = [];
+      acc[status].push(task);
+      return acc;
+    },
+    {} as Record<string, MyTasks[]>,
+  );
+};

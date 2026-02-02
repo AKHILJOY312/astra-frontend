@@ -95,15 +95,17 @@ export const userRoutes: RouteItem[] = [
     protected: true,
     filePath: "user/upgrade/",
   },
-  // {
-  //   path: '/',
-  //   component: 'Dashboard',
-  //   exact: true,
-  //   protected: true,
-  // },
+
   {
     path: PATHS.TASK.LIST_TASK,
     component: "ProjectBoardPage",
+    layout: "app",
+    protected: true,
+    filePath: "user/task/",
+  },
+  {
+    path: PATHS.TASK.TASKS,
+    component: "TasksPage",
     layout: "app",
     protected: true,
     filePath: "user/task/",
@@ -133,12 +135,6 @@ export const userRoutes: RouteItem[] = [
 ];
 
 export const adminRoutes: RouteItem[] = [
-  // {
-  //   path: "/admin/profile",
-  //   component: "UserProfiles",
-  //   layout: "admin",
-  //   protected: true,
-  // },
   {
     path: PATHS.ADMIN.LOGIN,
     component: "SignIn",

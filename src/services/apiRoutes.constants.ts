@@ -50,6 +50,7 @@ export const API_ROUTES = {
       `/projects/${projectId}/tasks/members/search`,
     COMMENT: (projectId: string, taskId: string) =>
       `/projects/${projectId}/tasks/${taskId}/comment`,
+    GET_ALL_TASKS: "/projects/tasks",
   },
   VIDEO_CALL: {
     ROOT: "/meetings",
