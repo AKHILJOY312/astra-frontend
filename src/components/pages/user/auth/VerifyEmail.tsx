@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { PATHS } from "@/routes/routeConstant";
+import { verifyResetToken, verifyUserEmail } from "@/services/auth.service";
 
 interface BackendError {
   message: string;
@@ -15,7 +16,7 @@ const VerifyEmail: React.FC = () => {
   const type = searchParams.get("type"); // "reset" or null/undefined for email verification
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "loading"
+    "loading",
   );
   const [message, setMessage] = useState("Verifying your email...");
 
@@ -35,11 +36,11 @@ const VerifyEmail: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         if (type === "reset") {
-          await axios.get(`/api/auth/verify-reset-token?token=${token}`);
+          await verifyResetToken(token);
           setStatus("success");
           setMessage("Reset link verified! Redirecting...");
         } else {
-          await axios.get(`/api/auth/verify-email?token=${token}`);
+          await verifyUserEmail(token);
           setStatus("success");
           setMessage("Email verified successfully!");
         }
@@ -57,7 +58,7 @@ const VerifyEmail: React.FC = () => {
         setStatus("error");
         setMessage(
           axiosError.response?.data?.message ||
-            "Verification failed. The link may be expired or invalid."
+            "Verification failed. The link may be expired or invalid.",
         );
       }
     };
@@ -79,8 +80,8 @@ const VerifyEmail: React.FC = () => {
             status === "loading"
               ? "bg-blue-100"
               : status === "success"
-              ? "bg-green-100"
-              : "bg-red-100"
+                ? "bg-green-100"
+                : "bg-red-100"
           }`}
         >
           {status === "loading" && (
@@ -130,8 +131,8 @@ const VerifyEmail: React.FC = () => {
               status === "success"
                 ? "text-green-600"
                 : status === "error"
-                ? "text-red-600"
-                : "text-gray-600"
+                  ? "text-red-600"
+                  : "text-gray-600"
             }`}
           >
             {message}

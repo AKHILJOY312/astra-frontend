@@ -1,12 +1,13 @@
 export const API_ROUTES = {
   AUTH: {
-    LOGIN: "/auth/login",
+    SESSION: "/auth/session",
+    // LOGIN: "/auth/login",
     REGISTER: "/auth/register",
     ME: "/auth/me",
-    LOGOUT: "/auth/logout",
+    // LOGOUT: "/auth/logout",
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: "/auth/reset-password",
-    VERIFY_EMAIL: "/auth/verify-email",
+    // VERIFY_EMAIL: "/auth/verify-email",
     VERIFY_RESET_TOKEN: "/auth/verify-reset-token",
   },
 
