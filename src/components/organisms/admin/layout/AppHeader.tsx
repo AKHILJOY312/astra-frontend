@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { useSidebar } from "@/context/SidebarContext";
 import { ThemeToggleButton } from "@/components/organisms/admin/common/ThemeToggleButton";
-import NotificationDropdown from "@/components/organisms/admin/header/NotificationDropdown";
+// import NotificationDropdown from "@/components/organisms/admin/header/NotificationDropdown";
 import UserDropdown from "@/components/organisms/admin/header/UserDropdown";
 
 const AppHeader: React.FC = () => {
@@ -85,13 +85,13 @@ const AppHeader: React.FC = () => {
 
           <Link to="/" className="lg:hidden">
             <img
-              className="dark:hidden"
-              src="./images/logo/logo.svg"
+              className="dark:hidden w-8 h-8"
+              src="/images/logo/logo-icon.svg"
               alt="Logo"
             />
             <img
-              className="hidden dark:block"
-              src="./images/logo/logo-dark.svg"
+              className="hidden dark:block w-8 h-8"
+              src="/images/logo/logo-icon.svg"
               alt="Logo"
             />
           </Link>
@@ -116,7 +116,7 @@ const AppHeader: React.FC = () => {
             </svg>
           </button>
 
-          <div className="hidden lg:block">
+          {/* <div className="hidden lg:block">
             <form>
               <div className="relative">
                 <span className="absolute -translate-y-1/2 pointer-events-none left-4 top-1/2">
@@ -149,7 +149,7 @@ const AppHeader: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
+          </div> */}
         </div>
         <div
           className={`${
@@ -160,7 +160,7 @@ const AppHeader: React.FC = () => {
             {/* <!-- Dark Mode Toggler --> */}
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
-            <NotificationDropdown />
+            {/* <NotificationDropdown /> */}
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}

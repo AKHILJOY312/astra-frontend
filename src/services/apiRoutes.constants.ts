@@ -20,6 +20,8 @@ export const API_ROUTES = {
     PLAN_BY_ID: (id: string) => `/admin/plans/${id}`,
     CURRENT_PLAN: "/admin/plans/current",
     PLAN_LIMITS: "/admin/plans/limits",
+    DASHBOARD: "/admin/dashboard",
+    BILLING: "/admin/billings",
   },
 
   PROJECTS: {

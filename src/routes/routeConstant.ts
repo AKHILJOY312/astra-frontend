@@ -48,6 +48,7 @@ export const PATHS = {
     USERS: "/admin/users",
     PLANS: "/admin/plan",
     FORGOT_PASSWORD: "/admin/forgot-password",
+    BILLING: "/admin/billing",
   },
 } as const;
 

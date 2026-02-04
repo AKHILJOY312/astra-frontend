@@ -169,4 +169,11 @@ export const adminRoutes: RouteItem[] = [
     protected: true,
     filePath: "admin/Dashboard/",
   },
+  {
+    path: PATHS.ADMIN.BILLING,
+    component: "BillingPage",
+    layout: "admin",
+    protected: true,
+    filePath: "admin/Billing/",
+  },
 ];
