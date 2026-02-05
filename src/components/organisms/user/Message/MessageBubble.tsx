@@ -67,7 +67,7 @@ export function MessageBubble({
               className="mt-1 text-xs text-blue-400 hover:underline flex items-center gap-1 font-medium"
             >
               <MessageSquare size={12} />
-              View thread
+              View Reply
             </button>
           )}
         </div>

@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { getAllTaskForUser } from "@/services/task.service";
 import { groupTasksByStatus } from "@/utils/utils";
 import type { ProjectGroup } from "@/types/myTasks.types";
+import { Link } from "react-router-dom";
 
 export default function TasksPage() {
   const [projects, setProjects] = React.useState<ProjectGroup[]>([]);
@@ -42,14 +43,14 @@ export default function TasksPage() {
     );
 
   return (
-    <div className="flex h-screen bg-[#1a1d21] overflow-hidden">
+    <div className="flex bg-[#1a1d21] overflow-hidden">
       <TaskSidebar
         projects={projects}
         activeId={activeProjectId}
         onSelect={setActiveProjectId}
       />
 
-      <main className="flex-1 flex flex-col bg-[#1a1d21]">
+      <main className="flex-1 flex flex-col bg-[#1a1d21] overflow-y-auto p-8">
         {/* Modern Header Component */}
         <header className="h-16 border-b border-gray-800 flex items-center justify-between px-8 bg-[#1a1d21]/80 backdrop-blur-md">
           <div className="flex items-center gap-4">
@@ -58,14 +59,12 @@ export default function TasksPage() {
             </h2>
             <div className="h-4 w-px bg-gray-700" />
           </div>
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search tasks..."
-              className="bg-[#1a1d21] border border-gray-800 rounded-full py-1.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-purple-500 w-64 transition-all"
-            />
-          </div>
+          <Link
+            to={`/projects/${currentProject?.projectId}/task`}
+            className="relative block w-full"
+          >
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          </Link>
         </header>
         {currentProject?.stats && (
           <ProjectHero

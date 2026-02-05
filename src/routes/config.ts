@@ -133,7 +133,7 @@ export const userRoutes: RouteItem[] = [
     filePath: "user/video/",
   },
 ];
-
+//--------------------------------------------------------
 export const adminRoutes: RouteItem[] = [
   {
     path: PATHS.ADMIN.LOGIN,
