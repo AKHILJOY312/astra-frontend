@@ -37,7 +37,10 @@ export function useAdminBilling() {
       setLoading(false);
     }
   }, []);
-
+  // ---- Single user billing ----
+  const fetchBillDetails = useCallback(async (userId: string) => {
+    return fetchBillDetailsApi({ userId });
+  }, []);
   // ---- Dashboard ----
   const fetchDashboard = useCallback(async () => {
     try {
@@ -46,11 +49,6 @@ export function useAdminBilling() {
     } catch {
       setError("Failed to fetch dashboard");
     }
-  }, []);
-
-  // ---- Single user billing ----
-  const fetchBillDetails = useCallback(async (userId: string) => {
-    return fetchBillDetailsApi({ userId });
   }, []);
 
   return {

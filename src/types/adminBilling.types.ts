@@ -1,5 +1,7 @@
 // types/adminBilling.types.ts
 
+import type { PaymentStatus } from "./billing.types";
+
 export type BillingQueryParams = {
   page: number;
   limit: number;
@@ -23,7 +25,47 @@ export type BillingListResponse = {
   totalRevenue: number;
   activeSubscriptions: number;
 };
+///--------------------------------
+export type UserBillingDetails = {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    status: string;
+    signupDate: Date;
+  };
+  subscription: {
+    planName: string;
 
+    status: string;
+    startDate?: Date;
+    endDate?: Date | null;
+  };
+  stats: {
+    ltv: number;
+    failedCount: number;
+    totalTransactions: number;
+  };
+  paymentHistory: AdminPaymentHistoryRow[];
+};
+
+interface AdminPaymentHistoryRow {
+  _id: string;
+  userId: string;
+  planId?: string;
+  planName?: string;
+  amount: number;
+  currency: string;
+  status: PaymentStatus;
+  method?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  invoiceNumber?: string;
+  billingSnapshot?: unknown;
+  createdAt: Date;
+}
+
+//-----------------------------------------
 export type AdminDashboardResponse = {
   revenue: {
     mrr: number;

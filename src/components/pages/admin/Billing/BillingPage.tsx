@@ -129,7 +129,7 @@ import PageBreadcrumb from "@/components/organisms/admin/common/PageBreadCrumb";
 import ComponentCard from "@/components/organisms/admin/common/ComponentCard";
 import PageMeta from "@/components/organisms/admin/common/PageMeta";
 
-import UserBillingList from "./UserBillingList";
+import UserBillingList from "./AdminBillingList";
 function BillingPage() {
   return (
     <>

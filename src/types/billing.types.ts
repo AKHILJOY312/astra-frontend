@@ -40,7 +40,7 @@ export type VerifyPayment = {
 };
 
 //payment hisotry billing hisotry
-
+export type PaymentStatus = "pending" | "captured" | "failed";
 export type Subscription = {
   planName: string;
   startDate: string;
@@ -54,7 +54,7 @@ export type Payment = {
   planName: string;
   amount: number;
   currency: string;
-  status: "pending" | "captured" | "failed";
+  status: PaymentStatus;
   method: string;
   paidAt: string;
   canDownloadInvoice: boolean;
