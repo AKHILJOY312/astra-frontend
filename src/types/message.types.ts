@@ -26,3 +26,11 @@ export type MessagesState = {
   activeChannelId: string | null;
   list: Message[];
 };
+
+export type MessageReply = {
+  id: string;
+  parentMessageId: string;
+  senderId: string;
+  text: string;
+  createdAt: string;
+};

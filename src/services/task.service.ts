@@ -76,3 +76,6 @@ export const addCommentToTaskApi = async (
     message,
   });
 };
+
+export const getAllTaskForUser = async () =>
+  api.get(API_ROUTES.TASKS.GET_ALL_TASKS);

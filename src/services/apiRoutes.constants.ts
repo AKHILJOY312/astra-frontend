@@ -1,12 +1,13 @@
 export const API_ROUTES = {
   AUTH: {
-    LOGIN: "/auth/login",
+    SESSION: "/auth/session",
+    // LOGIN: "/auth/login",
     REGISTER: "/auth/register",
     ME: "/auth/me",
-    LOGOUT: "/auth/logout",
+    // LOGOUT: "/auth/logout",
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: "/auth/reset-password",
-    VERIFY_EMAIL: "/auth/verify-email",
+    // VERIFY_EMAIL: "/auth/verify-email",
     VERIFY_RESET_TOKEN: "/auth/verify-reset-token",
   },
 
@@ -19,6 +20,8 @@ export const API_ROUTES = {
     PLAN_BY_ID: (id: string) => `/admin/plans/${id}`,
     CURRENT_PLAN: "/admin/plans/current",
     PLAN_LIMITS: "/admin/plans/limits",
+    DASHBOARD: "/admin/dashboard",
+    BILLING: "/admin/billings",
   },
 
   PROJECTS: {
@@ -50,13 +53,17 @@ export const API_ROUTES = {
       `/projects/${projectId}/tasks/members/search`,
     COMMENT: (projectId: string, taskId: string) =>
       `/projects/${projectId}/tasks/${taskId}/comment`,
+    GET_ALL_TASKS: "/projects/tasks",
   },
   VIDEO_CALL: {
     ROOT: "/meetings",
     CODE: (code: string) => `/meetings/${code}`,
     END: "/meetings/leave",
   },
-
+  MESSAGE: {
+    LIST: (projectId: string, channelId: string) =>
+      `/projects/${projectId}/channels/${channelId}/messages`,
+  },
   SUBSCRIPTION: {
     PLANS: "/subscription/plans",
     LIMITS: "/subscription/limits",

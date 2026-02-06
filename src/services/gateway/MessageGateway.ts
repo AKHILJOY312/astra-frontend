@@ -45,7 +45,21 @@ class MessageGateway {
 
     this.socket?.emit("channel:join", channelId);
   }
-
+  sendReply(payload: {
+    projectId: string;
+    channelId: string;
+    parentMessageId: string;
+    senderId: string;
+    text: string;
+  }) {
+    if (!this.socket?.connected) {
+      console.error(
+        " [MessageGateway.sendMessage] Cannot send; socket not connected.",
+      );
+      return;
+    }
+    this.socket.emit("message:reply", payload);
+  }
   sendMessage(payload: {
     text: string;
     channelId: string;

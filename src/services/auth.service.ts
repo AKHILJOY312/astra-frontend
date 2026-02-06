@@ -8,12 +8,14 @@ export const login = (credentials: {
 }) => {
   const endpoint = credentials.isAdminLogin
     ? API_ROUTES.ADMIN.LOGIN
-    : API_ROUTES.AUTH.LOGIN;
+    : API_ROUTES.AUTH.SESSION;
 
   const { ...payload } = credentials;
 
   return api.post(endpoint, payload);
 };
+export const loadMe = () => api.get(API_ROUTES.AUTH.ME);
+export const logout = () => api.delete(API_ROUTES.AUTH.SESSION);
 
 export const register = (data: {
   name: string;
@@ -21,22 +23,16 @@ export const register = (data: {
   password: string;
   confirmPassword: string;
 }) => api.post(API_ROUTES.AUTH.REGISTER, data);
-
-export const loadMe = () => api.get(API_ROUTES.AUTH.ME);
-
-export const logout = () => api.post(API_ROUTES.AUTH.LOGOUT);
+export const verifyUserEmail = (token: string) =>
+  api.get(API_ROUTES.AUTH.REGISTER, { params: { token } });
 
 export const forgotUserPassword = (email: string) =>
-  api.post(API_ROUTES.AUTH.FORGOT_PASSWORD, { email });
-
+  api.post(API_ROUTES.AUTH.RESET_PASSWORD, { email });
 export const resetUserPassword = (token: string, password: string) =>
-  api.post(
+  api.put(
     API_ROUTES.AUTH.RESET_PASSWORD,
     { password, confirmPassword: password },
-    { params: { token } }
+    { params: { token } },
   );
-export const verifyUserEmail = (token: string) =>
-  api.get(API_ROUTES.AUTH.VERIFY_EMAIL, { params: { token } });
-
 export const verifyResetToken = (token: string) =>
-  api.get(API_ROUTES.AUTH.VERIFY_RESET_TOKEN, { params: { token } });
+  api.get(API_ROUTES.AUTH.RESET_PASSWORD, { params: { token } });

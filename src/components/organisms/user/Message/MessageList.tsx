@@ -4,18 +4,20 @@ import { MessageBubble } from "./MessageBubble";
 /* ------------------------------------------------------
    SLACK MESSAGE LIST
 ------------------------------------------------------ */
-interface SlackMessageListProps {
+interface MessageListProps {
   scrollRef: React.RefObject<HTMLDivElement>;
   isLoading: boolean;
   messages: Message[];
+  projectId: string;
   loadOlderMessages: () => void;
 }
 export function MessageList({
   scrollRef,
   isLoading,
   messages,
+  projectId,
   loadOlderMessages,
-}: SlackMessageListProps) {
+}: MessageListProps) {
   return (
     <div
       ref={scrollRef}
@@ -31,7 +33,7 @@ export function MessageList({
         <div className="text-center text-gray-400">No messages yet.</div>
       ) : (
         messages.map((msg: Message) => (
-          <MessageBubble key={msg.id} message={msg} />
+          <MessageBubble key={msg.id} message={msg} projectId={projectId} />
         ))
       )}
     </div>

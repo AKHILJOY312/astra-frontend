@@ -1,20 +1,22 @@
-import EcommerceMetrics from "@/components/organisms/admin/ecommerce/EcommerceMetrics";
-import MonthlySalesChart from "@/components/organisms/admin/ecommerce/MonthlySalesChart";
-import StatisticsChart from "@/components/organisms/admin/ecommerce/StatisticsChart";
-import MonthlyTarget from "@/components/organisms/admin/ecommerce/MonthlyTarget";
-import RecentOrders from "@/components/organisms/admin/ecommerce/RecentOrders";
-import DemographicCard from "@/components/organisms/admin/ecommerce/DemographicCard";
+// import EcommerceMetrics from "@/components/organisms/admin/ecommerce/EcommerceMetrics";
+// import MonthlySalesChart from "@/components/organisms/admin/ecommerce/MonthlySalesChart";
+// import StatisticsChart from "@/components/organisms/admin/ecommerce/StatisticsChart";
+// import MonthlyTarget from "@/components/organisms/admin/ecommerce/MonthlyTarget";
+// import RecentOrders from "@/components/organisms/admin/ecommerce/RecentOrders";
+// import DemographicCard from "@/components/organisms/admin/ecommerce/DemographicCard";
 import PageMeta from "@/components/organisms/admin/common/PageMeta";
+import AdminDashboard from "./AdminDashboard";
 
 export default function Home() {
   return (
     <>
       <PageMeta
-        title="React.js Ecommerce Dashboard | TailAdmin - React.js Admin Dashboard Template"
-        description="This is React.js Ecommerce Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title="Dashboard"
+        description="View and manage your admin dashboard"
       />
-      <div className="grid grid-cols-12 gap-4 md:gap-6">
+      {/* <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 space-y-6 xl:col-span-7">
+         
           <EcommerceMetrics />
 
           <MonthlySalesChart />
@@ -27,15 +29,8 @@ export default function Home() {
         <div className="col-span-12">
           <StatisticsChart />
         </div>
-
-        <div className="col-span-12 xl:col-span-5">
-          <DemographicCard />
-        </div>
-
-        <div className="col-span-12 xl:col-span-7">
-          <RecentOrders />
-        </div>
-      </div>
+      </div> */}
+      <AdminDashboard></AdminDashboard>
     </>
   );
 }

@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Home,
-  MessagesSquare,
   Bell,
   // MoreHorizontal,
-  Plus,
+  // Plus,
   ChevronDown,
   LogOut,
   Settings,
-  Hash,
+  // Hash,
   type LucideIcon,
+  VideoIcon,
   // Globe,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -100,31 +100,33 @@ export default function SlackSidebar() {
         route="/projects"
       />
       <SidebarButton
-        icon={MessagesSquare}
-        label="DMs"
+        icon={VideoIcon}
+        label="Meetings"
         isActive={activeItem === "dms"}
         onClick={() => setActiveItem("dms")}
+        route="/meeting"
       />
       <SidebarButton
         icon={Bell}
         label="Activity"
         isActive={activeItem === "activity"}
         onClick={() => setActiveItem("activity")}
+        route="/tasks"
       />
-      <SidebarButton
+      {/* <SidebarButton
         icon={Hash}
         label="Channels"
         isActive={activeItem === "channels"}
         onClick={() => setActiveItem("channels")}
-      />
+      /> */}
 
       {/* New Message Button */}
-      <div className="mt-2">
+      {/* <div className="mt-2">
         <button className="group flex h-12 w-12 items-center justify-center rounded-lg bg-transparent transition-all hover:rounded-xl hover:bg-white/10">
           <Plus className="h-6 w-6 text-white/70 transition-all group-hover:scale-110 group-hover:text-white" />
         </button>
         <span className="mt-1 block text-[11px] text-white/70">New</span>
-      </div>
+      </div> */}
 
       {/* Spacer */}
       <div className="flex-1" />
@@ -251,20 +253,20 @@ function SidebarButton({
           "flex h-9 w-9 items-center justify-center rounded-lg p-2 transition-all",
           isActive
             ? "bg-white/20"
-            : "bg-transparent hover:rounded-xl hover:bg-white/10"
+            : "bg-transparent hover:rounded-xl hover:bg-white/10",
         )}
       >
         <Icon
           className={cn(
             "h-5 w-5 text-white transition-all group-hover:scale-110",
-            isActive && "scale-110"
+            isActive && "scale-110",
           )}
         />
       </div>
       <span
         className={cn(
           "text-[11px] transition-colors",
-          isActive ? "text-white" : "text-white/70 group-hover:text-white"
+          isActive ? "text-white" : "text-white/70 group-hover:text-white",
         )}
       >
         {label}

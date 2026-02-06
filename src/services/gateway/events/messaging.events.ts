@@ -11,6 +11,16 @@ export interface ServerToClientEvents {
     createdAt: string;
     updatedAt: string;
   }) => void;
+  "message:reply:new": (reply: {
+    id: string;
+    parentMessageId: string;
+    channelId: string;
+    senderId: string;
+    senderName: string;
+    text: string;
+    createdAt: string;
+    updatedAt: string;
+  }) => void;
 }
 
 export interface ClientToServerEvents {
@@ -28,4 +38,11 @@ export interface ClientToServerEvents {
     }>;
   }) => void;
   "channel:leave": (data: { channelId: string }) => void;
+  "message:reply": (payload: {
+    projectId: string;
+    channelId: string;
+    parentMessageId: string;
+    senderId: string;
+    text: string;
+  }) => void;
 }

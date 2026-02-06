@@ -10,12 +10,13 @@ import {
   HorizontaLDots,
   // ListIcon,
   // PageIcon,
-  PieChartIcon,
+  // PieChartIcon,
   // PlugInIcon,
   // TableIcon,
   UserCircleIcon,
 } from "../icons/index";
 import { useSidebar } from "@/context/SidebarContext";
+import { ReceiptText } from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -28,7 +29,7 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    path: "/admin/dashboard",
   },
   {
     icon: <UserCircleIcon />,
@@ -36,9 +37,9 @@ const navItems: NavItem[] = [
     path: "/admin/users",
   },
   {
-    icon: <CalenderIcon />,
-    name: "Plan",
-    path: "/admin/plan",
+    icon: <ReceiptText />,
+    name: "Billing",
+    path: "/admin/billing",
   },
 
   // {
@@ -63,12 +64,9 @@ const navItems: NavItem[] = [
 
 const othersItems: NavItem[] = [
   {
-    icon: <PieChartIcon />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
-    ],
+    icon: <CalenderIcon />,
+    name: "Plan",
+    path: "/admin/plan",
   },
   // {
   //   icon: <BoxCubeIcon />,
@@ -101,14 +99,14 @@ const AppSidebar: React.FC = () => {
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
+    {},
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
     (path: string) => location.pathname === path,
-    [location.pathname]
+    [location.pathname],
   );
 
   useEffect(() => {
@@ -290,8 +288,8 @@ const AppSidebar: React.FC = () => {
           isExpanded || isMobileOpen
             ? "w-[290px]"
             : isHovered
-            ? "w-[290px]"
-            : "w-[90px]"
+              ? "w-[290px]"
+              : "w-[90px]"
         }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}
@@ -336,7 +334,7 @@ const AppSidebar: React.FC = () => {
           <div className="flex flex-col gap-4">
             <div>
               <h5
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
+                className={`mb-4 text-xs uppercase flex leading-5 text-gray-400 ${
                   !isExpanded && !isHovered
                     ? "lg:justify-center"
                     : "justify-start"
@@ -352,7 +350,7 @@ const AppSidebar: React.FC = () => {
             </div>
             <div className="">
               <h5
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
+                className={`mb-4 text-xs uppercase flex leading-5 text-gray-400 ${
                   !isExpanded && !isHovered
                     ? "lg:justify-center"
                     : "justify-start"
