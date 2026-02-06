@@ -18,10 +18,13 @@ export default function TasksPage() {
     const getAllProjectTasks = async () => {
       try {
         const response = await getAllTaskForUser();
-        setProjects(response.data.data.projects);
-        setActiveProjectId(
-          (prev) => prev ?? response.data.data.projects[0].projectId,
-        );
+        const projectsData = response.data.data.projects || [];
+
+        setProjects(projectsData);
+
+        if (projectsData.length > 0) {
+          setActiveProjectId((prev) => prev ?? projectsData[0].projectId);
+        }
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -42,6 +45,19 @@ export default function TasksPage() {
       </div>
     );
 
+  if (projects.length === 0) {
+    return (
+      <div className="h-screen bg-[#1a1d21] flex items-center justify-center text-white">
+        <div className="text-center">
+          <h2 className="text-xl font-bold mb-2">No projects found</h2>
+          <p className="text-gray-400">
+            Get started by creating your first project.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex bg-[#1a1d21] overflow-hidden">
       <TaskSidebar
@@ -50,7 +66,7 @@ export default function TasksPage() {
         onSelect={setActiveProjectId}
       />
 
-      <main className="flex-1 flex flex-col bg-[#1a1d21] overflow-y-auto p-8">
+      <main className="flex-1 flex  flex-col bg-[#1a1d21] h-screen overflow-y-auto p-8">
         {/* Modern Header Component */}
         <header className="h-16 border-b border-gray-800 flex items-center justify-between px-8 bg-[#1a1d21]/80 backdrop-blur-md">
           <div className="flex items-center gap-4">

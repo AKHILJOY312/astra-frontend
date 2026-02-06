@@ -11,6 +11,16 @@ export interface ServerToClientEvents {
     createdAt: string;
     updatedAt: string;
   }) => void;
+  "message:reply:new": (reply: {
+    id: string;
+    parentMessageId: string;
+    channelId: string;
+    senderId: string;
+    senderName: string;
+    text: string;
+    createdAt: string;
+    updatedAt: string;
+  }) => void;
 }
 
 export interface ClientToServerEvents {

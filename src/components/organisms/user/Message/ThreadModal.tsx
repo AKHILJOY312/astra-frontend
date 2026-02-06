@@ -37,7 +37,28 @@ export function ThreadModal({
 
   // 2. Listen for real-time replies (Optional: Add a specific socket event if your backend emits one)
   // For now, we'll focus on sending.
+  useEffect(() => {
+    if (!messageGateway.getSocket()) return;
 
+    const handleNewReply = (reply: MessageReply) => {
+      // Only add if it belongs to this thread
+      if (reply.parentMessageId === parentMessage.id) {
+        setReplies((prev) => [...prev, reply]);
+
+        // Scroll to bottom
+        setTimeout(() => {
+          scrollBottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 80);
+      }
+    };
+
+    // Listen to the same event your backend emits
+    messageGateway.getSocket()?.on("message:reply:new", handleNewReply);
+
+    return () => {
+      messageGateway.getSocket()?.off("message:reply:new", handleNewReply);
+    };
+  }, [parentMessage.id]);
   const handleSendReply = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim() || !user) return;
