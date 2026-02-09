@@ -12,7 +12,7 @@ import { Modal } from "@/components/atoms/admin/modal";
 import Badge from "@/components/atoms/admin/badge/Badge";
 
 const AdminBillingList: React.FC = () => {
-  const { billing, loading, error, fetchBillingList, fetchBillDetails } =
+  const { billing, loading, fetchBillingList, fetchBillDetails } =
     useAdminBilling();
 
   const [listState, setListState] = useState<BillingQueryParams>({

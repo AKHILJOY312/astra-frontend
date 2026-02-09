@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import {
   Users,
   DollarSign,
@@ -123,9 +123,15 @@ const AdminDashboard = () => {
     </div>
   );
 };
-
+type StatCardProps = {
+  title: string;
+  value: string | number;
+  trend?: number;
+  icon: ReactNode;
+  subText?: string;
+};
 // Reusable Sub-Components
-const StatCard = ({ title, value, trend, icon, subText }: any) => (
+const StatCard = ({ title, value, trend, icon, subText }: StatCardProps) => (
   <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
     <div className="flex justify-between items-start mb-4">
       <div className="p-2 bg-gray-50 rounded-lg">{icon}</div>
@@ -147,8 +153,12 @@ const StatCard = ({ title, value, trend, icon, subText }: any) => (
     {subText && <p className="text-xs text-gray-400 mt-1">{subText}</p>}
   </div>
 );
-
-const PaymentStatus = ({ label, count, color }: any) => (
+type PaymentStatusProps = {
+  label: string;
+  count: number;
+  color: string; // Tailwind class like "bg-green-500"
+};
+const PaymentStatus = ({ label, count, color }: PaymentStatusProps) => (
   <div className="flex items-center justify-between">
     <div className="flex items-center gap-2">
       <div className={`w-2 h-2 rounded-full ${color}`} />

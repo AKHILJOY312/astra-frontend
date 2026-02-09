@@ -10,6 +10,8 @@ export function useGsapDrawer(isOpen: boolean, onClose: () => void) {
   // 1. Entrance Animation (Triggered when component mounts)
   useGSAP(
     () => {
+      if (!isOpen) return;
+
       const tl = gsap.timeline();
 
       tl.fromTo(
@@ -37,7 +39,7 @@ export function useGsapDrawer(isOpen: boolean, onClose: () => void) {
           "-=0.1",
         );
     },
-    { scope: overlayRef },
+    { dependencies: [isOpen], scope: overlayRef },
   );
 
   // 2. Animated Close Function
