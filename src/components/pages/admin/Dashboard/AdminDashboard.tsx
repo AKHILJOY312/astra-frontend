@@ -1,16 +1,20 @@
-import { useEffect, type ReactNode } from "react";
-import {
-  Users,
-  DollarSign,
-  Activity,
-  ArrowUpRight,
-  ArrowDownRight,
-  RefreshCcw,
-} from "lucide-react";
+import { useEffect } from "react";
+import { Users, DollarSign, RefreshCcw } from "lucide-react";
 import { useAdminBilling } from "@/hooks/useAdminBilling";
+import StatisticsChart from "@/components/organisms/admin/ecommerce/StatisticsChart";
+// import MonthlyTarget from "@/components/organisms/admin/ecommerce/MonthlyTarget";
+import { StatCard } from "./StatCard";
+import { PaymentStatus } from "./PaymentStatus";
 
 const AdminDashboard = () => {
-  const { dashboard, loading, error, fetchDashboard } = useAdminBilling();
+  const {
+    dashboard,
+    loading,
+    chartLoading,
+    error,
+    fetchDashboard,
+    fetchChartData,
+  } = useAdminBilling();
 
   useEffect(() => {
     fetchDashboard();
@@ -53,12 +57,6 @@ const AdminDashboard = () => {
           value={users.total.toString()}
           subText={`${users.new.thisWeek} joined this week`}
           icon={<Users className="text-purple-600" />}
-        />
-        <StatCard
-          title="Churn Rate"
-          value={`${subscriptions.churnRate}%`}
-          trend={-2.5} // Example trend
-          icon={<Activity className="text-orange-600" />}
         />
       </div>
 
@@ -109,63 +107,17 @@ const AdminDashboard = () => {
               count={payments.today.failed}
               color="bg-red-500"
             />
-            {/* <div className="pt-4 mt-4 border-t">
-              <p className="text-sm text-gray-500">
-                Refunds this month:{" "}
-                <span className="font-semibold text-gray-800">
-                  {payments.thisMonth.refunds}
-                </span>
-              </p>
-            </div> */}
           </div>
+        </div>
+        <div className="col-span-12">
+          <StatisticsChart
+            isLoading={chartLoading}
+            onPeriodChange={fetchChartData}
+          />
         </div>
       </div>
     </div>
   );
 };
-type StatCardProps = {
-  title: string;
-  value: string | number;
-  trend?: number;
-  icon: ReactNode;
-  subText?: string;
-};
-// Reusable Sub-Components
-const StatCard = ({ title, value, trend, icon, subText }: StatCardProps) => (
-  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-    <div className="flex justify-between items-start mb-4">
-      <div className="p-2 bg-gray-50 rounded-lg">{icon}</div>
-      {trend && (
-        <span
-          className={`flex items-center text-xs font-medium ${trend >= 0 ? "text-green-600" : "text-red-600"}`}
-        >
-          {trend >= 0 ? (
-            <ArrowUpRight size={14} />
-          ) : (
-            <ArrowDownRight size={14} />
-          )}
-          {Math.abs(trend)}%
-        </span>
-      )}
-    </div>
-    <h4 className="text-gray-500 text-sm font-medium">{title}</h4>
-    <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
-    {subText && <p className="text-xs text-gray-400 mt-1">{subText}</p>}
-  </div>
-);
-type PaymentStatusProps = {
-  label: string;
-  count: number;
-  color: string; // Tailwind class like "bg-green-500"
-};
-const PaymentStatus = ({ label, count, color }: PaymentStatusProps) => (
-  <div className="flex items-center justify-between">
-    <div className="flex items-center gap-2">
-      <div className={`w-2 h-2 rounded-full ${color}`} />
-      <span className="text-sm text-gray-600">{label}</span>
-    </div>
-    <span className="text-sm font-bold text-gray-800">{count}</span>
-  </div>
-);
 
 export default AdminDashboard;

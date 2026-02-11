@@ -11,3 +11,6 @@ export const fetchBillingListApi = (params: {
 
 export const fetchBillDetailsApi = (payload: { userId: string }) =>
   api.post(API_ROUTES.ADMIN.BILLING, payload);
+
+export const fetchAdminDashboardChartApi = (params?: { period?: string }) =>
+  api.get(API_ROUTES.ADMIN.ANALYTICS, { params });

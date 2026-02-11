@@ -21,6 +21,7 @@ export const API_ROUTES = {
     CURRENT_PLAN: "/admin/plans/current",
     PLAN_LIMITS: "/admin/plans/limits",
     DASHBOARD: "/admin/dashboard",
+    ANALYTICS: "/admin/dashboard/analytics",
     BILLING: "/admin/billings",
   },
 
