@@ -104,7 +104,7 @@ export const userRoutes: RouteItem[] = [
     filePath: "user/task/",
   },
   {
-    path: PATHS.TASK.TASKS,
+    path: PATHS.TASK.PAGE,
     component: "TasksPage",
     layout: "app",
     protected: true,

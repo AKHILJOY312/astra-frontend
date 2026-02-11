@@ -33,11 +33,11 @@ export const PATHS = {
   },
   //Task
   TASK: {
-    TASKS: "/tasks",
+    PAGE: "/tasks",
     LIST_TASK: "/projects/:projectId/task",
   },
   VIDEO: {
-    PAGE: "/meeting",
+    PAGE: "/meetings",
     LOBBY: "/meeting/:code/lobby",
     MEETING: "/meeting/:code",
   },
