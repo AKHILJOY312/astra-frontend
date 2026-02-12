@@ -27,7 +27,14 @@ interface UserModel {
   role: "admin" | "user";
   image?: string; // Optional image field
 }
-
+type AdminUserListResult = {
+  id: string;
+  name: string;
+  email: string;
+  status: "active" | "blocked";
+  isAdmin: boolean;
+  image: string | null;
+};
 interface UserListState {
   users: UserModel[];
   page: number;
@@ -81,14 +88,17 @@ export default function UsersList() {
       );
       const result = response.data;
       // Map the result to the local UserModel, deriving 'role' from 'isAdmin'
-      const mappedUsers: UserModel[] = result.users.map((u) => ({
-        id: u.id,
-        name: u.name,
-        email: u.email,
-        status: u.status,
-        role: u.isAdmin ? "admin" : "user",
-        image: u.image || "https://via.placeholder.com/40/CCCCCC/808080?text=U", // Placeholder image
-      }));
+      const mappedUsers: UserModel[] = result.users.map(
+        (u: AdminUserListResult) => ({
+          id: u.id,
+          name: u.name,
+          email: u.email,
+          status: u.status,
+          role: u.isAdmin ? "admin" : "user",
+          image:
+            u.image || "https://via.placeholder.com/40/CCCCCC/808080?text=U", // Placeholder image
+        }),
+      );
 
       setListState((prev) => ({
         ...prev,

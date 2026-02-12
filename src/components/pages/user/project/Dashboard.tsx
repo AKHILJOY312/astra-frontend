@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { openCreateProjectModal } from "@/redux/slice/uiSlice";
 import { useProjects } from "@/hooks/useProjects";
 
-import CreateProjectModal from "@/components/organisms/user/Projects/CreateProjectModal";
+import CreateProjectModal from "@/components/organisms/user/projects/CreateProjectModal";
 import ProjectCard from "@/components/organisms/user/common/ProjectCard";
 import Button from "@/components/organisms/admin/ui/button/Button";
 import { useEffect } from "react";

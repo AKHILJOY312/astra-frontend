@@ -1,11 +1,12 @@
 import React from "react";
-import { ProjectHero, TaskSection, TaskSidebar } from "./TaskComponent";
-
-import { Search } from "lucide-react";
+import { AlertCircle, Search } from "lucide-react";
 import { getAllTaskForUser } from "@/services/task.service";
 import { groupTasksByStatus } from "@/utils/utils";
 import type { ProjectGroup } from "@/types/myTasks.types";
 import { Link } from "react-router-dom";
+import { TaskSidebar } from "./TaskSidebar";
+import { ProjectHero } from "./ProjectHero";
+import { TaskSection } from "./TaskSection";
 
 export default function TasksPage() {
   const [projects, setProjects] = React.useState<ProjectGroup[]>([]);
@@ -13,6 +14,7 @@ export default function TasksPage() {
     null,
   );
   const [loading, setLoading] = React.useState(true);
+  const [showOverdueOnly, setShowOverdueOnly] = React.useState(false);
 
   React.useEffect(() => {
     const getAllProjectTasks = async () => {
@@ -34,9 +36,40 @@ export default function TasksPage() {
   }, []);
 
   const currentProject = projects.find((p) => p.projectId === activeProjectId);
-  const groupedTasks = currentProject
-    ? groupTasksByStatus(currentProject.tasks)
-    : {};
+
+  // Logic to filter tasks based on overdue status
+  const filteredTasks = React.useMemo(() => {
+    if (!currentProject) return [];
+    if (!showOverdueOnly) return currentProject.tasks;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Calculate "One day before" (Tomorrow)
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    return currentProject.tasks.filter((task) => {
+      if (!task.dueDate || task.status === "done") return false;
+
+      const taskDate = new Date(task.dueDate);
+      taskDate.setHours(0, 0, 0, 0);
+
+      // Condition 1: Passed the due date (Overdue)
+      const isOverdue = taskDate < today;
+
+      // Condition 2: Due today or tomorrow (Due Soon)
+      const isDueSoon =
+        taskDate.getTime() === today.getTime() ||
+        taskDate.getTime() === tomorrow.getTime();
+
+      return isOverdue || isDueSoon;
+    });
+  }, [currentProject, showOverdueOnly]);
+
+  const groupedTasks = React.useMemo(() => {
+    return groupTasksByStatus(filteredTasks);
+  }, [filteredTasks]);
 
   if (loading)
     return (
@@ -75,6 +108,19 @@ export default function TasksPage() {
             </h2>
             <div className="h-4 w-px bg-gray-700" />
           </div>
+
+          {/* --- Overdue Toggle Button --- */}
+          <button
+            onClick={() => setShowOverdueOnly(!showOverdueOnly)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all shadow-sm ${
+              showOverdueOnly
+                ? "bg-orange-500/20 text-orange-400 border border-orange-500/50"
+                : "bg-gray-800 text-gray-400 border border-transparent hover:border-gray-700"
+            }`}
+          >
+            <AlertCircle className="w-3.5 h-3.5" />
+            {showOverdueOnly ? "Urgent & Overdue View" : "Show Urgent"}
+          </button>
           <Link
             to={`/projects/${currentProject?.projectId}/task`}
             className="relative block w-full"
@@ -82,7 +128,7 @@ export default function TasksPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           </Link>
         </header>
-        {currentProject?.stats && (
+        {currentProject?.stats && !showOverdueOnly && (
           <ProjectHero
             stats={currentProject.stats}
             title={currentProject.projectTitle}
@@ -90,28 +136,45 @@ export default function TasksPage() {
         )}
         {/* Task Content */}
 
-        {/* Render Groups Dynamically */}
-        <TaskSection
-          title="To Do"
-          status="todo"
-          tasks={groupedTasks["todo"] || []}
-        />
-        <TaskSection
-          title="In Progress"
-          status="inprogress"
-          tasks={groupedTasks["inprogress"] || []}
-        />
-        <TaskSection
-          title="Completed"
-          status="done"
-          tasks={groupedTasks["done"] || []}
-        />
+        {/* Task Content */}
+        <div className="flex flex-col gap-2">
+          <TaskSection
+            title={showOverdueOnly ? "Overdue / Due Soon: To Do" : "To Do"}
+            status="todo"
+            tasks={groupedTasks["todo"] || []}
+          />
 
-        {currentProject?.tasks.length === 0 && (
+          <TaskSection
+            title={
+              showOverdueOnly
+                ? "Overdue / Due Soon: In Progress"
+                : "In Progress"
+            }
+            status="inprogress"
+            tasks={groupedTasks["inprogress"] || []}
+          />
+
+          {/* Hide Completed section when filtering for overdue/due soon */}
+          {!showOverdueOnly && (
+            <TaskSection
+              title="Completed"
+              status="done"
+              tasks={groupedTasks["done"] || []}
+            />
+          )}
+        </div>
+        {filteredTasks.length === 0 && (
+          <div className="text-center py-20 text-gray-600 italic border-2 border-dashed border-gray-800 rounded-3xl">
+            {showOverdueOnly
+              ? "No overdue tasks found!"
+              : "No tasks found in this project."}
+          </div>
+        )}
+        {/* {currentProject?.tasks.length === 0 && (
           <div className="text-center py-20 text-gray-600 italic border-2 border-dashed border-gray-800 rounded-3xl">
             No tasks found in this project.
           </div>
-        )}
+        )} */}
       </main>
     </div>
   );

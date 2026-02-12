@@ -97,21 +97,21 @@ export default function SlackSidebar() {
         label="Projects"
         isActive={activeItem === "home"}
         onClick={() => setActiveItem("home")}
-        route="/projects"
+        route={PATHS.PROJECT.DASHBOARD}
       />
       <SidebarButton
         icon={VideoIcon}
         label="Meetings"
         isActive={activeItem === "dms"}
         onClick={() => setActiveItem("dms")}
-        route="/meeting"
+        route={PATHS.VIDEO.PAGE}
       />
       <SidebarButton
         icon={Bell}
         label="Activity"
         isActive={activeItem === "activity"}
         onClick={() => setActiveItem("activity")}
-        route="/tasks"
+        route={PATHS.TASK.PAGE}
       />
       {/* <SidebarButton
         icon={Hash}

@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import {
   fetchAdminDashboardApi,
+  fetchAdminDashboardChartApi,
   fetchBillDetailsApi,
   fetchBillingListApi,
 } from "@/services/adminBillingService";
@@ -19,6 +20,7 @@ export function useAdminBilling() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [chartLoading, setChartLoading] = useState(false);
 
   // ---- Billing list (params passed here, not stored) ----
   const fetchBillingList = useCallback(async (params: BillingQueryParams) => {
@@ -51,13 +53,33 @@ export function useAdminBilling() {
     }
   }, []);
 
+  const fetchChartData = useCallback(async (period: string) => {
+    try {
+      setChartLoading(true);
+      const res = await fetchAdminDashboardChartApi({ period });
+      const chartData = res.data.data;
+
+      return chartData;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Failed to fetch chart data:", err.message);
+      } else {
+        console.error("Failed to fetch chart data:", err);
+      }
+    } finally {
+      setChartLoading(false);
+    }
+  }, []);
+
   return {
     billing,
     dashboard,
     loading,
+    chartLoading,
     error,
     fetchBillingList,
     fetchDashboard,
     fetchBillDetails,
+    fetchChartData,
   };
 }

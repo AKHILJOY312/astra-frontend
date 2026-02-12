@@ -1,6 +1,6 @@
 import type { UiAlertType } from "@/types/ui.types";
 import { X } from "lucide-react";
-import React, { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
 interface UiAlertProps {

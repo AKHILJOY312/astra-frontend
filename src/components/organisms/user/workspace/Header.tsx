@@ -1,9 +1,9 @@
 import useGoBack from "@/hooks/useGoBack";
-import { Bell, Mic, Headphones, ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const cn = (...inputs: (string | undefined | false)[]) =>
-  inputs.filter(Boolean).join(" ");
+// const cn = (...inputs: (string | undefined | false)[]) =>
+//   inputs.filter(Boolean).join(" ");
 
 export default function SlackHeader() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function SlackHeader() {
     navigate("/upgrade");
   }
   const goBack = useGoBack();
-  const userStatus = "online"; // online, away, dnd
+  // const userStatus = "online"; // online, away, dnd
 
   return (
     <header className="sticky top-0 left-[70px] right-0 z-40 flex h-12 justify-end  border-b border-white/10 bg-[#4F1B60] px-4 text-white py-2">
@@ -40,10 +40,10 @@ export default function SlackHeader() {
         </button> */}
 
         {/* Notifications */}
-        <button className="relative p-2 hover:bg-white/10 rounded-md transition">
+        {/* <button className="relative p-2 hover:bg-white/10 rounded-md transition">
           <Bell className="h-5 w-5" />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500" />
-        </button>
+        </button> */}
         <button
           onClick={() => {
             handleupGrade();
@@ -54,7 +54,7 @@ export default function SlackHeader() {
           Upgrade
         </button>
         {/* Voice / Presence */}
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <button
             className={cn(
               "p-2 rounded-md transition",
@@ -67,7 +67,7 @@ export default function SlackHeader() {
               <Mic className="h-5 w-5" />
             )}
           </button>
-        </div>
+        </div> */}
 
         {/* User Menu */}
         {/* <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-white/10 transition">
