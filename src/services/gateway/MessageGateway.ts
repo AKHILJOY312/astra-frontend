@@ -7,7 +7,7 @@ import type {
 type NewMessagePayload = Parameters<ServerToClientEvents["message:new"]>[0];
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 class MessageGateway {
   private socket: SocketType | null = null;
 
