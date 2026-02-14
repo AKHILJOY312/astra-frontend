@@ -26,7 +26,7 @@ export function MessageBubble({
         className={`group relative flex gap-3 p-2 rounded-lg hover:bg-gray-800/30 transition-colors ${isOwn ? "flex-row-reverse" : ""}`}
       >
         {/* Avatar */}
-        <div className="w-10 h-10 rounded-full bg-gray-700 flex-shrink-0 flex items-center justify-center text-sm font-bold">
+        <div className="w-10 h-10 rounded-full bg-gray-700 shrink-0 flex items-center justify-center text-sm font-bold">
           {message.senderName.substring(0, 1).toUpperCase()}
         </div>
 

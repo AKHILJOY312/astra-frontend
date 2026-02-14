@@ -43,7 +43,18 @@ export function ThreadModal({
     const handleNewReply = (reply: MessageReply) => {
       // Only add if it belongs to this thread
       if (reply.parentMessageId === parentMessage.id) {
-        setReplies((prev) => [...prev, reply]);
+        setReplies((prev) => {
+          if (prev.some((r) => r.id === reply.id)) return prev;
+
+          const filtered = prev.filter((r) => {
+            const isOptimistic = r.id.includes(".") || r.id.length < 10;
+            const isSameContent =
+              r.text === reply.text && r.senderId === reply.senderId;
+            return !(isOptimistic && isSameContent);
+          });
+
+          return [...filtered, reply];
+        });
 
         // Scroll to bottom
         setTimeout(() => {
@@ -75,7 +86,7 @@ export function ThreadModal({
 
     // Optimistic UI Update (Optional)
     const optimisticReply: MessageReply = {
-      id: Math.random().toString(), // Temp ID
+      id: `temp-${Date.now()}`, // Temp ID
       parentMessageId: parentMessage.id,
       senderId: user.id,
       text: inputText,
@@ -93,7 +104,7 @@ export function ThreadModal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[100] flex justify-end bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-100 flex justify-end bg-black/40 backdrop-blur-sm"
     >
       <div
         ref={panelRef}
