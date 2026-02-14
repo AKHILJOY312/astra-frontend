@@ -7,14 +7,14 @@ import type {
 type NewMessagePayload = Parameters<ServerToClientEvents["message:new"]>[0];
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
-
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
 class MessageGateway {
   private socket: SocketType | null = null;
 
   connect(token: string): void {
     // console.log(" [MessageGateway.connect] Called with token:", token);
 
-    this.socket = io("http://localhost:3000", {
+    this.socket = io(SOCKET_URL, {
       auth: { token },
       transports: ["websocket"],
     });
