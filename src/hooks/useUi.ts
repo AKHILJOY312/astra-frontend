@@ -20,12 +20,15 @@ import {
   closeViewMembersModal,
   openEditProjectModal,
   closeEditProjectModal,
+  showAlert,
+  hideAlert,
 } from "@/redux/slice/uiSlice";
+import type { UiAlertType } from "@/types/ui.types";
 
 export const useUi = () => {
   const dispatch = useAppDispatch();
 
-  // 🎯 UI STATE
+  //  UI STATE
   const {
     sidebarOpen,
     theme,
@@ -38,86 +41,94 @@ export const useUi = () => {
     editProjectModalOpen,
   } = useAppSelector((state) => state.ui);
 
-  // 🎯 ACTIONS (wrapped with callbacks)
+  //  ACTIONS (wrapped with callbacks)
   const actions = {
     toggleSidebar: useCallback(() => dispatch(toggleSidebar()), [dispatch]),
 
     setSidebarOpen: useCallback(
       (open: boolean) => dispatch(setSidebarOpen(open)),
-      [dispatch]
+      [dispatch],
     ),
 
     toggleTheme: useCallback(() => dispatch(toggleTheme()), [dispatch]),
 
     setTheme: useCallback(
       (theme: "light" | "dark") => dispatch(setTheme(theme)),
-      [dispatch]
+      [dispatch],
     ),
 
     openCreateProject: useCallback(
       () => dispatch(openCreateProjectModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     closeCreateProject: useCallback(
       () => dispatch(closeCreateProjectModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     openInviteMember: useCallback(
       () => dispatch(openInviteMemberModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     closeInviteMember: useCallback(
       () => dispatch(closeInviteMemberModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     openCreateChannel: useCallback(
       () => dispatch(openCreateChannelModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     closeCreateChannel: useCallback(
       () => dispatch(closeCreateChannelModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     openUpgradePlan: useCallback(
       () => dispatch(openUpgradePlanModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     closeUpgradePlan: useCallback(
       () => dispatch(closeUpgradePlanModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     toggleMobileMenu: useCallback(
       () => dispatch(toggleMobileMenu()),
-      [dispatch]
+      [dispatch],
     ),
 
     closeMobileMenu: useCallback(() => dispatch(closeMobileMenu()), [dispatch]),
 
     openViewMembers: useCallback(
       () => dispatch(openViewMembersModal()),
-      [dispatch]
+      [dispatch],
     ),
 
     closeViewMembers: useCallback(
       () => dispatch(closeViewMembersModal()),
-      [dispatch]
+      [dispatch],
     ),
     openEditProject: useCallback(
       () => dispatch(openEditProjectModal()),
-      [dispatch]
+      [dispatch],
     ),
     closeEditProjectModal: useCallback(
       () => dispatch(closeEditProjectModal()),
-      [dispatch]
+      [dispatch],
     ),
+
+    displayAlert: useCallback(
+      (type: UiAlertType, message: string) =>
+        dispatch(showAlert({ type, message })),
+      [dispatch],
+    ),
+
+    clearAlert: useCallback(() => dispatch(hideAlert()), [dispatch]),
   };
 
   return {
