@@ -4,18 +4,18 @@ import MiddleBlockContent from "./content/MiddleBlockContent.json";
 import AboutContent from "./content/AboutContent.json";
 import MissionContent from "./content/MissionContent.json";
 import ProductContent from "./content/ProductContent.json";
-
+// home page
 const MiddleBlock = lazy(
-  () => import("@/components/organisms/user/MiddleBlock")
+  () => import("@/components/organisms/user/MiddleBlock"),
 );
 const Container = lazy(
-  () => import("@/components/organisms/user/common/Container/index")
+  () => import("@/components/organisms/user/common/Container/index"),
 );
 const ScrollToTop = lazy(
-  () => import("@/components/organisms/user/common/ScrollToTop/index")
+  () => import("@/components/organisms/user/common/ScrollToTop/index"),
 );
 const ContentBlock = lazy(
-  () => import("@/components/organisms/user/ContentBlock")
+  () => import("@/components/organisms/user/ContentBlock"),
 );
 
 const Home = () => {

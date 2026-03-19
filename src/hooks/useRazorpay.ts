@@ -4,6 +4,7 @@ import {
 } from "@/services/subscription.service";
 import { useState } from "react";
 import axios from "axios";
+import { useUi } from "./useUi";
 // Razorpay handler response
 interface RazorpayResponse {
   razorpay_order_id: string;
@@ -73,7 +74,7 @@ export const useRazorpay = () => {
   const [paymentStatus, setPaymentStatus] = useState<
     "success" | "failed" | null
   >(null);
-
+  const { displayAlert } = useUi();
   // Discriminated union for payment details
   type PaymentDetails =
     | {
@@ -93,12 +94,18 @@ export const useRazorpay = () => {
     try {
       const isLoaded = await loadRazorpay();
       if (!isLoaded) {
-        alert("Failed to load Razorpay SDK");
+        displayAlert(
+          "error",
+          "Failed to load Razorpay SDK. Please check your connection.",
+        );
         return;
       }
 
       if (!window.Razorpay) {
-        alert("Razorpay SDK did not initialize");
+        displayAlert(
+          "error",
+          "Razorpay SDK did not initialize. Try refreshing.",
+        );
         return;
       }
 
