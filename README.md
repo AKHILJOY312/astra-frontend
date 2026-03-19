@@ -1,73 +1,69 @@
-# React + TypeScript + Vite
+# Astra Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Astra is a project management frontend built with React, TypeScript, and Vite. It provides a multi-tenant workspace for teams to plan projects, manage tasks, chat in real time, and run video meetings, with user and admin experiences split by route guards and layouts.
 
-Currently, two official plugins are available:
+## Features
+- Public landing, authentication, and email verification flows
+- Project dashboard, project detail view, and member invites
+- Task management with status flows, comments, and attachments
+- Workspace messaging with channels and real-time updates via Socket.IO
+- Video meetings with lobby and in-room experiences powered by LiveKit
+- Billing and plan upgrade flow (Razorpay integration)
+- Admin dashboard for users, plans, and billing
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
+- React 18 + TypeScript
+- Vite 7
+- Tailwind CSS 4
+- Redux Toolkit for state and thunks
+- React Query for server-state caching
+- Axios with interceptors
+- Socket.IO client and LiveKit components
 
-## React Compiler
+## Project Structure
+- `src/app/` application entry, root layout, and global styles
+- `src/components/` UI organized by an atomic design-inspired structure
+- `src/context/` React context providers
+- `src/hooks/` custom hooks
+- `src/redux/` Redux Toolkit store, slices, and thunks
+- `src/routes/` route config, guards, and constants
+- `src/services/` API layer and gateway services
+- `src/styles/` global styles and theme definitions
+- `src/types/` shared TypeScript types
+- `src/utils/` shared utilities
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
+- Node.js 18+ (Node 20 recommended to match the Dockerfile)
+- npm
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Install and Run
+1. `npm install`
+2. `npm run dev`
+3. Open the URL printed by Vite (default: `http://localhost:5173`)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Build and Preview
+1. `npm run build`
+2. `npm run preview`
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Lint
+- `npm run lint`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Environment Variables
+Vite only exposes variables prefixed with `VITE_`. Add or update values in `.env`.
+- `VITE_BACKEND_URL` API base URL (example: `http://localhost:3000/api`)
+- `VITE_SOCKET_URL` Socket.IO base URL (example: `http://localhost:3000`)
+- `VITE_RAZORPAY_KEY` Razorpay public key for the checkout flow
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Docker
+This project ships a multi-stage Docker build that serves the production build via Nginx.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. `docker build -t astra-frontend .`
+2. `docker run -p 5173:80 astra-frontend`
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Nginx proxies `/api/*` and `/socket.io/*` to `http://backend:3000`. If your backend host differs, update `nginx.conf`.
+
+## Notes
+- Routing is defined in `src/routes/config.ts` and guarded by `src/routes/RouteGuards.tsx`.
+- Vite will ignore non-`VITE_` variables in `.env`.
